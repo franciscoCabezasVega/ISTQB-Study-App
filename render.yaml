@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: istqb-api
+    runtime: node
+    buildCommand: npm install && npm run build --workspace=packages/api
+    startCommand: npm start --workspace=packages/api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_PORT
+        value: 3001
+    region: oregon
+    plan: starter
+    autoDeploy: true
+
+  - type: web
+    name: istqb-frontend
+    runtime: node
+    buildCommand: npm install && npm run build --workspace=packages/web
+    startCommand: npm start --workspace=packages/web
+    envVars:
+      - key: NODE_ENV
+        value: production
+    region: oregon
+    plan: starter
+    autoDeploy: true
