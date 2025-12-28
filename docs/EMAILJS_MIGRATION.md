@@ -89,7 +89,7 @@ const response = await emailjs.send(
 
 **Antes:**
 ```env
-RESEND_API_KEY=re_7SoGjFXC_26z54MZRQXEaeSzwG2882KQK
+RESEND_API_KEY=""
 EMAIL_FROM=ISTQB Study App <onboarding@resend.dev>
 APP_URL=http://localhost:3000
 ```
