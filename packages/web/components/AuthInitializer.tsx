@@ -1,0 +1,15 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useAuthStore } from '@/lib/store/authStore';
+
+export function AuthInitializer({ children }: { children: React.ReactNode }) {
+  const initialize = useAuthStore((state) => state.initialize);
+
+  useEffect(() => {
+    // Marcar que la inicialización está completa
+    initialize();
+  }, [initialize]);
+
+  return <>{children}</>;
+}
