@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sin conexión - ISTQB Study App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    h1 {
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-direction: column;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .tips {
+      background: #f9f9f9;
+      border-left: 4px solid #667eea;
+      padding: 16px;
+      text-align: left;
+      margin-top: 24px;
+      border-radius: 4px;
+    }
+
+    .tips h3 {
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .tips ul {
+      color: #666;
+      font-size: 13px;
+      list-style-type: disc;
+      padding-left: 20px;
+      line-height: 1.6;
+    }
+
+    .tips li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">📡</div>
+
+    <h1>Sin conexión</h1>
+    <p>Parece que no tienes conexión a internet en este momento. Los datos en caché podrán estar disponibles si accediste anteriormente.</p>
+
+    <div class="actions">
+      <button class="btn-primary" onclick="location.href='/'">Volver al inicio</button>
+      <button class="btn-secondary" onclick="location.reload()">Reintentar conexión</button>
+    </div>
+
+    <div class="tips">
+      <h3>💡 Consejos:</h3>
+      <ul>
+        <li>Comprueba tu conexión a internet</li>
+        <li>Intenta cambiar de red Wi-Fi</li>
+        <li>Los datos guardados seguirán disponibles</li>
+        <li>Cuando te conectes, se sincronizarán automáticamente</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

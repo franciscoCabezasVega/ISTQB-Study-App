@@ -1,0 +1,29 @@
+{
+  "name": "istqb-study-app",
+  "version": "0.1.0",
+  "description": "Progressive Web App para preparación ISTQB Foundation Level",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=packages/web",
+    "dev:api": "npm run dev --workspace=packages/api",
+    "extract-and-seed": "node scripts/extract_and_seed.js",
+    "build": "npm run build --workspace=packages/shared && npm run build --workspace=packages/web && npm run build --workspace=packages/api",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "type-check": "npm run type-check --workspaces"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "pdf-parse": "^2.4.5",
+    "pdfjs-dist": "^5.4.449",
+    "uuid": "^13.0.0"
+  }
+}
