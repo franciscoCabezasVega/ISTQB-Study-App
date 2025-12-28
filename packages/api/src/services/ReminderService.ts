@@ -162,7 +162,7 @@ class ReminderService {
         throw new Error(`Error fetching active reminders: ${error.message}`);
       }
 
-      return data.map((r) => this.mapToStudyReminder(r));
+      return data.map((r: any) => this.mapToStudyReminder(r));
     } catch (error) {
       console.error('ReminderService.getActiveRemindersToSend error:', error);
       throw error;

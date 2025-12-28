@@ -263,9 +263,9 @@ export class StudyService {
     }
 
     const totalQuestions = answers?.length || 0;
-    const correctAnswers = answers?.filter(a => a.is_correct).length || 0;
+    const correctAnswers = answers?.filter((a: any) => a.is_correct).length || 0;
     const totalSessions = sessions?.length || 0;
-    const completedSessions = sessions?.filter(s => s.status === 'completed').length || 0;
+    const completedSessions = sessions?.filter((s: any) => s.status === 'completed').length || 0;
 
     return {
       totalQuestions,
@@ -273,7 +273,7 @@ export class StudyService {
       accuracy: totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0,
       totalSessions,
       completedSessions,
-      activeSessions: sessions?.filter(s => s.status === 'active').length || 0,
+      activeSessions: sessions?.filter((s: any) => s.status === 'active').length || 0,
     };
   }
 }

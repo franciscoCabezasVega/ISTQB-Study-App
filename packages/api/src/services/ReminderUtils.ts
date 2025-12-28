@@ -176,7 +176,7 @@ export class ReminderUtils {
       }
 
       if (reminder.custom_days) {
-        const invalidDays = reminder.custom_days.filter(day => day < 0 || day > 6);
+        const invalidDays = reminder.custom_days.filter((day: number) => day < 0 || day > 6);
         if (invalidDays.length > 0) {
           errors.push(`Invalid days: ${invalidDays.join(', ')} (must be 0-6)`);
         }
