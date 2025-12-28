@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card } from '@/components/Card';
@@ -9,7 +9,7 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { useTranslation } from '@/lib/useTranslation';
 import { apiClient } from '@/lib/api';
 
-export default function SigninPage() {
+function SigninForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, setUser, setAccessToken, setRememberMe } = useAuthStore();
@@ -165,5 +165,13 @@ export default function SigninPage() {
         </p>
       </Card>
     </div>
+  );
+}
+
+export default function SigninPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SigninForm />
+    </Suspense>
   );
 }
