@@ -57,7 +57,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a 
-                  href="https://github.com/yourusername/istqb-study-app" 
+                  href="https://github.com/franciscoCabezasVega/istqb-study-app" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
@@ -96,7 +96,7 @@ export const Footer: React.FC = () => {
                 {t('footer.buildDate')}: {BUILD_DATE}
               </p>
               <Link 
-                href="https://github.com/yourusername/istqb-study-app/blob/main/CHANGELOG.md"
+                href="https://github.com/franciscoCabezasVega/istqb-study-app/blob/main/CHANGELOG.md"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
