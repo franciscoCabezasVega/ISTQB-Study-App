@@ -5,15 +5,11 @@ import { APIError } from '@istqb-app/shared';
 
 const supabase = createClient(config.supabaseUrl, config.supabaseAnonKey);
 
-export interface AuthRequest extends Request {
+export interface AuthRequest extends Request<any, any, any, any> {
   user?: {
     id: string;
     email: string;
   };
-  body?: any;
-  params?: any;
-  query?: any;
-  headers?: any;
 }
 
 export const authenticateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {

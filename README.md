@@ -1,6 +1,13 @@
 # 📚 ISTQB Study App - Progressive Web Application
 
+![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
+![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
+
 Una aplicación web progresiva (PWA) para ayudar a estudiantes a prepararse para la certificación ISTQB Foundation Level.
+
+> 📌 **Versión Actual**: `1.0.0-alpha` | [Ver Historial de Cambios](CHANGELOG.md) | [Releases](https://github.com/tu-usuario/istqb-study-app/releases)
 
 ## 🎯 Características principales
 
@@ -189,6 +196,26 @@ npm run build --workspace=packages/web
 - ✅ SQL Injection prevention (Supabase ORM)
 - ✅ XSS protection (React)
 - ✅ Rate limiting (recomendado en producción)
+
+## 📋 Versionado
+
+Este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/) y mantiene un [CHANGELOG](CHANGELOG.md) detallado.
+
+### Crear una nueva versión
+
+```bash
+# Script interactivo (recomendado)
+npm run release
+
+# O usar scripts rápidos
+npm run version:patch  # 1.0.0 -> 1.0.1
+npm run version:minor  # 1.0.0 -> 1.1.0
+npm run version:major  # 1.0.0 -> 2.0.0
+```
+
+Los releases se crean automáticamente en GitHub cuando se hace push de un tag de versión.
+
+📖 **Ver guía completa**: [docs/VERSIONING_GUIDE.md](docs/VERSIONING_GUIDE.md)
 
 ## 🤝 Contribuir
 

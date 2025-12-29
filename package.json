@@ -1,6 +1,6 @@
 {
   "name": "istqb-study-app",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha",
   "description": "Progressive Web App para preparación ISTQB Foundation Level",
   "private": true,
   "workspaces": [
@@ -13,7 +13,12 @@
     "build": "npm run build --workspace=packages/shared && npm run build --workspace=packages/web && npm run build --workspace=packages/api",
     "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces",
-    "type-check": "npm run type-check --workspaces"
+    "type-check": "npm run type-check --workspaces",
+    "version:patch": "npm version patch --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
+    "version:minor": "npm version minor --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
+    "version:major": "npm version major --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
+    "release": "node scripts/release.js",
+    "verify:version": "node scripts/verify-version-system.js"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",

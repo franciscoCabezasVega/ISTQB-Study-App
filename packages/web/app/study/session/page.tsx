@@ -28,6 +28,25 @@ function StudySessionContent() {
   const { refreshStreak } = useStreakStore();
   const { t } = useTranslation();
 
+  // Mapeo de temas en inglés a las claves en i18n
+  const topicKeyMap: Record<string, string> = {
+    'Fundamentals of Testing': 'fundamentals',
+    'Testing Throughout the Software Development Lifecycle': 'sdlc',
+    'Static Testing': 'static',
+    'Test Analysis and Design': 'techniques',
+    'Managing the Test Activities': 'management',
+    'Test Tools': 'tools',
+  };
+
+  // Función para obtener el título traducido
+  const getTranslatedTopicTitle = () => {
+    const topicKey = topicKeyMap[topic];
+    if (topicKey) {
+      return t(`study.topics.${topicKey}.title`);
+    }
+    return topic; // Fallback al nombre original
+  };
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -38,12 +57,17 @@ function StudySessionContent() {
     isCorrect: boolean;
     selectedOptions: string[];
   } | null>(null);
+  const [loadingTranslations, setLoadingTranslations] = useState(false);
+  const sessionLanguageRef = React.useRef<string>(language); // Idioma en que se cargó la sesión
 
   // Cargar preguntas
   useEffect(() => {
     const loadQuestions = async () => {
       try {
         setLoading(true);
+        // Guardar el idioma en que se carga la sesión
+        sessionLanguageRef.current = language;
+        
         // El topic ya viene en inglés desde la página principal, usarlo directamente
         const response = await apiClient.getQuestionsByTopic(
           topic,
@@ -65,7 +89,16 @@ function StudySessionContent() {
     };
 
     loadQuestions();
-  }, [topic, difficulty, language]); // Agregar language como dependencia
+  }, [topic, difficulty]); // NO incluir language
+
+  // Notificar si intenta cambiar idioma durante la sesión
+  useEffect(() => {
+    if (questions.length > 0 && language !== sessionLanguageRef.current) {
+      console.log('[INFO] Idioma cambió durante sesión. Las preguntas se mantienen en:', sessionLanguageRef.current);
+      // Aquí podrías mostrar un toast o notificación si lo deseas
+      // Por ahora solo lo registramos en consola
+    }
+  }, [language, questions.length]);
 
   const currentQuestion = questions[currentIndex];
 
@@ -178,7 +211,7 @@ function StudySessionContent() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold mb-2">{topic}</h1>
+        <h1 className="text-3xl font-bold mb-2">{getTranslatedTopicTitle()}</h1>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
           {t('study.questionProgress', { current: currentIndex + 1, total: questions.length })}
         </p>

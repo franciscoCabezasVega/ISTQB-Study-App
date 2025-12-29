@@ -67,8 +67,20 @@ export function shuffleQuestionOptions<T extends { options: any[]; correct_answe
 export function shuffleQuestionsAndOptions<T extends { options: any[]; correct_answer_ids: string[] }>(
   questions: T[]
 ): T[] {
+  // Validar que questions es un array válido
+  if (!Array.isArray(questions) || questions.length === 0) {
+    return [];
+  }
+  
+  // Filtrar preguntas inválidas
+  const validQuestions = questions.filter(q => q && q.options && Array.isArray(q.options));
+  
+  if (validQuestions.length === 0) {
+    return [];
+  }
+  
   // Primero aleatorizar el orden de las preguntas
-  const shuffledQuestions = shuffleArray(questions);
+  const shuffledQuestions = shuffleArray(validQuestions);
   
   // Luego aleatorizar las opciones de cada pregunta
   return shuffledQuestions.map(q => shuffleQuestionOptions(q));
