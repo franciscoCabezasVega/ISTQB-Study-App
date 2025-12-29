@@ -17,6 +17,8 @@ export const Card: React.FC<CardProps> = ({ children, className = '' }) => {
         p-6
         transition-shadow
         hover:shadow-lg
+        h-full
+        flex flex-col
         ${className}
       `}
     >

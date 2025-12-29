@@ -156,8 +156,8 @@ class APIClient {
   }
 
   // Exam endpoints
-  createExamSession(difficulty: string = 'all') {
-    return this.client.post('/exams', { difficulty });
+  createExamSession(difficulty: string = 'all', language: string = 'es') {
+    return this.client.post('/exams', { difficulty, language });
   }
 
   submitExamAnswer(sessionId: string, questionId: string, selectedAnswerId: string, timeSpent: number) {

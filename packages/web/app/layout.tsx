@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 import { AuthInitializer } from '@/components/AuthInitializer';
 import { NotificationNavigator } from '@/components/NotificationNavigator';
@@ -44,13 +45,14 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="ISTQB Study" />
         <ServiceWorkerRegistration />
       </head>
-      <body className="bg-gray-50 dark:bg-gray-900">
+      <body className="bg-gray-50 dark:bg-gray-900 flex flex-col min-h-screen">
         <AuthInitializer>
           <NotificationNavigator />
           <Header />
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
             {children}
           </main>
+          <Footer />
         </AuthInitializer>
       </body>
     </html>

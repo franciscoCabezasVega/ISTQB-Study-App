@@ -67,8 +67,8 @@ function ExamPageContent() {
     try {
       setLoading(true);
 
-      // Crear sesión de examen
-      const response = await apiClient.createExamSession(selectedDifficulty);
+      // Crear sesión de examen con el idioma actual
+      const response = await apiClient.createExamSession(selectedDifficulty, language);
       const session = response.data.data;
 
       // Iniciar store con las preguntas

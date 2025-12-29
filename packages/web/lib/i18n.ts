@@ -153,7 +153,7 @@ export const translations = {
           description: 'Conceptos básicos sobre testing',
         },
         sdlc: {
-          title: 'Testing a lo largo del SDLC',
+          title: 'Testing a lo Largo del Ciclo de Vida del Desarrollo de Software',
           description: 'Testing en diferentes fases del desarrollo',
         },
         static: {
@@ -394,6 +394,17 @@ export const translations = {
       enableDescription: 'Recibe recordatorios para mantener tu racha de estudio y mejorar tu preparación para el examen ISTQB.',
       enableButton: '🔔 Activar notificaciones',
       requesting: '⏳ Solicitando...',
+    },
+    footer: {
+      about: 'Acerca de',
+      aboutDescription: 'Aplicación web progresiva para la preparación del examen ISTQB Foundation Level. Estudia de manera efectiva con simuladores, repetición espaciada y seguimiento de progreso.',
+      links: 'Enlaces',
+      version: 'Versión',
+      buildDate: 'Compilación',
+      viewChangelog: 'Ver historial de cambios',
+      rights: 'Todos los derechos reservados.',
+      privacy: 'Privacidad',
+      terms: 'Términos',
     },
   },
   en: {
@@ -793,6 +804,17 @@ export const translations = {
       enableDescription: 'Receive reminders to maintain your study streak and improve your ISTQB exam preparation.',
       enableButton: '🔔 Enable notifications',
       requesting: '⏳ Requesting...',
+    },
+    footer: {
+      about: 'About',
+      aboutDescription: 'Progressive web app for preparing for the ISTQB Foundation Level exam. Study effectively with simulators, spaced repetition, and progress tracking.',
+      links: 'Links',
+      version: 'Version',
+      buildDate: 'Build',
+      viewChangelog: 'View changelog',
+      rights: 'All rights reserved.',
+      privacy: 'Privacy',
+      terms: 'Terms',
     },
   },
 };

@@ -15,12 +15,18 @@ export const Header: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   
   const handleLogout = async () => {
     setShowDropdown(false);
+    setShowMobileMenu(false);
     logout();
     // Usar router de Next.js para una navegación más limpia
     router.push('/auth/signin');
+  };
+
+  const handleNavClick = () => {
+    setShowMobileMenu(false);
   };
 
   const getInitials = (name: string) => {
@@ -48,14 +54,17 @@ export const Header: React.FC = () => {
   const shouldHideSignInButton = isAuthPage || (isHomePage && !user);
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow">
+    <header className="bg-white dark:bg-gray-800 shadow sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-            📚 ISTQB Study
+          <Link href="/" className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+            <span className="text-2xl">📚</span>
+            <span className="hidden xs:inline">ISTQB</span>
+            <span>Study</span>
           </Link>
 
-          <nav className="flex items-center gap-4">
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-4">
             {user ? (
               <>
                 <Link href="/study" className={navLinkClass('/study')}>
@@ -136,7 +145,97 @@ export const Header: React.FC = () => {
               </>
             )}
           </nav>
+
+          {/* Mobile Menu Controls */}
+          <div className="flex lg:hidden items-center gap-3">
+            {user && <StreakCounter compact />}
+            <LanguageSelector />
+            {user && (
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+                aria-label="Toggle menu"
+              >
+                {showMobileMenu ? (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            )}
+            {!user && !shouldHideSignInButton && (
+              <Link href="/auth/signin">
+                <Button variant="primary" size="sm">
+                  {t('auth.signin')}
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        {showMobileMenu && user && (
+          <div className="lg:hidden mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col space-y-2">
+              <Link 
+                href="/study" 
+                className={`px-4 py-3 rounded-lg ${isActive('/study') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                onClick={handleNavClick}
+              >
+                📖 {t('nav.study')}
+              </Link>
+              <Link 
+                href="/exam" 
+                className={`px-4 py-3 rounded-lg ${isActive('/exam') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                onClick={handleNavClick}
+              >
+                🎯 {t('nav.exam')}
+              </Link>
+              <Link 
+                href="/progress" 
+                className={`px-4 py-3 rounded-lg ${isActive('/progress') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                onClick={handleNavClick}
+              >
+                📊 {t('nav.progress')}
+              </Link>
+              <Link 
+                href="/achievements" 
+                className={`px-4 py-3 rounded-lg ${isActive('/achievements') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                onClick={handleNavClick}
+              >
+                🏆 {t('nav.achievements')}
+              </Link>
+              
+              <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">{user.full_name}</p>
+                  <p className="text-xs">{user.email}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    router.push('/settings/reminders');
+                  }}
+                  className="w-full text-left px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                >
+                  <span>⚙️</span>
+                  <span>{t('nav.settings')}</span>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                >
+                  <span>🚪</span>
+                  <span>{t('common.logout')}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

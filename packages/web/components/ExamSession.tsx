@@ -41,9 +41,18 @@ export function ExamSession({ sessionId, questions: initialQuestions, difficulty
   const [sessionComplete, setSessionComplete] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
   // Aleatorizar preguntas y opciones al iniciar el examen
-  const [questions, setQuestions] = useState<Question[]>(() => shuffleQuestionsAndOptions(initialQuestions));
-  const [loadingTranslations, setLoadingTranslations] = useState(false);
-  const [lastLanguage, setLastLanguage] = useState<string>(language);
+  const [questions, setQuestions] = useState<Question[]>(() => {
+    if (!initialQuestions || initialQuestions.length === 0) {
+      return [];
+    }
+    return shuffleQuestionsAndOptions(initialQuestions);
+  });
+  const sessionLanguageRef = React.useRef<string>(language); // Idioma en que se cargó la sesión
+
+  // Guardar el idioma de la sesión cuando se carga
+  useEffect(() => {
+    sessionLanguageRef.current = language;
+  }, []);
 
   console.log('[DEBUG] ExamSession render:', {
     sessionId,
@@ -52,66 +61,19 @@ export function ExamSession({ sessionId, questions: initialQuestions, difficulty
     answersCount: answers?.length || 0,
     sessionComplete,
     language,
-    lastLanguage
+    sessionLanguage: sessionLanguageRef.current
   });
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = (answers.length / questions.length) * 100;
 
-  // Recargar preguntas cuando cambia el idioma (solo una vez por cambio)
+  // Notificar si intenta cambiar idioma durante el examen
   useEffect(() => {
-    // Solo recargar si el idioma realmente cambió
-    if (language === lastLanguage || initialQuestions.length === 0 || loadingTranslations) {
-      return;
+    if (questions.length > 0 && language !== sessionLanguageRef.current) {
+      console.log('[INFO] Idioma cambió durante examen. Las preguntas se mantienen en:', sessionLanguageRef.current);
+      // Aquí podrías mostrar un toast o notificación si lo deseas
     }
-
-    console.log('[DEBUG] Language changed from', lastLanguage, 'to', language);
-    setLastLanguage(language);
-
-    const reloadQuestionsInNewLanguage = async () => {
-      setLoadingTranslations(true);
-      try {
-        // Obtener los IDs de las preguntas actuales para mantener el mismo set
-        const questionIds = initialQuestions.map(q => q.id);
-        
-        console.log('[DEBUG] Reloading', questionIds.length, 'questions in', language);
-        
-        // Recargar cada pregunta en el nuevo idioma
-        const reloadedQuestions = await Promise.all(
-          questionIds.map(async (id) => {
-            try {
-              const response = await apiClient.getQuestion(id, language);
-              return response.data.data;
-            } catch (error) {
-              console.error(`Error loading question ${id}:`, error);
-              return null;
-            }
-          })
-        );
-
-        const validQuestions = reloadedQuestions.filter((q): q is Question => q !== null);
-        
-        console.log('[DEBUG] Reloaded', validQuestions.length, 'questions successfully');
-        
-        if (validQuestions.length > 0) {
-          // Aleatorizar preguntas y opciones al cambiar de idioma
-          const shuffledQuestions = shuffleQuestionsAndOptions(validQuestions);
-          setQuestions(shuffledQuestions);
-          
-          // Actualizar también el store si existe el método
-          if (updateQuestions) {
-            updateQuestions(shuffledQuestions);
-          }
-        }
-      } catch (error) {
-        console.error('Error reloading questions:', error);
-      } finally {
-        setLoadingTranslations(false);
-      }
-    };
-
-    reloadQuestionsInNewLanguage();
-  }, [language]); // Solo cuando cambia el idioma
+  }, [language, questions.length]);
 
   // Timer de 60 minutos
   useEffect(() => {

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
 import { CardSkeleton } from '@/components/Skeleton';
@@ -123,7 +122,7 @@ export default function StudyPage() {
       </div>
 
       {/* Botones de acción rápida */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
         <Button
           variant="success"
           size="lg"
@@ -132,11 +131,14 @@ export default function StudyPage() {
         >
           🎯 {t('study.examSimulator')}
         </Button>
-        <Link href="/progress" className="w-full">
-          <Button variant="secondary" size="lg" className="w-full">
-            📊 {t('study.viewProgress')}
-          </Button>
-        </Link>
+        <Button
+          variant="secondary"
+          size="lg"
+          onClick={() => router.push('/progress')}
+          className="w-full"
+        >
+          📊 {t('study.viewProgress')}
+        </Button>
       </div>
 
       {/* Grid de temas */}
@@ -158,16 +160,16 @@ export default function StudyPage() {
             const hasQuestions = totalAvailable > 0;
             
             return (
-              <Card key={topic.id} className="hover:shadow-lg transition flex flex-col">
-                <div className="flex items-start justify-between mb-4">
-                  <h2 className="text-xl font-bold flex-1">{topic.icon} {title}</h2>
+              <Card key={topic.id}>
+                <div className="mb-3 min-h-[3.5rem]">
+                  <h2 className="text-lg font-bold line-clamp-2 leading-tight">{topic.icon} {title}</h2>
                 </div>
 
-                <p className="text-gray-600 dark:text-gray-400 mb-4 flex-1">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 min-h-[2.5rem]">
                   {t(topic.descriptionKey)}
                 </p>
 
-                <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-800 rounded">
+                <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-800 rounded flex-shrink-0">
                   <p className="text-sm text-gray-700 dark:text-gray-300">
                     {t('study.progress')}: <strong>{correct}/{totalAvailable}</strong> ({progressPercentage.toFixed(1)}%)
                   </p>
@@ -182,7 +184,7 @@ export default function StudyPage() {
                   </p>
                 </div>
 
-                <div className="relative group">
+                <div className="relative group mt-auto">
                   <Button
                     variant="primary"
                     className="w-full"
