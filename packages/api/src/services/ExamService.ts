@@ -5,7 +5,6 @@ import { Language } from '@istqb-app/shared';
 
 export interface ExamSessionRequest {
   userId: string;
-  difficulty: 'easy' | 'medium' | 'hard' | 'all';
   numberOfQuestions: number;
   language?: Language;
 }
@@ -22,7 +21,6 @@ export interface ExamSessionResponse {
   userId: string;
   createdAt: string;
   totalQuestions: number;
-  difficulty: string;
   questions: any[];
 }
 
@@ -65,48 +63,57 @@ class ExamService {
 
   /**
    * Crear una nueva sesión de examen
-   * Ahora obtiene preguntas en el idioma del usuario
+   * Ahora obtiene preguntas en el idioma del usuario siguiendo la distribución oficial ISTQB
    */
   async createExamSession(
     userId: string,
-    difficulty: 'easy' | 'medium' | 'hard' | 'all',
     numberOfQuestions: number = 40
   ): Promise<ExamSessionResponse> {
     try {
       // Obtener idioma del usuario
       const userLanguage = await this.getUserLanguage(userId);
 
-      // Obtener preguntas usando QuestionService para tener traducciones
-      let allQuestions = await QuestionService.getQuestionsForExam(numberOfQuestions * 2, userLanguage); // Obtener más preguntas para filtrar
+      // Distribución oficial ISTQB por capítulo (total 40 preguntas)
+      const questionDistribution = {
+        'Fundamentals of Testing': 8,
+        'Testing Throughout the Software Development Lifecycle': 6,
+        'Static Testing': 4,
+        'Test Analysis and Design': 11,
+        'Managing the Test Activities': 9,
+        'Test Tools': 2,
+      };
 
-      if (!allQuestions || allQuestions.length === 0) {
+      // Obtener preguntas por cada tema según la distribución
+      const allQuestions: any[] = [];
+      
+      for (const [topic, count] of Object.entries(questionDistribution)) {
+        // Obtener más preguntas de las necesarias para poder seleccionar aleatoriamente
+        const topicQuestions = await QuestionService.getQuestionsByTopic(
+          topic,
+          userLanguage,
+          count * 3 // Obtener el triple para tener variedad
+        );
+
+        // Mezclar las preguntas del tema
+        const shuffled = this.shuffleArray(topicQuestions);
+        
+        // Tomar solo el número necesario
+        const selectedQuestions = shuffled.slice(0, count);
+        
+        if (selectedQuestions.length < count) {
+          console.warn(`⚠️ Topic "${topic}" has only ${selectedQuestions.length} questions, needed ${count}`);
+        }
+        
+        allQuestions.push(...selectedQuestions);
+      }
+
+      // Verificar que tenemos suficientes preguntas
+      if (allQuestions.length === 0) {
         throw new Error('No questions available');
       }
 
-      // Filtrar por dificultad si NO es 'all'
-      let filteredQuestions = allQuestions;
-      if (difficulty !== 'all') {
-        // Mapear dificultad a la label correcta según el idioma
-        const difficultyLabels = {
-          easy: userLanguage === 'es' ? 'Fácil' : 'Easy',
-          medium: userLanguage === 'es' ? 'Medio' : 'Medium',
-          hard: userLanguage === 'es' ? 'Difícil' : 'Hard',
-        };
-        
-        const targetDifficulty = difficultyLabels[difficulty];
-        filteredQuestions = allQuestions.filter(q => q.difficultyLabel === targetDifficulty);
-        
-        if (filteredQuestions.length === 0) {
-          throw new Error(`No questions available for difficulty: ${difficulty}`);
-        }
-      }
-
-      // Tomar solo el número de preguntas solicitado
-      filteredQuestions = filteredQuestions.slice(0, numberOfQuestions);
-
-      if (filteredQuestions.length === 0) {
-        throw new Error(`No questions available for difficulty: ${difficulty}`);
-      }
+      // Mezclar todas las preguntas para que no estén ordenadas por tema
+      const shuffledQuestions = this.shuffleArray(allQuestions);
 
       // Crear sesión de examen en la BD
       const sessionId = uuidv4();
@@ -115,9 +122,8 @@ class ExamService {
         .insert({
           id: sessionId,
           user_id: userId,
-          total_questions: filteredQuestions.length,
-          difficulty: difficulty,
-          questions: filteredQuestions.map((q: any) => ({ id: q.id, title: q.title })),
+          total_questions: shuffledQuestions.length,
+          questions: shuffledQuestions.map((q: any) => ({ id: q.id, title: q.title })),
           started_at: new Date().toISOString(),
           status: 'in_progress',
         })
@@ -132,14 +138,25 @@ class ExamService {
         sessionId: session.id,
         userId: session.user_id,
         createdAt: session.started_at,
-        totalQuestions: filteredQuestions.length,
-        difficulty: session.difficulty,
-        questions: filteredQuestions,
+        totalQuestions: shuffledQuestions.length,
+        questions: shuffledQuestions,
       };
     } catch (error) {
       console.error('ExamService.createExamSession error:', error);
       throw error;
     }
+  }
+
+  /**
+   * Método auxiliar para mezclar un array (Fisher-Yates shuffle)
+   */
+  private shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
   }
 
   /**
@@ -520,18 +537,6 @@ class ExamService {
       console.error('ExamService.updateUserProgress error:', error);
       // No throw - this is non-critical
     }
-  }
-
-  /**
-   * Shuffle array (Fisher-Yates)
-   */
-  private shuffleArray<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
   }
 }
 

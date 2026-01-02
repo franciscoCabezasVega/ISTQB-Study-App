@@ -63,7 +63,7 @@ function SigninForm() {
   };
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center">
+    <div className="min-h-[70vh] flex items-center justify-center" suppressHydrationWarning>
       <Card className="max-w-md w-full">
         <h1 className="text-3xl font-bold mb-6 text-center">{t('auth.signin')}</h1>
 
@@ -86,7 +86,7 @@ function SigninForm() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div suppressHydrationWarning>
             <label className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.email')}
             </label>
@@ -96,10 +96,11 @@ function SigninForm() {
               required
               className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
               placeholder="tu@email.com"
+              suppressHydrationWarning
             />
           </div>
 
-          <div>
+          <div suppressHydrationWarning>
             <label className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.password')}
             </label>
@@ -110,6 +111,7 @@ function SigninForm() {
                 required
                 className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 pr-12"
                 placeholder="••••••••"
+                suppressHydrationWarning
               />
               <button
                 type="button"

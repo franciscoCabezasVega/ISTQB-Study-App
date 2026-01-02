@@ -18,34 +18,8 @@ function ExamPageContent() {
   const { language } = useLanguageStore();
 
   const [loading, setLoading] = useState(false);
-  const [loadingCounts, setLoadingCounts] = useState(true);
-  const [questionCounts, setQuestionCounts] = useState<{ easy: number; medium: number; hard: number }>({
-    easy: 0,
-    medium: 0,
-    hard: 0,
-  });
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard'>(
-    'easy'
-  );
   const [showInstructions, setShowInstructions] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
-
-  // Cargar conteo de preguntas al montar el componente
-  useEffect(() => {
-    const fetchQuestionCounts = async () => {
-      try {
-        setLoadingCounts(true);
-        const response = await apiClient.getQuestionCountByDifficulty(language);
-        setQuestionCounts(response.data.data);
-      } catch (error) {
-        console.error('Error fetching question counts:', error);
-      } finally {
-        setLoadingCounts(false);
-      }
-    };
-
-    fetchQuestionCounts();
-  }, [language]);
 
   if (!user) {
     return (
@@ -68,11 +42,11 @@ function ExamPageContent() {
       setLoading(true);
 
       // Crear sesión de examen con el idioma actual
-      const response = await apiClient.createExamSession(selectedDifficulty, language);
+      const response = await apiClient.createExamSession(language);
       const session = response.data.data;
 
       // Iniciar store con las preguntas
-      startExam(session.sessionId, selectedDifficulty, session.totalQuestions, session.questions);
+      startExam(session.sessionId, session.totalQuestions, session.questions);
 
       // Redirigir a la sesión
       router.push(`/exam/session?sessionId=${session.sessionId}`);
@@ -169,7 +143,7 @@ function ExamPageContent() {
             variant="success"
             size="lg"
             onClick={handleStartExam}
-            disabled={!acknowledged || loading || questionCounts[selectedDifficulty] === 0}
+            disabled={!acknowledged || loading}
           >
             {loading ? t('exam.starting') : t('exam.beginExam')}
           </Button>
@@ -221,50 +195,9 @@ function ExamPageContent() {
           </li>
           <li className="flex items-start gap-3">
             <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
-            <span>{t('exam.summary4')} <strong>{t(`study.${selectedDifficulty}`)}</strong> {t('exam.summary4b')}</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
             <span>{t('exam.summary5')} <strong>{t('exam.summary5b')}</strong></span>
           </li>
         </ul>
-      </Card>
-
-      <Card>
-        <h2 className="text-2xl font-bold mb-4">{t('exam.selectDifficulty')}</h2>
-        {loadingCounts ? (
-          <div className="text-center py-8 text-gray-500">{t('common.loading')}</div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {(['easy', 'medium', 'hard'] as const).map((level) => {
-              const count = questionCounts[level];
-              const isDisabled = count === 0;
-              
-              return (
-                <button
-                  key={level}
-                  onClick={() => !isDisabled && setSelectedDifficulty(level)}
-                  disabled={isDisabled}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    isDisabled
-                      ? 'border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 cursor-not-allowed opacity-50'
-                      : selectedDifficulty === level
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-blue-300'
-                  }`}
-                  title={isDisabled ? t('exam.noQuestionsAvailable') : undefined}
-                >
-                  <p className="font-bold capitalize text-gray-800 dark:text-white">
-                    {level === 'easy' && '🟢'}
-                    {level === 'medium' && '🟡'}
-                    {level === 'hard' && '🔴'}{' '}
-                    {t(`exam.${level}`)}
-                  </p>
-                </button>
-              );
-            })}
-          </div>
-        )}
       </Card>
 
       <div className="flex gap-4">

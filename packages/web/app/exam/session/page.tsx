@@ -21,13 +21,48 @@ function ExamSessionContent() {
   const [sessionData, setSessionData] = useState<{
     sessionId: string;
     questions: Question[];
-    difficulty: string;
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSessionActive, setIsSessionActive] = useState(false);
+  const sessionLanguageRef = React.useRef<string>(language);
+
+  // Detectar refresh de página: si hay una sesión activa en sessionStorage, redirigir al home
+  useEffect(() => {
+    const activeSession = sessionStorage.getItem('active_exam_session');
+    
+    if (activeSession === 'true') {
+      // Hubo un refresh durante la sesión activa -> redirigir al home
+      console.log('[SESSION] Refresh detectado durante sesión de examen activa. Redirigiendo al home...');
+      sessionStorage.removeItem('active_exam_session');
+      router.push('/');
+      return;
+    }
+    
+    // Marcar que la sesión está activa
+    sessionStorage.setItem('active_exam_session', 'true');
+    sessionLanguageRef.current = language;
+    setIsSessionActive(true);
+    
+    // Limpiar al desmontar el componente (navegación normal o salida)
+    return () => {
+      sessionStorage.removeItem('active_exam_session');
+    };
+  }, [router, language]);
+
+  // Detectar cambio de idioma durante la sesión
+  useEffect(() => {
+    if (isSessionActive && sessionData && language !== sessionLanguageRef.current) {
+      console.log('[SESSION] Cambio de idioma detectado durante sesión de examen activa. Redirigiendo al home...');
+      sessionStorage.removeItem('active_exam_session');
+      router.push('/');
+      return;
+    }
+  }, [language, sessionData, isSessionActive, router]);
 
   useEffect(() => {
     if (!user) {
+      sessionStorage.removeItem('active_exam_session');
       router.push('/auth/signin');
       return;
     }
@@ -35,6 +70,7 @@ function ExamSessionContent() {
     if (!sessionId) {
       setError('Session ID not found');
       setLoading(false);
+      sessionStorage.removeItem('active_exam_session');
       return;
     }
 
@@ -50,11 +86,9 @@ function ExamSessionContent() {
         }
 
         const parsed = JSON.parse(examStorageData);
-        const difficulty = parsed.state?.difficulty || 'all';
         const existingQuestions = parsed.state?.questions || [];
 
         console.log('[DEBUG] Exam session data:', { 
-          difficulty, 
           existingQuestionsCount: existingQuestions.length,
           language 
         });
@@ -65,7 +99,6 @@ function ExamSessionContent() {
           setSessionData({
             sessionId,
             questions: existingQuestions,
-            difficulty,
           });
         } else {
           console.log('[DEBUG] Loading questions from backend');
@@ -84,7 +117,6 @@ function ExamSessionContent() {
           setSessionData({
             sessionId,
             questions,
-            difficulty,
           });
 
           // Actualizar el localStorage con las nuevas preguntas
@@ -94,13 +126,16 @@ function ExamSessionContent() {
       } catch (e) {
         console.error('Error loading exam questions:', e);
         setError('Error loading session data');
+        sessionStorage.removeItem('active_exam_session');
       } finally {
         setLoading(false);
       }
     };
 
-    loadExamQuestions();
-  }, [sessionId, user, router]); // NO incluir language para evitar recarga durante el examen
+    if (isSessionActive) {
+      loadExamQuestions();
+    }
+  }, [sessionId, user, router, isSessionActive]); // NO incluir language para evitar recarga durante el examen
 
   if (loading) {
     return (
@@ -137,7 +172,6 @@ function ExamSessionContent() {
     <ExamSession
       sessionId={sessionId}
       questions={sessionData.questions}
-      difficulty={sessionData.difficulty}
     />
   );
 }

@@ -6,25 +6,6 @@ import { Language } from '@istqb-app/shared';
 const router = Router();
 
 /**
- * GET /questions/count-by-difficulty
- * Obtiene la cantidad de preguntas disponibles por dificultad
- * Query params: language (opcional, default: 'es')
- * NOTA: Este endpoint debe estar ANTES del endpoint /:id para evitar confusiones
- */
-router.get('/count-by-difficulty', async (req, res, next) => {
-  try {
-    const language = (req.query.language as Language) || 'es';
-    const counts = await QuestionService.getQuestionCountByDifficulty(language);
-    res.status(200).json({
-      statusCode: 200,
-      data: counts,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-/**
  * GET /questions/count-by-topic
  * Obtiene la cantidad de preguntas disponibles por tema
  */
@@ -58,15 +39,14 @@ router.get('/:id', async (req, res, next) => {
 /**
  * GET /questions/topic/:topic
  * Obtiene preguntas por tema en el idioma especificado
- * Query params: language (opcional, default: 'es'), difficulty, limit
+ * Query params: language (opcional, default: 'es'), limit
  */
 router.get('/topic/:topic', async (req, res, next) => {
   try {
-    const { difficulty, limit, language } = req.query;
+    const { limit, language } = req.query;
     const questions = await QuestionService.getQuestionsByTopic(
       req.params.topic,
       (language as Language) || 'es',
-      difficulty as any,
       parseInt(limit as string) || 10
     );
     res.status(200).json(questions);

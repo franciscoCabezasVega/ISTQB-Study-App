@@ -13,6 +13,11 @@ const processText = (text: string): string => {
   return text.replace(/\\n/g, '\n');
 };
 
+// Helper function to check if text contains HTML
+const containsHTML = (text: string): boolean => {
+  return /<[a-z][\s\S]*>/i.test(text);
+};
+
 interface QuestionCardProps {
   question: Question;
   onAnswer: (selectedOptions: string[], timeSpent: number) => void;
@@ -57,15 +62,16 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   return (
     <Card className="w-full">
-      <div className="flex justify-between items-center mb-6 pb-4 border-b">
-        <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">
-          {t('study.difficulty')}: <span className="capitalize">{question.difficultyLabel || 'N/A'}</span>
-        </span>
-      </div>
-
       <h2 className="text-2xl font-bold mb-6">{question.title}</h2>
       {question.description && (
-        <p className="text-gray-700 dark:text-gray-300 mb-6 whitespace-pre-line">{processText(question.description)}</p>
+        containsHTML(question.description) ? (
+          <div 
+            className="text-gray-700 dark:text-gray-300 mb-6 prose dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: question.description }}
+          />
+        ) : (
+          <p className="text-gray-700 dark:text-gray-300 mb-6 whitespace-pre-line">{processText(question.description)}</p>
+        )
       )}
 
       <div className="space-y-3 mb-8">

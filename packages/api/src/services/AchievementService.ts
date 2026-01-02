@@ -195,7 +195,7 @@ class AchievementService {
   async updateStreak(userId: string): Promise<DailyStreak> {
     try {
       // Obtener streak existente o crear si no existe
-      let { data: streak, error: streakError } = await supabase
+      const { data: streak, error: streakError } = await supabase
         .from('daily_streaks')
         .select('*')
         .eq('user_id', userId)

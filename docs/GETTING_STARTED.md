@@ -12,24 +12,9 @@ La estructura del proyecto, tipos, componentes base y servicios han sido creados
 2. Registrarse o iniciar sesión
 3. Crear un nuevo proyecto
 4. Esperar a que se inicialice
-5. Guardar las credenciales (ver Paso 3)
+5. Guardar las credenciales (ver Paso 2)
 
-### Paso 2: Ejecutar setup en tu máquina (5 min)
-
-**Windows:**
-```powershell
-cd "c:\Users\frank\OneDrive\Documentos\GitHub\Estudiar ISTQB"
-.\setup.bat
-```
-
-**macOS/Linux:**
-```bash
-cd ~/GitHub/Estudiar\ ISTQB
-chmod +x setup.sh
-./setup.sh
-```
-
-### Paso 3: Configurar variables de entorno (5 min)
+### Paso 2: Configurar variables de entorno (5 min)
 
 **Backend** - `packages/api/.env`:
 ```env
@@ -54,7 +39,7 @@ Cómo obtener las credenciales:
 4. Copiar `service_role secret` → SUPABASE_SERVICE_ROLE_KEY
 5. Generar una clave JWT segura (puedes usar: `openssl rand -base64 32`)
 
-### Paso 4: Crear tablas en Supabase (10-15 min)
+### Paso 3: Crear tablas en Supabase (10-15 min)
 
 1. En Supabase Dashboard → SQL Editor
 2. Crear nueva query
@@ -334,7 +319,6 @@ export function QuestionCard({ question }: { question: Question }) {
 
 - [ ] Crear proyecto en Supabase
 - [ ] Obtener y guardar credenciales
-- [ ] Ejecutar `setup.bat` o `setup.sh`
 - [ ] Configurar `.env` files
 - [ ] Ejecutar scripts SQL de Supabase
 - [ ] Insertar preguntas de ejemplo
