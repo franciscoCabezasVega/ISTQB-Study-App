@@ -18,10 +18,9 @@ import { formatPercentage, shuffleQuestionsAndOptions } from '@/lib/utils';
 interface ExamSessionProps {
   sessionId: string;
   questions: Question[];
-  difficulty: string;
 }
 
-export function ExamSession({ sessionId, questions: initialQuestions, difficulty }: ExamSessionProps) {
+export function ExamSession({ sessionId, questions: initialQuestions }: ExamSessionProps) {
   const router = useRouter();
   const { user } = useAuthStore();
   const { language } = useLanguageStore();
@@ -47,33 +46,17 @@ export function ExamSession({ sessionId, questions: initialQuestions, difficulty
     }
     return shuffleQuestionsAndOptions(initialQuestions);
   });
-  const sessionLanguageRef = React.useRef<string>(language); // Idioma en que se cargó la sesión
-
-  // Guardar el idioma de la sesión cuando se carga
-  useEffect(() => {
-    sessionLanguageRef.current = language;
-  }, []);
-
   console.log('[DEBUG] ExamSession render:', {
     sessionId,
     questionsCount: questions?.length || 0,
     currentQuestionIndex,
     answersCount: answers?.length || 0,
     sessionComplete,
-    language,
-    sessionLanguage: sessionLanguageRef.current
+    language
   });
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = (answers.length / questions.length) * 100;
-
-  // Notificar si intenta cambiar idioma durante el examen
-  useEffect(() => {
-    if (questions.length > 0 && language !== sessionLanguageRef.current) {
-      console.log('[INFO] Idioma cambió durante examen. Las preguntas se mantienen en:', sessionLanguageRef.current);
-      // Aquí podrías mostrar un toast o notificación si lo deseas
-    }
-  }, [language, questions.length]);
 
   // Timer de 60 minutos
   useEffect(() => {
@@ -163,6 +146,9 @@ export function ExamSession({ sessionId, questions: initialQuestions, difficulty
 
       // Refrescar el streak después de finalizar el examen
       refreshStreak();
+
+      // Limpiar marcador de sesión activa
+      sessionStorage.removeItem('active_exam_session');
 
       // Limpiar store
       endExam();

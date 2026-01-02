@@ -10,10 +10,6 @@ export interface AuthRequest extends Request {
     id: string;
     email: string;
   };
-  body?: any;
-  params?: any;
-  query?: any;
-  headers?: any;
 }
 
 export const authenticateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -51,7 +47,11 @@ export const authenticateToken = async (req: AuthRequest, res: Response, next: N
   }
 };
 
-export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+interface HttpError extends Error {
+  statusCode?: number;
+}
+
+export const errorHandler = (err: HttpError, req: Request, res: Response, _next: NextFunction) => {
   console.error('[ERROR]', err);
 
   const statusCode = err.statusCode || 500;

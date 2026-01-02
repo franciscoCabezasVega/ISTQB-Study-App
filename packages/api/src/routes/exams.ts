@@ -10,14 +10,13 @@ const router = Router();
  */
 router.post('/', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
-    const { difficulty = 'all' } = req.body;
     const userId = req.user?.id;
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const session = await ExamService.createExamSession(userId, difficulty, 40);
+    const session = await ExamService.createExamSession(userId, 40);
 
     res.status(201).json({
       statusCode: 201,

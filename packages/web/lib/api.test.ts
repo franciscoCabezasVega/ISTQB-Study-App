@@ -2,13 +2,14 @@
  * Tests para API Client - Token Expiration Handling
  * Cubre manejo de tokens expirados y errores 401
  */
+import { vi } from 'vitest';
 
 describe('API Client - Token Expiration', () => {
   describe('Response Interceptor', () => {
     it('should clear auth storage on 401 error', () => {
       // Mock localStorage
       const mockLocalStorage = {
-        removeItem: jest.fn(),
+        removeItem: vi.fn(),
       };
       global.localStorage = mockLocalStorage as any;
 

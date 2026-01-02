@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { authenticateToken, AuthRequest } from '../middleware';
 import { AnswerService } from '../services/AnswerService';
-import AchievementService from '../services/AchievementService';
 import { supabase } from '../config/supabase';
 
 const router = Router();
