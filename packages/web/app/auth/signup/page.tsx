@@ -125,7 +125,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center">
+    <div className="min-h-[70vh] flex items-center justify-center" suppressHydrationWarning>
       <Card className="max-w-md w-full">
         <h1 className="text-3xl font-bold mb-6 text-center">{t('auth.signup')}</h1>
 
@@ -149,7 +149,7 @@ export default function SignupPage() {
             />
           </div>
 
-          <div>
+          <div suppressHydrationWarning>
             <label className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.email')}
             </label>
@@ -159,10 +159,11 @@ export default function SignupPage() {
               required
               className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
               placeholder="tu@email.com"
+              suppressHydrationWarning
             />
           </div>
 
-          <div>
+          <div suppressHydrationWarning>
             <label className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.password')}
             </label>
@@ -175,6 +176,7 @@ export default function SignupPage() {
                 required
                 className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 pr-12"
                 placeholder="••••••••"
+                suppressHydrationWarning
               />
               <button
                 type="button"
@@ -266,7 +268,7 @@ export default function SignupPage() {
             </div>
           </div>
 
-          <div>
+          <div suppressHydrationWarning>
             <label className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.confirmPassword')}
             </label>
@@ -281,6 +283,7 @@ export default function SignupPage() {
                   confirmPassword && !passwordsMatch ? 'border-red-500 dark:border-red-500' : ''
                 }`}
                 placeholder="••••••••"
+                suppressHydrationWarning
               />
               <button
                 type="button"

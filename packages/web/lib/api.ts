@@ -84,19 +84,15 @@ class APIClient {
     return this.client.get(`/questions/${id}`, { params: { language } });
   }
 
-  getQuestionsByTopic(topic: string, language?: 'es' | 'en', difficulty?: string, limit?: number) {
+  getQuestionsByTopic(topic: string, language?: 'es' | 'en', limit?: number) {
     const encoded = encodeURIComponent(topic);
     return this.client.get(`/questions/topic/${encoded}`, {
-      params: { language, difficulty, limit },
+      params: { language, limit },
     });
   }
 
   getQuestionsForExam(count: number = 40, language?: 'es' | 'en') {
     return this.client.get('/questions', { params: { count, language } });
-  }
-
-  getQuestionCountByDifficulty(language?: 'es' | 'en') {
-    return this.client.get('/questions/count-by-difficulty', { params: { language } });
   }
 
   getQuestionCountByTopic() {
@@ -131,8 +127,8 @@ class APIClient {
     return this.client.post('/study/answers', data);
   }
 
-  getOrCreateStudySession(topic?: string, difficulty?: string) {
-    return this.client.get('/study/session', { params: { topic, difficulty } });
+  getOrCreateStudySession(topic?: string) {
+    return this.client.get('/study/session', { params: { topic } });
   }
 
   completeStudySession(sessionId: string) {
@@ -156,8 +152,8 @@ class APIClient {
   }
 
   // Exam endpoints
-  createExamSession(difficulty: string = 'all', language: string = 'es') {
-    return this.client.post('/exams', { difficulty, language });
+  createExamSession(language: string = 'es') {
+    return this.client.post('/exams', { language });
   }
 
   submitExamAnswer(sessionId: string, questionId: string, selectedAnswerId: string, timeSpent: number) {
