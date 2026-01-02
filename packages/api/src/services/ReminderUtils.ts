@@ -94,7 +94,7 @@ export class ReminderUtils {
         daysUntilNext = (8 - currentDayOfWeek) % 7 || 7;
         break;
 
-      case 'custom':
+      case 'custom': {
         if (!reminder.custom_days || reminder.custom_days.length === 0) {
           return null;
         }
@@ -112,6 +112,7 @@ export class ReminderUtils {
           daysUntilNext = (7 - currentDayOfWeek) + sortedDays[0];
         }
         break;
+      }
 
       default:
         return null;

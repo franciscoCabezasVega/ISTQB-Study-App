@@ -18,12 +18,11 @@ interface ExamState {
   startTime: number | null;
   duration: number; // en segundos (3600 = 1 hora)
   timeRemaining: number;
-  difficulty: 'easy' | 'medium' | 'hard' | 'all';
   totalQuestions: number;
   questions: Question[];
 
   // Acciones
-  startExam: (sessionId: string, difficulty: string, totalQuestions: number, questions: Question[]) => void;
+  startExam: (sessionId: string, totalQuestions: number, questions: Question[]) => void;
   submitAnswer: (answer: ExamAnswer) => void;
   nextQuestion: () => void;
   endExam: () => void;
@@ -48,15 +47,13 @@ export const useExamStore = create<ExamState>()(
       startTime: null,
       duration: 3600, // 60 minutos
       timeRemaining: 3600,
-      difficulty: 'all',
       totalQuestions: 40,
       questions: [],
 
       // Iniciar examen
-      startExam: (sessionId: string, difficulty: string, totalQuestions: number, questions: Question[]) => {
+      startExam: (sessionId: string, totalQuestions: number, questions: Question[]) => {
         set({
           sessionId,
-          difficulty: (difficulty as any) || 'easy',
           totalQuestions,
           questions,
           currentQuestionIndex: 0,
@@ -99,7 +96,6 @@ export const useExamStore = create<ExamState>()(
           isActive: false,
           startTime: null,
           timeRemaining: 3600,
-          difficulty: 'all',
           totalQuestions: 40,
         });
       },

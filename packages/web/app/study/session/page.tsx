@@ -20,7 +20,6 @@ function StudySessionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const topic = searchParams.get('topic') || 'Fundamentals of Testing';
-  const difficulty = searchParams.get('difficulty') || 'all';
 
   const { user } = useAuthStore();
   const { addUserAnswer } = useStudyStore();
@@ -59,6 +58,39 @@ function StudySessionContent() {
   } | null>(null);
   const [loadingTranslations, setLoadingTranslations] = useState(false);
   const sessionLanguageRef = React.useRef<string>(language); // Idioma en que se cargó la sesión
+  const [isSessionActive, setIsSessionActive] = React.useState(false);
+
+  // Detectar refresh de página: si hay una sesión activa en sessionStorage, redirigir al home
+  useEffect(() => {
+    const activeSession = sessionStorage.getItem('active_study_session');
+    
+    if (activeSession === 'true') {
+      // Hubo un refresh durante la sesión activa -> redirigir al home
+      console.log('[SESSION] Refresh detectado durante sesión activa. Redirigiendo al home...');
+      sessionStorage.removeItem('active_study_session');
+      router.push('/');
+      return;
+    }
+    
+    // Marcar que la sesión está activa
+    sessionStorage.setItem('active_study_session', 'true');
+    setIsSessionActive(true);
+    
+    // Limpiar al desmontar el componente (navegación normal o salida)
+    return () => {
+      sessionStorage.removeItem('active_study_session');
+    };
+  }, [router]);
+
+  // Detectar cambio de idioma durante la sesión
+  useEffect(() => {
+    if (isSessionActive && questions.length > 0 && language !== sessionLanguageRef.current) {
+      console.log('[SESSION] Cambio de idioma detectado durante sesión activa. Redirigiendo al home...');
+      sessionStorage.removeItem('active_study_session');
+      router.push('/');
+      return;
+    }
+  }, [language, questions.length, isSessionActive, router]);
 
   // Cargar preguntas
   useEffect(() => {
@@ -72,8 +104,7 @@ function StudySessionContent() {
         const response = await apiClient.getQuestionsByTopic(
           topic,
           language, // Enviar el idioma del usuario
-          difficulty === 'all' ? undefined : difficulty,
-          10
+          1000 // Límite alto para obtener todas las preguntas disponibles
         );
         
         // Aleatorizar preguntas y opciones
@@ -82,6 +113,7 @@ function StudySessionContent() {
       } catch (error) {
         console.error('Error loading questions:', error);
         alert(t('study.errorLoadingQuestions'));
+        sessionStorage.removeItem('active_study_session'); // Limpiar en caso de error
         router.push('/study');
       } finally {
         setLoading(false);
@@ -89,16 +121,7 @@ function StudySessionContent() {
     };
 
     loadQuestions();
-  }, [topic, difficulty]); // NO incluir language
-
-  // Notificar si intenta cambiar idioma durante la sesión
-  useEffect(() => {
-    if (questions.length > 0 && language !== sessionLanguageRef.current) {
-      console.log('[INFO] Idioma cambió durante sesión. Las preguntas se mantienen en:', sessionLanguageRef.current);
-      // Aquí podrías mostrar un toast o notificación si lo deseas
-      // Por ahora solo lo registramos en consola
-    }
-  }, [language, questions.length]);
+  }, [topic]); // NO incluir language
 
   const currentQuestion = questions[currentIndex];
 
@@ -184,6 +207,9 @@ function StudySessionContent() {
   }
 
   if (sessionComplete) {
+    // Limpiar marcador de sesión activa antes de mostrar la pantalla de completado
+    sessionStorage.removeItem('active_study_session');
+    
     return (
       <Card className="text-center">
         <div className="mb-8">

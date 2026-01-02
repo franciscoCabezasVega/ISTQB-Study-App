@@ -20,7 +20,6 @@ export interface AuthResponse {
 
 // Tipos de preguntas y respuestas
 export type QuestionType = 'multiple_choice' | 'true_false' | 'situational';
-export type DifficultyLevel = 'easy' | 'medium' | 'hard';
 export type Language = 'es' | 'en';
 
 // Question structure in database (includes all languages)
@@ -31,13 +30,11 @@ export interface QuestionDB {
   description_es: string;
   options_es: QuestionOption[];
   explanation_es: string;
-  difficulty_es?: string;
   // English fields
   title_en: string | null;
   description_en: string | null;
   options_en: QuestionOption[] | null;
   explanation_en: string | null;
-  difficulty_en?: string | null;
   // Common fields (language-independent)
   type: QuestionType;
   topic: string;
@@ -52,7 +49,6 @@ export interface Question {
   title: string;
   description: string;
   type: QuestionType;
-  difficultyLabel?: string;
   topic: string; // ej: "Test Design", "Fundamentals", etc.
   options: QuestionOption[];
   correct_answer_ids: string[];

@@ -11,7 +11,7 @@ export const ISTQB_TOPICS = [
   'Test Tools'
 ] as const;
 
-export const DIFFICULTY_LEVELS = ['easy', 'medium', 'hard'] as const;
+
 
 export const QUESTION_TYPES = ['multiple_choice', 'true_false', 'situational'] as const;
 

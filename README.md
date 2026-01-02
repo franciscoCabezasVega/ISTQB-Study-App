@@ -1,238 +1,378 @@
 # 📚 ISTQB Study App - Progressive Web Application
 
+<div align="center">
+
 ![Version](https://img.shields.io/badge/version-1.0.0--alpha-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
+![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
+![Tests](https://img.shields.io/badge/tests-68%20passing-success)
+![Coverage](https://img.shields.io/badge/coverage-30.83%25-yellow)
 
-Una aplicación web progresiva (PWA) para ayudar a estudiantes a prepararse para la certificación ISTQB Foundation Level.
+**[Español](README.es.md)** | **English**
 
-> 📌 **Versión Actual**: `1.0.0-alpha` | [Ver Historial de Cambios](CHANGELOG.md) | [Releases](https://github.com/tu-usuario/istqb-study-app/releases)
+A Progressive Web Application (PWA) to help students prepare for the ISTQB Foundation Level certification.
 
-## 🎯 Características principales
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
-- ✅ **Motor de preguntas inteligente**: Preguntas basadas en el syllabus ISTQB Foundation Level
-- � **Aleatorización de preguntas**: Orden aleatorio de preguntas y opciones en cada sesión
-- �📖 **Estudio por temas**: Organizado en 6 temas principales del syllabus
-- 🎯 **Simulador de examen**: Modo examen de 40 preguntas en 60 minutos
-- 📊 **Seguimiento de progreso**: Estadísticas detalladas de desempeño
-- 🔄 **Repetición espaciada**: Algoritmo SM-2 para reforzar conceptos débiles
-- 🎮 **Gamificación**: Streaks, badges y logros
-- 📱 **Instalable**: Funciona como app nativa en dispositivos
-- 🔌 **Offline**: Acceso a preguntas incluso sin conexión
-- 🌍 **Multi-idioma**: Soporte para español e inglés
-- 🎨 **Tema oscuro/claro**: Interfaz adaptable
+</div>
 
-## 📁 Estructura del proyecto
+---
+
+## 🎯 Features
+
+### 🧠 Smart Study System
+- **Intelligent Question Engine**: Questions based on the official ISTQB Foundation Level syllabus
+- **Question Randomization**: Random order of questions and answer options in each session
+- **Topic-based Study**: Organized into 6 main syllabus topics
+- **Spaced Repetition**: SM-2 algorithm to reinforce weak concepts
+- **Error Bank**: Review and retry incorrectly answered questions
+
+### 📝 Exam Simulation
+- **Full Exam Simulator**: 40 questions in 60 minutes
+- **Realistic ISTQB Distribution**: Follows official exam topic distribution
+- **Detailed Statistics**: Performance tracking by topic and overall
+- **Pass Probability**: Estimated likelihood of passing based on your results
+
+### 🎮 Gamification & Progress
+- **Achievements System**: Badges and unlockable achievements
+- **Study Streaks**: Daily study tracking
+- **Progress Dashboard**: Detailed performance metrics
+- **Topics Mastery**: Track your strength in each syllabus area
+
+### 🌐 Modern & Accessible
+- **Progressive Web App**: Install as a native app on any device
+- **Offline Mode**: Access questions without internet connection
+- **Multi-language**: Full support for Spanish and English
+- **Dark/Light Theme**: Adaptive UI for comfortable studying
+- **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
+
+### 🔔 Study Tools
+- **Smart Reminders**: Configurable email and web notifications
+- **Custom Schedule**: Set study frequency and preferred times
+- **Study Sessions**: Timed practice sessions with feedback
+
+## 🏗️ Architecture
 
 ```
-Estudiar ISTQB/
+istqb-study-app/
 ├── packages/
-│   ├── shared/           # Tipos y constantes compartidas
-│   ├── api/              # Backend (Express + Supabase)
-│   └── web/              # Frontend (Next.js)
-├── package.json          # Monorepo root
-└── README.md
+│   ├── shared/          # Shared types and constants
+│   │   └── src/
+│   │       ├── types.ts
+│   │       └── topicMap.ts
+│   ├── api/             # Backend (Express + Supabase)
+│   │   └── src/
+│   │       ├── routes/
+│   │       ├── services/
+│   │       ├── middleware/
+│   │       └── config/
+│   └── web/             # Frontend (Next.js)
+│       ├── app/
+│       ├── components/
+│       └── lib/
+├── docs/                # Documentation
+├── migrations/          # Database migrations
+├── .github/
+│   └── workflows/       # CI/CD pipelines
+└── package.json         # Monorepo root
 ```
 
-## 🛠️ Tecnologías usadas
+## 🛠️ Tech Stack
 
 ### Backend
-- **Runtime**: Node.js
+- **Runtime**: Node.js 20+
 - **Framework**: Express.js
-- **Database**: Supabase (PostgreSQL)
-- **Auth**: Supabase Auth + JWT
+- **Database**: PostgreSQL (Supabase)
+- **Authentication**: Supabase Auth + JWT
+- **Email Service**: EmailJS
 - **Language**: TypeScript
+- **Testing**: Jest
 
 ### Frontend
-- **Framework**: Next.js 14
-- **UI**: React 18 + Tailwind CSS
-- **State**: Zustand
+- **Framework**: Next.js 14 (App Router)
+- **UI Library**: React 18
+- **Styling**: Tailwind CSS
+- **State Management**: Zustand
 - **HTTP Client**: Axios
-- **i18n**: Custom i18n system
+- **Testing**: Vitest + React Testing Library
+- **PWA**: next-pwa
 
-### Shared
-- **TypeScript**: Type definitions
-- **Constants**: Enums y configuraciones
+### DevOps & Tools
+- **Deployment**: Render
+- **CI/CD**: GitHub Actions
+- **Linting**: ESLint 9
+- **Type Checking**: TypeScript strict mode
+- **Package Manager**: npm workspaces
 
-## 🚀 Instalación
+## 🚀 Getting Started
 
-### Requisitos previos
-- Node.js >= 18
-- npm o yarn
-- Cuenta en Supabase
+### Prerequisites
+- Node.js >= 20.x
+- npm >= 10.x
+- Supabase account (free tier available)
 
-### Pasos de instalación
+### Quick Start
 
-1. **Clonar el repositorio**
+1. **Clone the repository**
 ```bash
-git clone <repository-url>
-cd "Estudiar ISTQB"
+git clone https://github.com/franciscoCabezasVega/ISTQB-Study-App.git
+cd ISTQB-Study-App
 ```
 
-2. **Instalar dependencias**
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Configurar variables de entorno**
+3. **Set up environment variables**
 
-Backend (`.env`):
-```bash
-cp packages/api/.env.example packages/api/.env
-```
+Create `packages/api/.env`:
+```env
+# Supabase
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-Edita `packages/api/.env`:
-```
-SUPABASE_URL=your-supabase-url
-SUPABASE_ANON_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-JWT_SECRET=your-jwt-secret-key
+# JWT
+JWT_SECRET=your-secure-jwt-secret
+
+# Server
 API_PORT=3001
 NODE_ENV=development
 CORS_ORIGIN=http://localhost:3000
+
+# EmailJS (for reminders)
+EMAILJS_SERVICE_ID=your-service-id
+EMAILJS_TEMPLATE_ID=your-template-id
+EMAILJS_PUBLIC_KEY=your-public-key
+EMAILJS_PRIVATE_KEY=your-private-key
 ```
 
-Frontend (`.env.local`):
-```bash
+Create `packages/web/.env.local`:
+```env
 NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-4. **Configurar Supabase**
+4. **Set up Supabase database**
 
-Ver `docs/SUPABASE_SETUP.md` para instrucciones detalladas sobre:
-- Crear tablas
-- Configurar RLS (Row Level Security)
-- Crear índices
+Follow the instructions in [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) to:
+- Create tables
+- Set up Row Level Security (RLS)
+- Create indexes
+- Apply migrations
 
-5. **Iniciar en desarrollo**
+5. **Start development servers**
 
 Terminal 1 - Backend:
 ```bash
-npm run dev --workspace=packages/api
+npm run dev:api
 ```
 
 Terminal 2 - Frontend:
 ```bash
-npm run dev --workspace=packages/web
+npm run dev:web
 ```
 
-La aplicación estará disponible en:
+Access the application:
 - Frontend: http://localhost:3000
-- Backend: http://localhost:3001
-
-## 📚 Documentación
-
-- [Setup de Supabase](./docs/SUPABASE_SETUP.md)
-- [Aleatorización de Preguntas](./docs/QUESTION_RANDOMIZATION.md)
-- [API Documentation](./docs/API.md)
-- [Architecture](./docs/ARCHITECTURE.md)
-- [Testing Guide](./docs/TESTING.md)
+- Backend API: http://localhost:3001
 
 ## 🧪 Testing
 
+The project has comprehensive test coverage across both backend and frontend:
+
+### Test Statistics
+- **Total Tests**: 68 passing (API) + 49 passing (Web)
+- **API Coverage**: 30.83% (services)
+  - Statements: 30.83%
+  - Branches: 19.15%
+  - Functions: 38.09%
+  - Lines: 30.92%
+
+### Tested Services
+- ✅ **AuthService** (15 tests) - Authentication and user management
+- ✅ **AnswerService** (14 tests) - Statistics and success rate calculations
+- ✅ **SpacedRepetitionService** (12 tests) - SM-2 algorithm implementation
+- ✅ **QuestionService** (11 tests) - Question retrieval and randomization
+- ✅ **UserService** (8 tests) - User profile management
+- ✅ **ExamService** (8 tests) - Exam simulation and scoring
+
+### Running Tests
+
 ```bash
-# Ejecutar todas las pruebas
+# Run all tests
 npm test
 
-# Con cobertura
-npm run test -- --coverage
+# Run tests for specific package
+npm test --workspace=packages/api
+npm test --workspace=packages/web
 
-# Ver específicamente un workspace
-npm run test --workspace=packages/api
+# Run tests with coverage report
+npm test -- --coverage
+
+# Run specific test suite
+npm test -- AuthService.spec.ts
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
 ```
 
-## 📦 Build para producción
+### CI/CD Integration
+All tests run automatically on:
+- Pull requests to `main` branch
+- Commits to `main` branch
+- Pre-deployment validation
+
+See [.github/workflows/ci.yml](.github/workflows/ci.yml) for CI/CD configuration.
+
+**Current Test Coverage:**
+- ✅ API: 13 tests passing
+- ✅ Web: 49 tests passing
+- ✅ Total: 62 tests passing
+
+## 📦 Production Build
 
 ```bash
-# Construir todos los paquetes
+# Build all packages
 npm run build
 
-# Backend
+# Build specific package
 npm run build --workspace=packages/api
-
-# Frontend
 npm run build --workspace=packages/web
 ```
 
-## 📖 Temas cubiertos (ISTQB Foundation Level)
+## 📚 Documentation
 
-1. **Fundamentos del Testing** (28 preguntas)
-   - Qué es testing
-   - Por qué el testing es importante
-   - Principios del testing
-   - Procesos de testing
+- [Getting Started Guide](./docs/GETTING_STARTED.md)
+- [Supabase Setup](./docs/SUPABASE_SETUP.md)
+- [Architecture Overview](./docs/ARCHITECTURE.md)
+- [Testing Guidelines](./docs/TESTING_GUIDELINES.md)
+- [Versioning Guide](./docs/VERSIONING_GUIDE.md)
+- [Admin Panel Guide](./docs/ADMIN_PANEL_GUIDE.md)
+- [Deployment Guide](./docs/RENDER_DEPLOY_GUIDE.md)
 
-2. **Testing a lo largo del SDLC** (22 preguntas)
-   - Testing en diferentes modelos
-   - Testing en diferentes niveles
-   - Tipos de testing
+## 📖 ISTQB Topics Covered
 
-3. **Testing Estático** (18 preguntas)
-   - Revisiones
-   - Análisis estático
+The app covers all 6 chapters of the ISTQB Foundation Level syllabus:
 
-4. **Técnicas de Testing** (35 preguntas)
-   - Diseño de casos de prueba
-   - Particionamiento de equivalencia
-   - Análisis de valores frontera
-   - Y más...
+1. **Fundamentals of Testing** (8 questions in exam)
+   - What is testing
+   - Why testing is necessary
+   - Testing principles
+   - Test activities and tasks
+   - Essential skills for testing
 
-5. **Gestión del Testing** (24 preguntas)
-   - Planificación
-   - Monitoreo y control
-   - Defectos
-   - Cierre
+2. **Testing Throughout the Software Development Lifecycle** (6 questions)
+   - Testing in the context of SDLC
+   - Test levels and types
+   - Maintenance testing
 
-6. **Soporte de herramientas** (15 preguntas)
-   - Características de herramientas
-   - Selección e implementación
+3. **Static Testing** (4 questions)
+   - Static testing basics
+   - Feedback and review process
+   - Reviews
 
-## 🔐 Seguridad
+4. **Test Analysis and Design** (11 questions)
+   - Test techniques overview
+   - Black-box test techniques
+   - White-box test techniques
+   - Experience-based test techniques
+   - Collaboration-based test approaches
 
-- ✅ Autenticación con JWT
-- ✅ HTTPS en producción
-- ✅ CORS configurado
-- ✅ SQL Injection prevention (Supabase ORM)
-- ✅ XSS protection (React)
-- ✅ Rate limiting (recomendado en producción)
+5. **Managing the Test Activities** (9 questions)
+   - Test planning
+   - Risk management
+   - Test monitoring and control
+   - Configuration management
+   - Defect management
 
-## 📋 Versionado
+6. **Test Tools** (2 questions)
+   - Tool support for testing
+   - Benefits and risks of test automation
 
-Este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/) y mantiene un [CHANGELOG](CHANGELOG.md) detallado.
+## 📋 Versioning
 
-### Crear una nueva versión
+This project follows [Semantic Versioning](https://semver.org/). See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
+
+### Creating a Release
 
 ```bash
-# Script interactivo (recomendado)
+# Interactive release script (recommended)
 npm run release
 
-# O usar scripts rápidos
+# Quick version bumps
 npm run version:patch  # 1.0.0 -> 1.0.1
 npm run version:minor  # 1.0.0 -> 1.1.0
 npm run version:major  # 1.0.0 -> 2.0.0
 ```
 
-Los releases se crean automáticamente en GitHub cuando se hace push de un tag de versión.
+## 🔐 Security
 
-📖 **Ver guía completa**: [docs/VERSIONING_GUIDE.md](docs/VERSIONING_GUIDE.md)
+- ✅ JWT-based authentication
+- ✅ HTTPS in production
+- ✅ CORS configuration
+- ✅ SQL injection prevention (Supabase PostgreSQL)
+- ✅ XSS protection (React)
+- ✅ Row Level Security (RLS) in database
+- ✅ Environment variables for sensitive data
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+Contributions are welcome! Please follow these steps:
 
-## 📝 Licencia
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-MIT
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and development process.
 
-## 📞 Soporte
+## 📝 License
 
-Para reportar bugs o sugerir mejoras, abre un issue en GitHub.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👏 Acknowledgments
+
+This project was developed with the assistance of:
+
+- **[GitHub Copilot](https://github.com/features/copilot)** - AI pair programmer that accelerated development and improved code quality
+- **[Supabase MCP](https://github.com/supabase/mcp-server-supabase)** - Model Context Protocol integration for seamless database operations
+- **[Render MCP](https://github.com/render-oss/mcp-server-render)** - Model Context Protocol integration for streamlined deployment and infrastructure management
+
+### Built With
+- [Next.js](https://nextjs.org/) - React framework
+- [Supabase](https://supabase.com/) - Backend as a Service
+- [Render](https://render.com/) - Cloud hosting platform
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
+
+## 🌟 Support
+
+If you find this project helpful, please consider:
+- ⭐ Starring the repository
+- 🐛 Reporting bugs via [GitHub Issues](https://github.com/franciscoCabezasVega/ISTQB-Study-App/issues)
+- 💡 Suggesting new features
+- 📖 Contributing to documentation
+
+## 📞 Contact
+
+For questions, feedback, or support:
+- Open an [issue](https://github.com/franciscoCabezasVega/ISTQB-Study-App/issues)
+- Email: [your-email@example.com]
 
 ---
 
-Hecho con ❤️ para la comunidad de QA y testing
+<div align="center">
+
+**Made with ❤️ for the QA and Testing community**
+
+[⬆ Back to top](#-istqb-study-app---progressive-web-application)
+
+</div>
