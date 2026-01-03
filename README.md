@@ -2,11 +2,11 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.3-brightgreen)
+![Version](https://img.shields.io/badge/version-1.0.4-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
-![Tests](https://img.shields.io/badge/tests-68%20passing-success)
+![Tests](https://img.shields.io/badge/tests-0%20passing-success)
 [![codecov](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App/branch/main/graph/badge.svg)](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App)
 
 **[Español](README.es.md)** | **English**
