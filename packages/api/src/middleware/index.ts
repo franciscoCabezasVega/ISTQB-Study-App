@@ -1,16 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { config } from '../config';
 import { APIError } from '@istqb-app/shared';
+import { AuthRequest } from '../types/express';
 
 const supabase = createClient(config.supabaseUrl, config.supabaseAnonKey);
 
-export interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-  };
-}
+export type { AuthRequest };
 
 export const authenticateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
