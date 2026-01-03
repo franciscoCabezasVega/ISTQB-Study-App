@@ -21,7 +21,7 @@
     "validate:api": "npm run type-check --workspace=packages/api && npm run build --workspace=packages/api",
     "validate:web": "npm run type-check --workspace=packages/web && npm run build --workspace=packages/web",
     "pre-deploy": "npm run validate",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "version:patch": "npm version patch --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
     "version:minor": "npm version minor --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
     "version:major": "npm version major --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
