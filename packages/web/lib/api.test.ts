@@ -11,10 +11,10 @@ describe('API Client - Token Expiration', () => {
       const mockLocalStorage = {
         removeItem: vi.fn(),
       };
-      global.localStorage = mockLocalStorage as any;
+      global.localStorage = mockLocalStorage as unknown as Storage;
 
       // Simular error 401
-      const error401 = {
+      const _error401 = {
         response: {
           status: 401,
         },
@@ -30,10 +30,10 @@ describe('API Client - Token Expiration', () => {
         pathname: '/exam',
         href: '',
       };
-      global.window = { location: mockLocation } as any;
+      global.window = { location: mockLocation } as unknown as Window & typeof globalThis;
 
       // Simular error 401 en una página que NO es /auth/*
-      const error401 = {
+      const _error401 = {
         response: { status: 401 },
       };
 
@@ -47,7 +47,7 @@ describe('API Client - Token Expiration', () => {
         pathname: '/auth/signin',
         href: '/auth/signin',
       };
-      global.window = { location: mockLocation } as any;
+      global.window = { location: mockLocation } as unknown as Window & typeof globalThis;
 
       // En página de auth, NO debe redirigir
       expect(mockLocation.pathname.startsWith('/auth/')).toBe(true);

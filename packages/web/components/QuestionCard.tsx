@@ -76,7 +76,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
       <div className="space-y-3 mb-8">
         {Array.isArray(question.options) &&
-          question.options.map((option: any) => (
+          question.options.map((option: { id: string; text: string }) => (
             <label
               key={option.id}
               className={`flex items-center p-4 border rounded-lg cursor-pointer transition ${

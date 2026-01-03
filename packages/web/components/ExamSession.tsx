@@ -21,7 +21,6 @@ interface ExamSessionProps {
 
 export function ExamSession({ sessionId, questions: initialQuestions }: ExamSessionProps) {
   const router = useRouter();
-  const { user: _user } = useAuthStore();
   const { language } = useLanguageStore();
   const { t } = useTranslation();
   const { refreshStreak } = useStreakStore();
