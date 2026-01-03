@@ -21,7 +21,7 @@ export const InstallPrompt: React.FC = () => {
       return;
     }
 
-    const handleBeforeInstallPrompt = (event: any) => {
+    const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
       setShowInstallPrompt(true);

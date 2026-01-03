@@ -6,14 +6,13 @@ import { Question } from '@istqb-app/shared';
 import { QuestionCard } from './QuestionCard';
 import { ProgressBar } from './ProgressBar';
 import { Card } from './Card';
-import { Button } from './Button';
 import { apiClient } from '@/lib/api';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useExamStore } from '@/lib/store/examStore';
 import { useLanguageStore } from '@/lib/store/languageStore';
 import { useStreakStore } from '@/lib/store/streakStore';
 import { useTranslation } from '@/lib/useTranslation';
-import { formatPercentage, shuffleQuestionsAndOptions } from '@/lib/utils';
+import { shuffleQuestionsAndOptions } from '@/lib/utils';
 
 interface ExamSessionProps {
   sessionId: string;
@@ -22,7 +21,7 @@ interface ExamSessionProps {
 
 export function ExamSession({ sessionId, questions: initialQuestions }: ExamSessionProps) {
   const router = useRouter();
-  const { user } = useAuthStore();
+  const { user: _user } = useAuthStore();
   const { language } = useLanguageStore();
   const { t } = useTranslation();
   const { refreshStreak } = useStreakStore();
@@ -33,14 +32,13 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
     updateTimeRemaining,
     submitAnswer,
     endExam,
-    updateQuestions,
   } = useExamStore();
 
   const [submitting, setSubmitting] = useState(false);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
   // Aleatorizar preguntas y opciones al iniciar el examen
-  const [questions, setQuestions] = useState<Question[]>(() => {
+  const [questions] = useState<Question[]>(() => {
     if (!initialQuestions || initialQuestions.length === 0) {
       return [];
     }
@@ -126,7 +124,7 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
     }
   };
 
-  const handleEndExam = async (lastAnswer?: any) => {
+  const handleEndExam = async (lastAnswer?: { questionId: string; selectedAnswerId: string | string[]; timeSpent: number }) => {
     try {
       // Combinar respuestas del store con la última respuesta si existe
       const allAnswers = lastAnswer ? [...answers, lastAnswer] : answers;
@@ -138,8 +136,17 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
         throw new Error('No answers to submit');
       }
 
+      // Normalizar las respuestas para la API (convertir arrays a strings)
+      const normalizedAnswers = allAnswers.map(answer => ({
+        questionId: answer.questionId,
+        selectedAnswerId: Array.isArray(answer.selectedAnswerId) 
+          ? answer.selectedAnswerId.join(',') 
+          : answer.selectedAnswerId,
+        timeSpent: answer.timeSpent
+      }));
+
       // Enviar todas las respuestas en una sola petición batch
-      await apiClient.submitExamAnswersBatch(sessionId, allAnswers);
+      await apiClient.submitExamAnswersBatch(sessionId, normalizedAnswers);
 
       // Finalizar sesión en el backend
       await apiClient.completeExamSession(sessionId);

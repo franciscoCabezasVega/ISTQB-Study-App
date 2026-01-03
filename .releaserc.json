@@ -77,7 +77,8 @@
         "failComment": false,
         "failTitle": false,
         "labels": false,
-        "releasedLabels": false
+        "releasedLabels": false,
+        "assets": []
       }
     ]
   ]

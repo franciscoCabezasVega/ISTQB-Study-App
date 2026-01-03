@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Card } from './Card';
 
 interface ProgressBarProps {
   current?: number;
