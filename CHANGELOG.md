@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.4](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.0.3...v1.0.4) (2026-01-03)
+
+### 🐛 Bug Fixes
+
+* resolve all ESLint warnings and improve documentation ([4677161](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/46771614b7a43986014686c40ac7b3f6919ea961))
+
 ## [1.0.3](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.0.2...v1.0.3) (2026-01-03)
 
 ### 🐛 Bug Fixes
