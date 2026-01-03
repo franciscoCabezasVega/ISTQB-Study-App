@@ -92,11 +92,11 @@ class NotificationService {
         emailId: response.text
       };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error sending email reminder:', error);
       return { 
         success: false, 
-        error: error.message 
+        error: (error as Error).message 
       };
     }
   }
@@ -137,11 +137,11 @@ class NotificationService {
 
       return { success: true };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending push notification:', error);
       return { 
         success: false, 
-        error: error.message 
+        error: (error as Error).message 
       };
     }
   }

@@ -141,9 +141,9 @@ class ReminderSchedulerService {
             console.error(`❌ Failed to send reminder ${reminder.id}:`, emailResult.error);
           }
 
-        } catch (error: any) {
+        } catch (error: unknown) {
           stats.failed++;
-          const errorMsg = `Error processing reminder ${reminder.id}: ${error.message}`;
+          const errorMsg = `Error processing reminder ${reminder.id}: ${(error as Error).message}`;
           stats.errors.push(errorMsg);
           console.error(`❌ ${errorMsg}`);
         }

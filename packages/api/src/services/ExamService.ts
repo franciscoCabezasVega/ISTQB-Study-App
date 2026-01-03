@@ -396,7 +396,7 @@ class ExamService {
       await this.updateUserProgress(session.user_id, answers);
 
       // Actualizar streak y verificar logros (asíncrono, no bloquea la respuesta)
-      const AchievementService = require('./AchievementService').default;
+      const { default: AchievementService } = await import('./AchievementService');
       AchievementService.updateStreak(session.user_id).catch(console.error);
       AchievementService.checkAndUnlockAchievements(session.user_id).catch(console.error);
 
@@ -407,6 +407,7 @@ class ExamService {
         correctAnswers,
         score,
         passed,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         answers: answers.map((a: any) => ({
           questionId: a.question_id,
           selectedAnswerId: a.selected_answer_id,
@@ -458,6 +459,7 @@ class ExamService {
       const score = session.score || (correctAnswers / totalQuestions) * 100;
 
       const breakdownByTopic: Record<string, { correct: number; total: number }> = {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       answers.forEach((answer: any) => {
         const topic = answer.questions?.topic || 'Unknown';
         if (!breakdownByTopic[topic]) {
@@ -476,6 +478,7 @@ class ExamService {
         correctAnswers,
         score,
         passed: score >= 65,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         answers: answers.map((a: any) => ({
           questionId: a.question_id,
           selectedAnswerId: a.selected_answer_id,
@@ -496,6 +499,7 @@ class ExamService {
   /**
    * Actualizar progreso del usuario después del examen
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async updateUserProgress(userId: string, answers: any[]): Promise<void> {
     try {
       const topicStats: Record<string, { correct: number; total: number }> = {};

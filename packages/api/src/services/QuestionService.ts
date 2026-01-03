@@ -106,6 +106,7 @@ export class QuestionService {
    * Formatea una pregunta de la base de datos al formato de respuesta API
    * Selecciona el idioma apropiado y hace fallback a español si no existe traducción
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private static formatQuestion(data: any, language: Language = 'es'): Question {
     // Determine which language fields to use
     const useEnglish = language === 'en' && data.title_en != null;
