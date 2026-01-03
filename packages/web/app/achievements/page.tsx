@@ -41,9 +41,9 @@ export default function AchievementsPage() {
 
       setAllAchievements(allAch || []);
       setUserAchievements(userAch || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error loading achievements:', error);
-      setError(error.message || 'Error loading achievements');
+      setError((error as Error).message || 'Error loading achievements');
     } finally {
       setLoading(false);
     }

@@ -117,8 +117,8 @@ export default function SignupPage() {
       setUser(data.user);
       
       router.push('/');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Error en el registro');
+    } catch (err: unknown) {
+      setError((err as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error en el registro');
     } finally {
       setLoading(false);
     }

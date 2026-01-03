@@ -35,7 +35,7 @@ export const authenticateToken = async (req: AuthRequest, res: Response, next: N
       email: user.email || '',
     };
     next();
-  } catch (error) {
+  } catch (_error) {
     return res.status(401).json({
       statusCode: 401,
       message: 'Invalid or expired token',

@@ -17,14 +17,14 @@ import Link from 'next/link';
 export default function RemindersSettingsPage() {
   const { user } = useAuthStore();
   const { t } = useTranslation();
-  const { permission } = useNotifications();
+  useNotifications(); // Hook para acceder a funcionalidad de notificaciones
   const [reminder, setReminder] = useState<StudyReminder | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('custom');
+  const [_frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('custom');
   const [preferredTime, setPreferredTime] = useState('09:00');
   const [enabled, setEnabled] = useState(false);
   const [customDays, setCustomDays] = useState<number[]>([]);

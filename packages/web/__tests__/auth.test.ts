@@ -100,7 +100,7 @@ describe('Auth Flow Tests', () => {
 
     it('should wait for user to be loaded from localStorage before fetching achievements', async () => {
       // Arrange: Simular carga diferida de usuario
-      let user: any = null;
+      let user: unknown = null;
       const loadAchievements = vi.fn();
 
       // Simular que el usuario se carga después de 100ms

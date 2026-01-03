@@ -10,6 +10,30 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { useExamStore } from '@/lib/store/examStore';
 import { useTranslation } from '@/lib/useTranslation';
 
+interface TopicBreakdown {
+  correct: number;
+  total: number;
+}
+
+interface ExamResults {
+  timeElapsed: number;
+  score: number;
+  passed: boolean;
+  totalQuestions: number;
+  correctAnswers: number;
+  wrongAnswers: number;
+  breakdownByTopic: Record<string, TopicBreakdown>;
+  allQuestions?: ExamQuestion[];
+}
+
+interface ExamQuestion {
+  id: string;
+  text: string;
+  selectedAnswer: string | null;
+  correctAnswer: string;
+  isCorrect: boolean;
+}
+
 function ExamResultsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -18,7 +42,7 @@ function ExamResultsContent() {
   const { resetExam } = useExamStore();
   const { t } = useTranslation();
 
-  const [results, setResults] = useState<any | null>(null);
+  const [results, setResults] = useState<ExamResults | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -52,8 +76,8 @@ function ExamResultsContent() {
       try {
         const response = await apiClient.getExamResults(sessionId);
         setResults(response.data.data);
-      } catch (err: any) {
-        setError(err.message || 'Error loading results');
+      } catch (err: unknown) {
+        setError((err as Error).message || 'Error loading results');
       } finally {
         setLoading(false);
       }
@@ -206,7 +230,7 @@ function ExamResultsContent() {
             <h3 className="text-lg font-bold mb-4">{t('exam.results.topicBreakdown')}</h3>
             <div className="space-y-4">
               {Object.entries(results.breakdownByTopic).map(
-                ([topic, stats]: [string, any]) => {
+                ([topic, stats]: [string, TopicBreakdown]) => {
                   const topicScore = (stats.correct / stats.total) * 100;
                   return (
                     <div key={topic} className="border-b last:border-b-0 pb-4 last:pb-0">
