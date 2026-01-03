@@ -32,7 +32,6 @@ interface ExamStatistics {
 }
 
 export default function ProgressPage() {
-  const { user: _user } = useAuthStore();
   const { refreshStreak } = useStreakStore();
   const { language } = useLanguageStore();
   const { t } = useTranslation();

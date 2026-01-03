@@ -24,7 +24,7 @@ export default function RemindersSettingsPage() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const [_frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('custom');
+  const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('custom');
   const [preferredTime, setPreferredTime] = useState('09:00');
   const [enabled, setEnabled] = useState(false);
   const [customDays, setCustomDays] = useState<number[]>([]);
@@ -160,9 +160,9 @@ export default function RemindersSettingsPage() {
       }
 
       alert(t('reminders.reminderSaved'));
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error saving reminder:', error);
-      alert(t('reminders.errorSaving') + ': ' + (error.response?.data?.error || error.message));
+      alert(t('reminders.errorSaving') + ': ' + ((error as any).response?.data?.error || (error as Error).message));
     } finally {
       setSaving(false);
     }
