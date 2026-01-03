@@ -1,0 +1,13 @@
+echo "🚀 Validando antes del push..."
+
+# Full validation antes de push
+echo "⚙️  Ejecutando validación completa..."
+npm run validate
+
+if [ $? -ne 0 ]; then
+  echo "❌ Validación falló. Por favor corrige los errores antes de hacer push."
+  echo "💡 Esto previene errores en el deploy de Render."
+  exit 1
+fi
+
+echo "✅ Pre-push validation passed! Safe to push."

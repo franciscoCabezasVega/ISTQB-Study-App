@@ -1,15 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/useTranslation';
 
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0-alpha';
-const BUILD_DATE = process.env.NEXT_PUBLIC_BUILD_DATE || new Date().toISOString().split('T')[0];
 
 export const Footer: React.FC = () => {
   const { t } = useTranslation();
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState<number | null>(null);
+  const [buildDate, setBuildDate] = useState<string>('');
+
+  useEffect(() => {
+    // Set current year and build date only on client side to avoid hydration mismatch
+    setCurrentYear(new Date().getFullYear());
+    setBuildDate(process.env.NEXT_PUBLIC_BUILD_DATE || new Date().toISOString().split('T')[0]);
+  }, []);
 
   return (
     <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
@@ -93,7 +99,7 @@ export const Footer: React.FC = () => {
                 )}
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-500">
-                {t('footer.buildDate')}: {BUILD_DATE}
+                {t('footer.buildDate')}: {buildDate || '...'} 
               </p>
               <Link 
                 href="https://github.com/franciscoCabezasVega/istqb-study-app/blob/main/CHANGELOG.md"
@@ -114,7 +120,7 @@ export const Footer: React.FC = () => {
         <div className="border-t border-gray-200 dark:border-gray-700 mt-6 pt-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-xs text-gray-500 dark:text-gray-500">
-              © {currentYear} ISTQB Study App. {t('footer.rights')}
+              © {currentYear || '...'} ISTQB Study App. {t('footer.rights')}
             </p>
             <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-500">
               <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400">

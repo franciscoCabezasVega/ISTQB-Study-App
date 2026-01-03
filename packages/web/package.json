@@ -1,16 +1,17 @@
 {
   "name": "@istqb-app/web",
-  "version": "1.0.0-alpha",
+  "version": "1.0.1-alpha",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=60",
     "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@istqb-app/shared": "file:../shared",
@@ -34,6 +35,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^4.0.16",
     "autoprefixer": "^10.4.16",
     "eslint-config-next": "^16.1.1",
     "eslint-plugin-react": "^7.37.5",

@@ -1,10 +1,11 @@
 {
   "name": "@istqb-app/shared",
-  "version": "1.0.0-alpha",
+  "version": "1.0.1-alpha",
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint": "echo 'No lint configured for shared package'"
   },
   "dependencies": {},
   "devDependencies": {
