@@ -2,14 +2,14 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.2-brightgreen)
+![Version](https://img.shields.io/badge/version-1.0.3-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
 ![Tests](https://img.shields.io/badge/tests-0%20passing-success)
-![Coverage](https://img.shields.io/badge/coverage-📊 API Coverage: 21%
+![Coverage](https://img.shields.io/badge/coverage-📊 API Coverage: 20%
 📊 Web Coverage: 74%
-48%25-red)
+47%25-red)
 
 **[Español](README.es.md)** | **English**
 
