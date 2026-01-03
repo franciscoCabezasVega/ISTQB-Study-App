@@ -1,3 +1,25 @@
+# 📝 Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+
+## 1.0.0 (2026-01-03)
+
+### ✨ Features
+
+* v1.0.1-alpha - Remove difficulty system & improve testing ([e273286](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/e273286ecdde51ec6a6c0d4d7f155a8843bc825b))
+
+### 🐛 Bug Fixes
+
+* add missing conventional-changelog-conventionalcommits dependency ([0a93e46](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/0a93e46bdbc1eaf54114a5fb1b360245c01101af))
+* index.ts ([57457d5](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/57457d58707ee79ee02e81d8196af855958401ff))
+* prevent husky from failing in CI/CD environments ([b7b90c8](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/b7b90c862539690ba450f085c1a9bf18a8eed26f))
+* Service type ([b415f6b](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/b415f6be199a4f1824fff4934f2b17b55da59c79))
+* tsconfig.json ([230785c](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/230785cbeeaf2b8050fd39f62c821f870c931ee8))
+
 # Changelog
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
