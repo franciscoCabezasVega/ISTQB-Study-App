@@ -45,9 +45,6 @@ export class AuthService {
       throw { statusCode: 500, message: 'Failed to create user profile' };
     }
 
-    // Obtener sesión
-    const { data: sessionData } = await supabase.auth.getSession();
-
     return {
       user: userData as User,
       session: {

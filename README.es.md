@@ -6,10 +6,8 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
-![Tests](https://img.shields.io/badge/tests-0%20passing-success)
-![Coverage](https://img.shields.io/badge/coverage-📊 API Coverage: 20%
-📊 Web Coverage: 74%
-47%25-red)
+![Tests](https://img.shields.io/badge/tests-68%20passing-success)
+[![codecov](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App/branch/main/graph/badge.svg)](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App)
 
 **Español** | **[English](README.md)**
 
@@ -186,23 +184,7 @@ Accede a la aplicación:
 
 ## 🧪 Testing
 
-El proyecto cuenta con cobertura de tests completa en backend y frontend:
-
-### Estadísticas de Tests
-- **Total de Tests**: 68 pasando (API) + 49 pasando (Web)
-- **Cobertura API**: 30.83% (servicios)
-  - Declaraciones: 30.83%
-  - Ramas: 19.15%
-  - Funciones: 38.09%
-  - Líneas: 30.92%
-
-### Servicios Testeados
-- ✅ **AuthService** (15 tests) - Autenticación y gestión de usuarios
-- ✅ **AnswerService** (14 tests) - Estadísticas y cálculo de tasa de éxito
-- ✅ **SpacedRepetitionService** (12 tests) - Implementación del algoritmo SM-2
-- ✅ **QuestionService** (11 tests) - Obtención y aleatorización de preguntas
-- ✅ **UserService** (8 tests) - Gestión de perfiles de usuario
-- ✅ **ExamService** (8 tests) - Simulación de exámenes y puntuación
+El proyecto cuenta con cobertura de tests completa en backend y frontend. Ver reportes detallados de cobertura en [Codecov](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App).
 
 ### Ejecutar Tests
 
@@ -234,11 +216,6 @@ Todos los tests se ejecutan automáticamente en:
 - Validación pre-despliegue
 
 Ver [.github/workflows/ci.yml](.github/workflows/ci.yml) para la configuración de CI/CD.
-
-**Cobertura Actual de Tests:**
-- ✅ API: 13 tests pasando
-- ✅ Web: 49 tests pasando
-- ✅ Total: 62 tests pasando
 
 ## 📦 Build de Producción
 
