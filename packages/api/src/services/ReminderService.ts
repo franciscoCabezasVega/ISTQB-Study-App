@@ -119,6 +119,7 @@ class ReminderService {
     updateData: UpdateReminderRequest
   ): Promise<StudyReminder> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const updates: any = {
         updated_at: new Date().toISOString(),
       };
@@ -162,6 +163,7 @@ class ReminderService {
         throw new Error(`Error fetching active reminders: ${error.message}`);
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return data.map((r: any) => this.mapToStudyReminder(r));
     } catch (error) {
       console.error('ReminderService.getActiveRemindersToSend error:', error);
@@ -212,6 +214,7 @@ class ReminderService {
   /**
    * Mapear datos de Supabase a StudyReminder
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private mapToStudyReminder(data: any): StudyReminder {
     return {
       id: data.id,

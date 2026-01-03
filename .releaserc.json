@@ -68,12 +68,12 @@
           {
             "path": "CHANGELOG.md",
             "name": "CHANGELOG.md",
-            "label": "📝 Changelog (English)"
+            "label": "Changelog (English)"
           },
           {
             "path": "CHANGELOG.es.md",
             "name": "CHANGELOG.es.md",
-            "label": "📝 Registro de Cambios (Español)"
+            "label": "Registro de Cambios (Espanol)"
           }
         ]
       }

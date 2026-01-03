@@ -1,6 +1,6 @@
 import { StudyReminder } from '@istqb-app/shared';
-import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
-import { format, getDay } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
+import { getDay } from 'date-fns';
 
 /**
  * Utilidades para filtrado y validación de recordatorios

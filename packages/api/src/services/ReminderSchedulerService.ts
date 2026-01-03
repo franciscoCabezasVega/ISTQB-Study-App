@@ -161,9 +161,9 @@ class ReminderSchedulerService {
         stats.errors.forEach(err => console.log(`   - ${err}`));
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('💥 Fatal error in reminder scheduler:', error);
-      stats.errors.push(`Fatal error: ${error.message}`);
+      stats.errors.push(`Fatal error: ${(error as Error).message}`);
     } finally {
       this.isRunning = false;
       console.log('✅ Scheduler finished\n');

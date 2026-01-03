@@ -14,6 +14,7 @@ export class StudyService {
     userId: string,
     topic?: string,
     difficulty?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     // Buscar sesión activa
     const { data: activeSessions, error: searchError } = await supabase
@@ -81,6 +82,7 @@ export class StudyService {
     isCorrect: boolean,
     timeSpentSeconds: number = 0,
     attemptNumber: number = 1
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     // Obtener o crear sesión activa
     const session = await this.getOrCreateStudySession(userId);
@@ -150,6 +152,7 @@ export class StudyService {
   /**
    * Obtener historial de respuestas en modo estudio
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async getStudyAnswerHistory(userId: string, limit: number = 50): Promise<any[]> {
     const { data, error } = await supabase
       .from('study_answers')
