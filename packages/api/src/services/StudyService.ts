@@ -180,6 +180,7 @@ export class StudyService {
   /**
    * Obtener respuestas incorrectas (banco de errores en modo estudio)
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async getIncorrectStudyAnswers(userId: string): Promise<any[]> {
     const { data, error } = await supabase
       .from('study_answers')
@@ -211,6 +212,7 @@ export class StudyService {
   /**
    * Completar sesión de estudio
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async completeStudySession(sessionId: string): Promise<any> {
     const { data, error } = await supabase
       .from('study_sessions')
@@ -232,6 +234,7 @@ export class StudyService {
   /**
    * Obtener sesiones de estudio del usuario
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async getUserStudySessions(userId: string, limit: number = 20): Promise<any[]> {
     const { data, error } = await supabase
       .from('study_sessions')
@@ -250,6 +253,7 @@ export class StudyService {
   /**
    * Obtener estadísticas de estudio
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async getStudyStats(userId: string): Promise<any> {
     const { data: sessions, error: sessionsError } = await supabase
       .from('study_sessions')
@@ -266,8 +270,10 @@ export class StudyService {
     }
 
     const totalQuestions = answers?.length || 0;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const correctAnswers = answers?.filter((a: any) => a.is_correct).length || 0;
     const totalSessions = sessions?.length || 0;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const completedSessions = sessions?.filter((s: any) => s.status === 'completed').length || 0;
 
     return {
@@ -276,6 +282,7 @@ export class StudyService {
       accuracy: totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0,
       totalSessions,
       completedSessions,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       activeSessions: sessions?.filter((s: any) => s.status === 'active').length || 0,
     };
   }
