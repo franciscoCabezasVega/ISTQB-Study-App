@@ -65,6 +65,7 @@ class AchievementService {
       }
 
       // Mapear directamente sin esperar el join (será resuelto en el frontend si es necesario)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (data || []).map((ua: any) => ({
         id: ua.id,
         user_id: ua.user_id,
@@ -320,7 +321,7 @@ class AchievementService {
       }
 
       // Actualizar streak
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         current_streak: currentStreak,
         longest_streak: longestStreak,
       };
@@ -345,9 +346,9 @@ class AchievementService {
         longest_streak: longestStreak,
         last_study_date: isToday ? now.toISOString() : streak.last_study_date,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Si no existe el streak, crear uno
-      if (error.code === 'PGRST116') {
+      if ((error as { code?: string }).code === 'PGRST116') {
         return await this.createStreak(userId);
       }
       console.error('AchievementService.updateStreak error:', error);
@@ -408,7 +409,7 @@ class AchievementService {
         longest_streak: data.longest_streak || 1,
         last_study_date: data.last_study_date,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Si hay error, devolver streak básico
       console.error('AchievementService.createStreak error:', error);
       return {
@@ -445,8 +446,8 @@ class AchievementService {
         longest_streak: data.longest_streak || 0,
         last_study_date: data.last_study_date || new Date().toISOString(),
       };
-    } catch (error: any) {
-      if (error.code === '42P01') {
+    } catch (error: unknown) {
+      if ((error as { code?: string }).code === '42P01') {
         // Tabla no existe, devolver streak básico
         return {
           user_id: userId,
@@ -521,6 +522,7 @@ class AchievementService {
 
       const topicsStats: Record<string, { total: number; correct: number; successRate: number }> = {};
       if (progress) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         progress.forEach((p: any) => {
           if (p.topic) {
             topicsStats[p.topic] = {
@@ -565,6 +567,7 @@ class AchievementService {
   /**
    * Mapear achievement de BD a DTO en el idioma especificado
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private mapToAchievement(data: any, language: Language = 'es'): Achievement {
     const useEnglish = language === 'en' && data.name_en != null;
     

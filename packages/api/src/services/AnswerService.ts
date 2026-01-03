@@ -1,5 +1,4 @@
 import { supabase } from '../config/supabase';
-import { UserAnswer } from '@istqb-app/shared';
 
 export class AnswerService {
   /**

@@ -55,8 +55,8 @@ function SigninForm() {
       setUser(data.user);
       
       router.push('/');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Error en la autenticación');
+    } catch (err: unknown) {
+      setError((err as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error en la autenticación');
     } finally {
       setLoading(false);
     }
