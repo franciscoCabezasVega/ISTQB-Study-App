@@ -7,7 +7,6 @@ import { Button } from '@/components/Button';
 import { CardSkeleton } from '@/components/Skeleton';
 import { apiClient } from '@/lib/api';
 import { useTranslation } from '@/lib/useTranslation';
-import { ISTQB_TOPICS } from '@istqb-app/shared';
 
 interface TopicStats {
   [key: string]: {
@@ -49,7 +48,7 @@ export default function StudyPage() {
 
         const statsMap: TopicStats = {};
         
-        statsResponse.data.statisticsByTopic?.forEach((stat: any) => {
+        statsResponse.data.statisticsByTopic?.forEach((stat: { topic: string; total_questions?: number; correct_answers?: number; success_rate?: number }) => {
           statsMap[stat.topic] = {
             total: stat.total_questions || 0,
             correct: stat.correct_answers || 0,

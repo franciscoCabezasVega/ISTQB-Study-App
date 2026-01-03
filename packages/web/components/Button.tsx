@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useUIStore } from '@/lib/store/uiStore';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'success';
