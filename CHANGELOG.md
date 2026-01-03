@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.1](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.0.0...v1.0.1) (2026-01-03)
+
+### 🐛 Bug Fixes
+
+* resolve TypeScript AuthRequest interface and add missing dependency ([46286bb](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/46286bb3edf30066f442e9bfd9eb7ef91d871e8d))
+
 ## 1.0.0 (2026-01-03)
 
 ### ✨ Features

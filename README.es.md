@@ -2,13 +2,12 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.0-brightgreen)
+![Version](https://img.shields.io/badge/version-1.0.1-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
 ![Tests](https://img.shields.io/badge/tests-0%20passing-success)
-![Coverage](https://img.shields.io/badge/coverage-📊 Web Coverage: 74%
-74%25-red)
+![Coverage](https://img.shields.io/badge/coverage-0%25-red)
 
 **Español** | **[English](README.md)**
 
