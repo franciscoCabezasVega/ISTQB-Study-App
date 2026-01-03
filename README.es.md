@@ -256,7 +256,6 @@ npm run build --workspace=packages/web
 - [Descripción de Arquitectura](./docs/ARCHITECTURE.md)
 - [Guías de Testing](./docs/TESTING_GUIDELINES.md)
 - [Guía de Versionado](./docs/VERSIONING_GUIDE.md)
-- [Guía del Panel de Administración](./docs/ADMIN_PANEL_GUIDE.md)
 - [Guía de Despliegue](./docs/RENDER_DEPLOY_GUIDE.md)
 
 ## 📖 Temas ISTQB Cubiertos
@@ -345,8 +344,8 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](L
 Este proyecto fue desarrollado con la asistencia de:
 
 - **[GitHub Copilot](https://github.com/features/copilot)** - Programador de pares con IA que aceleró el desarrollo y mejoró la calidad del código
-- **[Supabase MCP](https://github.com/supabase/mcp-server-supabase)** - Integración del Protocolo de Contexto de Modelo para operaciones de base de datos sin problemas
-- **[Render MCP](https://github.com/render-oss/mcp-server-render)** - Integración del Protocolo de Contexto de Modelo para gestión optimizada de despliegue e infraestructura
+- **[Supabase MCP](https://supabase.com/docs/guides/getting-started/mcp)** - Integración del Protocolo de Contexto de Modelo para operaciones de base de datos sin problemas
+- **[Render MCP](https://render.com/docs/mcp-server)** - Integración del Protocolo de Contexto de Modelo para gestión optimizada de despliegue e infraestructura
 
 ### Construido Con
 - [Next.js](https://nextjs.org/) - Framework de React
@@ -367,7 +366,7 @@ Si encuentras este proyecto útil, por favor considera:
 
 Para preguntas, feedback o soporte:
 - Abre un [issue](https://github.com/franciscoCabezasVega/ISTQB-Study-App/issues)
-- Email: [tu-email@ejemplo.com]
+- Email: [frank_vega25@hotmail.com]
 
 ---
 

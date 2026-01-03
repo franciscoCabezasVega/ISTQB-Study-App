@@ -256,7 +256,6 @@ npm run build --workspace=packages/web
 - [Architecture Overview](./docs/ARCHITECTURE.md)
 - [Testing Guidelines](./docs/TESTING_GUIDELINES.md)
 - [Versioning Guide](./docs/VERSIONING_GUIDE.md)
-- [Admin Panel Guide](./docs/ADMIN_PANEL_GUIDE.md)
 - [Deployment Guide](./docs/RENDER_DEPLOY_GUIDE.md)
 
 ## 📖 ISTQB Topics Covered
@@ -345,8 +344,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 This project was developed with the assistance of:
 
 - **[GitHub Copilot](https://github.com/features/copilot)** - AI pair programmer that accelerated development and improved code quality
-- **[Supabase MCP](https://github.com/supabase/mcp-server-supabase)** - Model Context Protocol integration for seamless database operations
-- **[Render MCP](https://github.com/render-oss/mcp-server-render)** - Model Context Protocol integration for streamlined deployment and infrastructure management
+- **[Supabase MCP](https://supabase.com/docs/guides/getting-started/mcp)** - Model Context Protocol integration for seamless database operations
+- **[Render MCP](https://render.com/docs/mcp-server)** - Model Context Protocol integration for streamlined deployment and infrastructure management
 
 ### Built With
 - [Next.js](https://nextjs.org/) - React framework
@@ -367,7 +366,7 @@ If you find this project helpful, please consider:
 
 For questions, feedback, or support:
 - Open an [issue](https://github.com/franciscoCabezasVega/ISTQB-Study-App/issues)
-- Email: [your-email@example.com]
+- Email: [frank_vega25@hotmail.com]
 
 ---
 
