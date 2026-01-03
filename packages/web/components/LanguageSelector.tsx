@@ -1,13 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLanguageStore } from '@/lib/store/languageStore';
 import { useAuthStore } from '@/lib/store/authStore';
 import { apiClient } from '@/lib/api';
+import { useRouter, usePathname } from 'next/navigation';
 
 export function LanguageSelector() {
   const { language, setLanguage: setLanguageStore } = useLanguageStore();
   const { user } = useAuthStore();
+  const router = useRouter();
+  const pathname = usePathname();
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleLanguageChange = async (newLanguage: 'es' | 'en') => {
@@ -15,6 +18,21 @@ export function LanguageSelector() {
     
     try {
       setIsUpdating(true);
+      
+      // Si está en la página de examen o sesión, redirigir al home
+      const isInExamPages = pathname === '/exam' || pathname?.startsWith('/exam/');
+      
+      if (isInExamPages) {
+        console.log('[LANGUAGE] Cambio de idioma detectado en examen. Redirigiendo al home...');
+        // Actualizar idioma primero
+        setLanguageStore(newLanguage);
+        if (user) {
+          await apiClient.updateLanguagePreference(newLanguage);
+        }
+        // Redirigir al home
+        router.push('/');
+        return;
+      }
       
       // Actualizar store local inmediatamente
       setLanguageStore(newLanguage);

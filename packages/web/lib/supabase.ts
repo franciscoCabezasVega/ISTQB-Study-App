@@ -28,16 +28,16 @@ export const supabase = getSupabase();
 export const setSupabaseAuth = (token: string | null) => {
   if (token) {
     console.log('[DEBUG] Setting Supabase auth token');
-    // @ts-ignore - rest.headers is protected in latest Supabase version
+    // @ts-expect-error - rest.headers is protected in latest Supabase version
     supabase.rest.headers = {
-      // @ts-ignore - rest.headers is protected in latest Supabase version
+      // @ts-expect-error - rest.headers is protected in latest Supabase version
       ...supabase.rest.headers,
-      // @ts-ignore - Authorization doesn't exist in Headers type
+      // @ts-expect-error - Authorization doesn't exist in Headers type
       Authorization: `Bearer ${token}`,
     };
   } else {
     console.log('[DEBUG] Clearing Supabase auth token');
-    // @ts-ignore - rest.headers is protected in latest Supabase version
+    // @ts-expect-error - rest.headers is protected in latest Supabase version
     delete supabase.rest.headers?.Authorization;
   }
 };

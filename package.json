@@ -1,6 +1,6 @@
 {
   "name": "istqb-study-app",
-  "version": "1.0.0-alpha",
+  "version": "1.0.1-alpha",
   "description": "Progressive Web App para preparación ISTQB Foundation Level",
   "private": true,
   "workspaces": [
@@ -11,16 +11,33 @@
     "dev:api": "npm run dev --workspace=packages/api",
     "extract-and-seed": "node scripts/extract_and_seed.js",
     "build": "npm run build --workspace=packages/shared && npm run build --workspace=packages/web && npm run build --workspace=packages/api",
+    "build:api": "npm run build --workspace=packages/api",
+    "build:web": "npm run build --workspace=packages/web",
     "test": "npm run test --workspaces",
+    "test:coverage": "npm run test:coverage --workspace=packages/api && npm run test --workspace=packages/web -- --coverage",
     "lint": "npm run lint --workspaces",
     "type-check": "npm run type-check --workspaces",
+    "validate": "npm run type-check && npm run lint && npm run build",
+    "validate:api": "npm run type-check --workspace=packages/api && npm run build --workspace=packages/api",
+    "validate:web": "npm run type-check --workspace=packages/web && npm run build --workspace=packages/web",
+    "pre-deploy": "npm run validate",
+    "prepare": "husky",
     "version:patch": "npm version patch --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
     "version:minor": "npm version minor --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
     "version:major": "npm version major --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
     "release": "node scripts/release.js",
-    "verify:version": "node scripts/verify-version-system.js"
+    "verify:version": "node scripts/verify-version-system.js",
+    "test:version-sync": "node scripts/test-version-sync.js"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/npm": "^12.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "semantic-release": "^24.2.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },

@@ -18,7 +18,7 @@ class APIClient {
       (config) => {
         if (typeof window !== 'undefined') {
           // Buscar primero en localStorage, luego en sessionStorage
-          let token = localStorage.getItem('auth-storage') || sessionStorage.getItem('auth-storage');
+          const token = localStorage.getItem('auth-storage') || sessionStorage.getItem('auth-storage');
           if (token) {
             try {
               const parsed = JSON.parse(token);

@@ -1,0 +1,23 @@
+echo "🔍 Validando código antes del commit..."
+
+# Type checking
+echo "⚙️  Type checking..."
+npm run type-check
+if [ $? -ne 0 ]; then
+  echo "❌ Type check falló. Por favor corrige los errores antes de commitear."
+  exit 1
+fi
+
+# Linting (solo errores, warnings no bloquean)
+echo "🔧 Lint..."
+npm run lint -- --quiet
+if [ $? -ne 0 ]; then
+  echo "❌ Lint falló. Por favor corrige los errores antes de commitear."
+  exit 1
+fi
+
+# Build validation (solo si es necesario)
+# Descomenta la siguiente línea si quieres validar el build antes de cada commit
+# npm run build
+
+echo "✅ Pre-commit validation passed!"

@@ -1,101 +1,77 @@
-name: Create Release
+name: Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
-      - 'v*.*.*-alpha'
-      - 'v*.*.*-beta'
-      - 'v*.*.*-rc*'
+    branches:
+      - main
 
 permissions:
   contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   release:
-    name: Create GitHub Release
+    name: Semantic Release
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
-
-      - name: Get version from tag
-        id: get_version
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
-
-      - name: Extract changelog for this version
-        id: extract_changelog
-        run: |
-          VERSION=${{ steps.get_version.outputs.version }}
-          
-          # Extraer la sección del CHANGELOG para esta versión
-          CHANGELOG=$(sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$d' | tail -n +2)
-          
-          if [ -z "$CHANGELOG" ]; then
-            echo "⚠️ No se encontró entrada en CHANGELOG para la versión $VERSION"
-            CHANGELOG="Release version $VERSION"
-          fi
-          
-          # Guardar en un archivo para el siguiente step
-          echo "$CHANGELOG" > release_notes.md
-          
-          echo "Notas del release extraídas"
-
-      - name: Determine if pre-release
-        id: prerelease
-        run: |
-          VERSION=${{ steps.get_version.outputs.version }}
-          if [[ "$VERSION" == *"alpha"* ]] || [[ "$VERSION" == *"beta"* ]] || [[ "$VERSION" == *"rc"* ]]; then
-            echo "is_prerelease=true" >> $GITHUB_OUTPUT
-            echo "Es una pre-release"
-          else
-            echo "is_prerelease=false" >> $GITHUB_OUTPUT
-            echo "Es una release estable"
-          fi
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm test
+      - name: Run validation
+        run: |
+          npm run type-check
+          npm run lint
+        continue-on-error: false
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
         continue-on-error: true
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       - name: Build project
         run: npm run build
-        continue-on-error: true
+        continue-on-error: false
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: Release v${{ steps.get_version.outputs.version }}
-          body_path: release_notes.md
-          prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
-          draft: false
-          generate_release_notes: true
+      - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: github-actions[bot]@users.noreply.github.com
+        run: npx semantic-release
 
       - name: Release Summary
+        if: success()
         run: |
-          echo "## 🎉 Release v${{ steps.get_version.outputs.version }} creado" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎉 Release automático completado" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📋 Detalles" >> $GITHUB_STEP_SUMMARY
-          echo "- **Versión**: ${{ steps.get_version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Pre-release**: ${{ steps.prerelease.outputs.is_prerelease }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Se ha creado un nuevo release automáticamente" >> $GITHUB_STEP_SUMMARY
+          echo "✅ CHANGELOG.md actualizado" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Badges actualizados en README (versión, tests, coverage)" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tag creado en GitHub" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🔗 Links" >> $GITHUB_STEP_SUMMARY
-          echo "- [Ver Release](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.get_version.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [Ver Releases](https://github.com/${{ github.repository }}/releases)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Ver CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)" >> $GITHUB_STEP_SUMMARY
           echo "- [Ver CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)" >> $GITHUB_STEP_SUMMARY

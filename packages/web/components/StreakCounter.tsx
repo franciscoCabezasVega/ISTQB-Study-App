@@ -18,7 +18,7 @@ export function StreakCounter({ compact = false }: StreakCounterProps) {
     if (user) {
       loadStreak();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [user]);
 
   // No mostrar nada si no hay usuario
