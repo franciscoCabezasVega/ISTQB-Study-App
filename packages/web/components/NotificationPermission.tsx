@@ -21,7 +21,7 @@ export function NotificationPermission({
   onPermissionGranted,
   onPermissionDenied,
   autoRequest = false,
-  showTestButton = false,
+  showTestButton: _showTestButton = false,
 }: NotificationPermissionProps) {
   const { permission, isSupported, requestPermission } = useNotifications();
   const { t } = useTranslation();
