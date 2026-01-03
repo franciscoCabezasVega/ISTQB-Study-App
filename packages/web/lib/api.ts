@@ -25,7 +25,7 @@ class APIClient {
               if (parsed.state?.accessToken) {
                 config.headers.Authorization = `Bearer ${parsed.state.accessToken}`;
               }
-            } catch (e) {
+            } catch (_e) {
               console.error('Error parsing token from storage');
             }
           }

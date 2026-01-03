@@ -24,7 +24,7 @@ export default function RemindersSettingsPage() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('custom');
+  const [, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('custom');
   const [preferredTime, setPreferredTime] = useState('09:00');
   const [enabled, setEnabled] = useState(false);
   const [customDays, setCustomDays] = useState<number[]>([]);

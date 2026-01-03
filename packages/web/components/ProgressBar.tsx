@@ -36,10 +36,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   } else if (current !== undefined && total !== undefined) {
     // Si se pasan current y total
     progressValue = (current / total) * 100;
-    displayValue = percentage ? `${progressValue.toFixed(1)}%` : `${current}/${total}`;
   } else {
     progressValue = 0;
-    displayValue = '0%';
   }
 
   return (
