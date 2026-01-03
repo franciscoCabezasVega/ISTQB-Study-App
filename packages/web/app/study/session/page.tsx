@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Question } from '@istqb-app/shared';import { translateTopicToEnglish } from '@istqb-app/shared';import { QuestionCard } from '@/components/QuestionCard';
+import { Question } from '@istqb-app/shared';
+import { QuestionCard } from '@/components/QuestionCard';
 import { ProgressBar } from '@/components/ProgressBar';
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
 import { QuestionSkeleton } from '@/components/Skeleton';
 import { apiClient } from '@/lib/api';
 import { formatPercentage, shuffleQuestionsAndOptions } from '@/lib/utils';
-import { getCurrentLanguage } from '@/lib/languageHelper';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useStudyStore } from '@/lib/store/studyStore';
 import { useLanguageStore } from '@/lib/store/languageStore';
@@ -56,7 +56,6 @@ function StudySessionContent() {
     isCorrect: boolean;
     selectedOptions: string[];
   } | null>(null);
-  const [loadingTranslations, setLoadingTranslations] = useState(false);
   const sessionLanguageRef = React.useRef<string>(language); // Idioma en que se cargó la sesión
   const [isSessionActive, setIsSessionActive] = React.useState(false);
 

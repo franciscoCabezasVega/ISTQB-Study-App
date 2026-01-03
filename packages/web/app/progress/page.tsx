@@ -8,7 +8,6 @@ import { StreakCounter } from '@/components/StreakCounter';
 import { StatCardSkeleton, ProgressBarSkeleton } from '@/components/Skeleton';
 import Link from 'next/link';
 import { apiClient } from '@/lib/api';
-import { useAuthStore } from '@/lib/store/authStore';
 import { useStreakStore } from '@/lib/store/streakStore';
 import { useLanguageStore } from '@/lib/store/languageStore';
 import { formatPercentage } from '@/lib/utils';

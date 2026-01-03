@@ -162,7 +162,8 @@ export default function RemindersSettingsPage() {
       alert(t('reminders.reminderSaved'));
     } catch (error: unknown) {
       console.error('Error saving reminder:', error);
-      alert(t('reminders.errorSaving') + ': ' + ((error as any).response?.data?.error || (error as Error).message));
+      const apiError = error as { response?: { data?: { error?: string } } };
+      alert(t('reminders.errorSaving') + ': ' + (apiError.response?.data?.error || (error as Error).message));
     } finally {
       setSaving(false);
     }

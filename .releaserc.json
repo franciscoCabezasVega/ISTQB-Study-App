@@ -53,7 +53,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "node scripts/sync-versions.js && node scripts/generate-changelogs.js && bash scripts/update-badges-release.sh ${nextRelease.version}"
+        "prepareCmd": "node scripts/sync-versions.js && bash scripts/update-badges-release.sh ${nextRelease.version}"
       }
     ],
     [
@@ -61,7 +61,6 @@
       {
         "assets": [
           "CHANGELOG.md",
-          "CHANGELOG.es.md",
           "package.json",
           "package-lock.json",
           "README.md",
@@ -78,19 +77,7 @@
         "failComment": false,
         "failTitle": false,
         "labels": false,
-        "releasedLabels": false,
-        "assets": [
-          {
-            "path": "CHANGELOG.md",
-            "name": "CHANGELOG.md",
-            "label": "Changelog (English)"
-          },
-          {
-            "path": "CHANGELOG.es.md",
-            "name": "CHANGELOG.es.md",
-            "label": "Registro de Cambios (Espanol)"
-          }
-        ]
+        "releasedLabels": false
       }
     ]
   ]
