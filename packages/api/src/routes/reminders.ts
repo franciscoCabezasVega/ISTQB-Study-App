@@ -27,11 +27,12 @@ router.get('/', authenticateToken, async (req: AuthRequest, res: Response) => {
       statusCode: 200,
       data: reminder,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /reminders error:', error);
+    const message = error instanceof Error ? error.message : 'Error fetching reminder';
     res.status(500).json({
       statusCode: 500,
-      error: error.message || 'Error fetching reminder',
+      error: message,
     });
   }
 });
@@ -71,11 +72,12 @@ router.post('/', authenticateToken, async (req: AuthRequest, res: Response) => {
       statusCode: 200,
       data: reminder,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /reminders error:', error);
+    const message = error instanceof Error ? error.message : 'Error creating/updating reminder';
     res.status(400).json({
       statusCode: 400,
-      error: error.message || 'Error creating/updating reminder',
+      error: message,
     });
   }
 });
@@ -109,11 +111,12 @@ router.put('/:id', authenticateToken, async (req: AuthRequest, res: Response) =>
       statusCode: 200,
       data: reminder,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('PUT /reminders/:id error:', error);
+    const message = error instanceof Error ? error.message : 'Error updating reminder';
     res.status(400).json({
       statusCode: 400,
-      error: error.message || 'Error updating reminder',
+      error: message,
     });
   }
 });
@@ -140,11 +143,12 @@ router.delete('/:id', authenticateToken, async (req: AuthRequest, res: Response)
       statusCode: 200,
       message: 'Reminder deleted successfully',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('DELETE /reminders/:id error:', error);
+    const message = error instanceof Error ? error.message : 'Error deleting reminder';
     res.status(400).json({
       statusCode: 400,
-      error: error.message || 'Error deleting reminder',
+      error: message,
     });
   }
 });
@@ -232,11 +236,12 @@ router.post('/send-now', authenticateToken, async (req: AuthRequest, res: Respon
         details: emailResult.error,
       });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /reminders/send-now error:', error);
+    const message = error instanceof Error ? error.message : 'Error sending reminder';
     res.status(500).json({
       statusCode: 500,
-      error: error.message || 'Error sending reminder',
+      error: message,
     });
   }
 });

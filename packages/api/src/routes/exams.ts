@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
 import { authenticateToken, AuthRequest } from '../middleware';
 import ExamService from '../services/ExamService';
 
@@ -22,11 +22,12 @@ router.post('/', authenticateToken, async (req: AuthRequest, res: Response) => {
       statusCode: 201,
       data: session,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /exams error:', error);
+    const message = error instanceof Error ? error.message : 'Error creating exam session';
     res.status(400).json({
       statusCode: 400,
-      error: error.message || 'Error creating exam session',
+      error: message,
     });
   }
 });
@@ -58,11 +59,12 @@ router.post('/:sessionId/answers', authenticateToken, async (req: AuthRequest, r
       statusCode: 200,
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /exams/:sessionId/answers error:', error);
+    const message = error instanceof Error ? error.message : 'Error submitting answer';
     res.status(400).json({
       statusCode: 400,
-      error: error.message || 'Error submitting answer',
+      error: message,
     });
   }
 });
@@ -89,11 +91,12 @@ router.post('/:sessionId/answers/batch', authenticateToken, async (req: AuthRequ
       statusCode: 200,
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /exams/:sessionId/answers/batch error:', error);
+    const message = error instanceof Error ? error.message : 'Error submitting answers';
     res.status(400).json({
       statusCode: 400,
-      error: error.message || 'Error submitting answers',
+      error: message,
     });
   }
 });
@@ -112,11 +115,12 @@ router.post('/:sessionId/complete', authenticateToken, async (req: AuthRequest, 
       statusCode: 200,
       data: results,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /exams/:sessionId/complete error:', error);
+    const message = error instanceof Error ? error.message : 'Error completing exam session';
     res.status(400).json({
       statusCode: 400,
-      error: error.message || 'Error completing exam session',
+      error: message,
     });
   }
 });
@@ -135,11 +139,12 @@ router.get('/:sessionId', authenticateToken, async (req: AuthRequest, res: Respo
       statusCode: 200,
       data: results,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /exams/:sessionId error:', error);
+    const message = error instanceof Error ? error.message : 'Error fetching exam results';
     res.status(400).json({
       statusCode: 400,
-      error: error.message || 'Error fetching exam results',
+      error: message,
     });
   }
 });

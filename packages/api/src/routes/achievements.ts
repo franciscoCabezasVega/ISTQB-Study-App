@@ -19,11 +19,12 @@ router.get('/', authenticateToken, async (req: AuthRequest, res: Response) => {
       statusCode: 200,
       data: achievements,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /achievements error:', error);
+    const message = error instanceof Error ? error.message : 'Error fetching achievements';
     res.status(500).json({
       statusCode: 500,
-      error: error.message || 'Error fetching achievements',
+      error: message,
     });
   }
 });
@@ -49,11 +50,12 @@ router.get('/user', authenticateToken, async (req: AuthRequest, res: Response) =
       statusCode: 200,
       data: achievements,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /achievements/user error:', error);
+    const message = error instanceof Error ? error.message : 'Error fetching user achievements';
     res.status(500).json({
       statusCode: 500,
-      error: error.message || 'Error fetching user achievements',
+      error: message,
     });
   }
 });
@@ -79,11 +81,12 @@ router.get('/streak', authenticateToken, async (req: AuthRequest, res: Response)
       statusCode: 200,
       data: streak,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /achievements/streak error:', error);
+    const message = error instanceof Error ? error.message : 'Error fetching streak';
     res.status(500).json({
       statusCode: 500,
-      error: error.message || 'Error fetching streak',
+      error: message,
     });
   }
 });

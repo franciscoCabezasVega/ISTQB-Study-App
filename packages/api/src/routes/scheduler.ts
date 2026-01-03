@@ -37,11 +37,12 @@ router.post('/reminders/process', async (req, res) => {
       message: 'Reminders processed successfully',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in scheduler endpoint:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
     return res.status(500).json({
       error: 'Internal server error',
-      message: error.message,
+      message,
     });
   }
 });
@@ -69,11 +70,12 @@ router.get('/reminders/stats', async (req, res) => {
       success: true,
       data: stats,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error getting scheduler stats:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
     return res.status(500).json({
       error: 'Internal server error',
-      message: error.message,
+      message,
     });
   }
 });

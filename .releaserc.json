@@ -53,7 +53,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "bash scripts/update-badges-release.sh ${nextRelease.version}"
+        "prepareCmd": "node scripts/sync-versions.js && bash scripts/update-badges-release.sh ${nextRelease.version}"
       }
     ],
     [

@@ -32,11 +32,12 @@ router.get('/profile', authenticateToken, async (req: AuthRequest, res: Response
       statusCode: 200,
       data: profile,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GET /users/profile error:', error);
+    const message = error instanceof Error ? error.message : 'Error fetching user profile';
     res.status(500).json({
       statusCode: 500,
-      error: error.message || 'Error fetching user profile',
+      error: message,
     });
   }
 });
@@ -70,11 +71,12 @@ router.put('/language', authenticateToken, async (req: AuthRequest, res: Respons
       statusCode: 200,
       data: updatedUser,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('PUT /users/language error:', error);
+    const message = error instanceof Error ? error.message : 'Error updating language preference';
     res.status(500).json({
       statusCode: 500,
-      error: error.message || 'Error updating language preference',
+      error: message,
     });
   }
 });
@@ -108,11 +110,12 @@ router.put('/theme', authenticateToken, async (req: AuthRequest, res: Response) 
       statusCode: 200,
       data: updatedUser,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('PUT /users/theme error:', error);
+    const message = error instanceof Error ? error.message : 'Error updating theme preference';
     res.status(500).json({
       statusCode: 500,
-      error: error.message || 'Error updating theme preference',
+      error: message,
     });
   }
 });
