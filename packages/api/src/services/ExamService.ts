@@ -454,6 +454,7 @@ class ExamService {
         throw new Error(`Error fetching answers: ${answersError.message}`);
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const correctAnswers = answers.filter((a: any) => a.is_correct).length;
       const totalQuestions = session.total_questions;
       const score = session.score || (correctAnswers / totalQuestions) * 100;
