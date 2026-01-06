@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc",
     "type-check": "tsc --noEmit",
-    "lint": "echo 'No lint configured for shared package'"
+    "lint": "echo 'No lint configured for shared package'",
+    "test": "echo 'No tests configured for shared package (types only)'"
   },
   "dependencies": {},
   "devDependencies": {

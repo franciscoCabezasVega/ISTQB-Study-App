@@ -7,19 +7,19 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Importar la configuración después de cargar .env
-const { config } = require('./config');
+import { config } from './config';
 
 // Importar middleware y rutas tras cargar variables de entorno
-const { errorHandler } = require('./middleware');
-const authRoutes = require('./routes/auth').default;
-const questionRoutes = require('./routes/questions').default;
-const answerRoutes = require('./routes/answers').default;
-const examRoutes = require('./routes/exams').default;
-const reminderRoutes = require('./routes/reminders').default;
-const achievementRoutes = require('./routes/achievements').default;
-const userRoutes = require('./routes/users').default;
-const studyRoutes = require('./routes/study').default;
-const schedulerRoutes = require('./routes/scheduler').default;
+import { errorHandler } from './middleware';
+import authRoutes from './routes/auth';
+import questionRoutes from './routes/questions';
+import answerRoutes from './routes/answers';
+import examRoutes from './routes/exams';
+import reminderRoutes from './routes/reminders';
+import achievementRoutes from './routes/achievements';
+import userRoutes from './routes/users';
+import studyRoutes from './routes/study';
+import schedulerRoutes from './routes/scheduler';
 
 // Crear aplicación Express
 const app: Express = express();

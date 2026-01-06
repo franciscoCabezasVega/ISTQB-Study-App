@@ -23,16 +23,14 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   total,
   progress: progressProp,
   label = '',
-  percentage = false,
+  percentage: _percentage = false,
   color = 'blue',
 }) => {
   let progressValue: number;
-  let displayValue: string;
 
   if (progressProp !== undefined) {
     // Si se pasa progress directo (0-100)
     progressValue = progressProp;
-    displayValue = `${progressValue.toFixed(1)}%`;
   } else if (current !== undefined && total !== undefined) {
     // Si se pasan current y total
     progressValue = (current / total) * 100;

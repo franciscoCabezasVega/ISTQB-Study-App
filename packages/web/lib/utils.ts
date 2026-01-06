@@ -40,7 +40,7 @@ export function shuffleArray<T>(array: T[]): T[] {
  * @param question Pregunta a aleatorizar
  * @returns Nueva pregunta con opciones en orden aleatorio
  */
-export function shuffleQuestionOptions<T extends { options: any[]; correct_answer_ids: string[] }>(
+export function shuffleQuestionOptions<T extends { options: unknown[]; correct_answer_ids: string[] }>(
   question: T
 ): T {
   // No aleatorizar si no hay opciones
@@ -64,7 +64,7 @@ export function shuffleQuestionOptions<T extends { options: any[]; correct_answe
  * @param questions Array de preguntas a aleatorizar
  * @returns Nuevo array con preguntas y opciones aleatorizadas
  */
-export function shuffleQuestionsAndOptions<T extends { options: any[]; correct_answer_ids: string[] }>(
+export function shuffleQuestionsAndOptions<T extends { options: unknown[]; correct_answer_ids: string[] }>(
   questions: T[]
 ): T[] {
   // Validar que questions es un array válido
