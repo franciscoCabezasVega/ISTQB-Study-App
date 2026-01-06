@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.9](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.0.8...v1.0.9) (2026-01-06)
+
+### 🐛 Bug Fixes
+
+* **api:** add currentTime parameter to shouldSendToday for timezone tests ([735869e](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/735869ebce5869c9499675f065fb9469d5e49fee))
+* **api:** add missing Request import in middleware ([ab9912e](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/ab9912ee83c22409dff240f14550da2e00e6cf82))
+* **api:** use date-fns getHours/getMinutes for timezone compatibility ([828fd4d](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/828fd4d09e90ccd219f705a37b6dbab8927599fa))
+* **api:** use formatInTimeZone for reliable timezone handling in CI ([9a0fcc7](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/9a0fcc783d3065e802932026162818631d4526d7))
+
 ## [1.0.8](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.0.7...v1.0.8) (2026-01-03)
 
 ### ♻️ Refactors

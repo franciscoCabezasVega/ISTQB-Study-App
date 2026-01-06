@@ -1,6 +1,6 @@
 {
   "name": "@istqb-app/shared",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
