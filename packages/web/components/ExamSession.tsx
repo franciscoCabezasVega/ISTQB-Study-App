@@ -7,7 +7,6 @@ import { QuestionCard } from './QuestionCard';
 import { ProgressBar } from './ProgressBar';
 import { Card } from './Card';
 import { apiClient } from '@/lib/api';
-import { useAuthStore } from '@/lib/store/authStore';
 import { useExamStore } from '@/lib/store/examStore';
 import { useLanguageStore } from '@/lib/store/languageStore';
 import { useStreakStore } from '@/lib/store/streakStore';

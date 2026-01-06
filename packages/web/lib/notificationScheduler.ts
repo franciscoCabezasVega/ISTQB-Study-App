@@ -3,13 +3,22 @@
  * Maneja la programación y cancelación de notificaciones basadas en los recordatorios del usuario
  */
 
+export interface NotificationData {
+  url?: string;
+  recurring?: 'daily' | 'weekly' | 'custom';
+  time?: string;
+  dayOfWeek?: number;
+  customDays?: number[];
+  [key: string]: unknown;
+}
+
 export interface ScheduledNotification {
   id: string;
   title: string;
   body: string;
   scheduledTime: Date;
   timeoutId?: number;
-  data?: any;
+  data?: NotificationData;
 }
 
 class NotificationSchedulerService {
@@ -28,7 +37,7 @@ class NotificationSchedulerService {
     title: string,
     body: string,
     scheduledTime: Date,
-    data?: any
+    data?: NotificationData
   ): boolean {
     const now = new Date();
     const delay = scheduledTime.getTime() - now.getTime();
@@ -153,7 +162,7 @@ class NotificationSchedulerService {
    * Cancela todas las notificaciones programadas
    */
   cancelAllNotifications(): void {
-    for (const [id, notification] of this.scheduledNotifications) {
+    for (const [, notification] of this.scheduledNotifications) {
       if (notification.timeoutId) {
         window.clearTimeout(notification.timeoutId);
       }
@@ -175,7 +184,7 @@ class NotificationSchedulerService {
   /**
    * Muestra una notificación usando el Service Worker
    */
-  private async showNotification(id: string, title: string, body: string, data?: any) {
+  private async showNotification(id: string, title: string, body: string, data?: NotificationData) {
     try {
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.ready;
@@ -223,7 +232,7 @@ class NotificationSchedulerService {
   /**
    * Envía un email de recordatorio a través del backend
    */
-  private async sendEmailReminder(id: string, data?: any) {
+  private async sendEmailReminder(id: string, data?: NotificationData) {
     try {
       // Solo en el navegador (no en SSR)
       if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
@@ -303,7 +312,10 @@ class NotificationSchedulerService {
    * Reprograma una notificación recurrente
    */
   private rescheduleRecurringNotification(notification: ScheduledNotification) {
+    if (!notification.data) return;
+    
     const { recurring, time, dayOfWeek } = notification.data;
+    if (!time) return;
 
     if (recurring === 'daily') {
       const [hours, minutes] = time.split(':').map(Number);

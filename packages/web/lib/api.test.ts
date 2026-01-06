@@ -14,6 +14,7 @@ describe('API Client - Token Expiration', () => {
       global.localStorage = mockLocalStorage as unknown as Storage;
 
       // Simular error 401
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _error401 = {
         response: {
           status: 401,
@@ -33,6 +34,7 @@ describe('API Client - Token Expiration', () => {
       global.window = { location: mockLocation } as unknown as Window & typeof globalThis;
 
       // Simular error 401 en una página que NO es /auth/*
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _error401 = {
         response: { status: 401 },
       };

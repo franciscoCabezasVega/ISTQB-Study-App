@@ -25,6 +25,7 @@ class APIClient {
               if (parsed.state?.accessToken) {
                 config.headers.Authorization = `Bearer ${parsed.state.accessToken}`;
               }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (_e) {
               console.error('Error parsing token from storage');
             }
@@ -75,7 +76,7 @@ class APIClient {
     return this.client.get('/auth/me');
   }
 
-  updateUser(data: any) {
+  updateUser(data: { name?: string; email?: string; [key: string]: unknown }) {
     return this.client.put('/auth/me', data);
   }
 
@@ -100,7 +101,7 @@ class APIClient {
   }
 
   // Answers endpoints
-  submitAnswer(data: any) {
+  submitAnswer(data: { questionId: string; selectedAnswerId: string | string[]; timeSpent: number }) {
     return this.client.post('/answers', data);
   }
 
