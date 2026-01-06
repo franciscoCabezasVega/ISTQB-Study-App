@@ -23,9 +23,10 @@ export const useStreakStore = create<StreakState>((set, get) => ({
     try {
       const response = await apiClient.getUserStreak();
       set({ streak: response.data.data, loading: false });
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error loading streak';
       console.error('Error loading streak:', error);
-      set({ error: error.message || 'Error loading streak', loading: false });
+      set({ error: errorMessage, loading: false });
     }
   },
 
@@ -34,7 +35,7 @@ export const useStreakStore = create<StreakState>((set, get) => ({
     try {
       const response = await apiClient.getUserStreak();
       set({ streak: response.data.data });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error refreshing streak:', error);
     }
   },

@@ -18,8 +18,7 @@ export function StreakCounter({ compact = false }: StreakCounterProps) {
     if (user) {
       loadStreak();
     }
-    // eslint-disable-next-line
-  }, [user]);
+  }, [user, loadStreak]);
 
   // No mostrar nada si no hay usuario
   if (!user) {

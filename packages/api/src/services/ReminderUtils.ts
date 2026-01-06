@@ -1,6 +1,5 @@
 import { StudyReminder } from '@istqb-app/shared';
-import { toZonedTime } from 'date-fns-tz';
-import { getDay } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 
 /**
  * Utilidades para filtrado y validación de recordatorios
@@ -9,15 +8,23 @@ export class ReminderUtils {
   /**
    * Verificar si un recordatorio debe enviarse HOY según su configuración
    */
-  static shouldSendToday(reminder: StudyReminder, userTimezone: string = 'UTC'): boolean {
+  static shouldSendToday(
+    reminder: StudyReminder,
+    userTimezone: string = 'UTC',
+    currentTime?: Date
+  ): boolean {
     if (!reminder.enabled) {
       return false;
     }
 
     // Obtener el día actual en la zona horaria del usuario
-    const now = new Date();
-    const userLocalDate = toZonedTime(now, userTimezone);
-    const currentDayOfWeek = getDay(userLocalDate); // 0=Domingo, 1=Lunes, ..., 6=Sábado
+    const now = currentTime || new Date();
+    
+    // Usar formatInTimeZone de date-fns-tz que funciona correctamente con zonas horarias en cualquier ambiente
+    // 'i' devuelve el día ISO (1=lunes, 2=martes, ..., 7=domingo)
+    // Convertir a formato JS getDay (0=domingo, 1=lunes, ..., 6=sábado)
+    const isoDayOfWeek = parseInt(formatInTimeZone(now, userTimezone, 'i'), 10);
+    const currentDayOfWeek = isoDayOfWeek % 7; // 7 (domingo ISO) → 0 (domingo JS), 1-6 permanecen igual
 
     switch (reminder.frequency) {
       case 'daily':
@@ -44,6 +51,7 @@ export class ReminderUtils {
 
   /**
    * Verificar si ya es hora de enviar el recordatorio según la hora preferida
+   * Este método verifica TANTO que sea el día correcto COMO que sea la hora correcta
    */
   static isTimeToSend(
     reminder: StudyReminder,
@@ -52,10 +60,30 @@ export class ReminderUtils {
   ): boolean {
     const now = currentTime || new Date();
     
-    // Obtener hora actual en zona horaria del usuario
-    const userLocalTime = toZonedTime(now, userTimezone);
-    const currentHour = userLocalTime.getHours();
-    const currentMinute = userLocalTime.getMinutes();
+    // Debug logging para CI
+    if (process.env.CI) {
+      console.log('[isTimeToSend] now:', now.toISOString());
+      console.log('[isTimeToSend] userTimezone:', userTimezone);
+      console.log('[isTimeToSend] reminder.frequency:', reminder.frequency);
+      console.log('[isTimeToSend] reminder.custom_days:', reminder.custom_days);
+    }
+    
+    // Primero verificar si debe enviarse HOY según frecuencia/días personalizados
+    const shouldSend = this.shouldSendToday(reminder, userTimezone, now);
+    if (process.env.CI) {
+      console.log('[isTimeToSend] shouldSendToday returned:', shouldSend);
+    }
+    if (!shouldSend) {
+      return false;
+    }
+    
+    // Obtener hora actual en zona horaria del usuario usando formatInTimeZone de date-fns-tz
+    const currentHour = parseInt(formatInTimeZone(now, userTimezone, 'H'), 10); // 0-23
+    const currentMinute = parseInt(formatInTimeZone(now, userTimezone, 'm'), 10); // 0-59
+    
+    if (process.env.CI) {
+      console.log('[isTimeToSend] currentHour:', currentHour, 'currentMinute:', currentMinute);
+    }
 
     // Parsear hora preferida (formato HH:MM)
     const [preferredHour, preferredMinute] = (reminder.preferred_time || '09:00')
@@ -79,8 +107,9 @@ export class ReminderUtils {
     }
 
     const now = new Date();
-    const userLocalDate = toZonedTime(now, userTimezone);
-    const currentDayOfWeek = getDay(userLocalDate);
+    // Usar formatInTimeZone para obtener el día de la semana en la zona horaria del usuario
+    const isoDayOfWeek = parseInt(formatInTimeZone(now, userTimezone, 'i'), 10);
+    const currentDayOfWeek = isoDayOfWeek % 7; // Convertir de ISO a formato JS
 
     let daysUntilNext = 0;
 
@@ -119,7 +148,7 @@ export class ReminderUtils {
     }
 
     // Calcular fecha y hora del próximo envío
-    const nextDate = new Date(userLocalDate);
+    const nextDate = new Date(now);
     nextDate.setDate(nextDate.getDate() + daysUntilNext);
 
     // Establecer la hora preferida

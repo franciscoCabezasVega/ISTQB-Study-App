@@ -1,3 +1,5 @@
+// Jest configuration for API tests
+// Updated: 2026-01-06 - Fixed mock chaining
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
