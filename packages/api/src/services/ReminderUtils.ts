@@ -1,6 +1,6 @@
 import { StudyReminder } from '@istqb-app/shared';
 import { toZonedTime } from 'date-fns-tz';
-import { getDay } from 'date-fns';
+import { getDay, getHours, getMinutes } from 'date-fns';
 
 /**
  * Utilidades para filtrado y validación de recordatorios
@@ -25,7 +25,9 @@ export class ReminderUtils {
     
     if (process.env.CI) {
       console.log('[shouldSendToday] now:', now.toISOString());
+      console.log('[shouldSendToday] userTimezone:', userTimezone);
       console.log('[shouldSendToday] userLocalDate:', userLocalDate.toISOString());
+      console.log('[shouldSendToday] userLocalDate.toString():', userLocalDate.toString());
       console.log('[shouldSendToday] currentDayOfWeek:', currentDayOfWeek);
     }
 
@@ -82,11 +84,12 @@ export class ReminderUtils {
     
     // Obtener hora actual en zona horaria del usuario
     const userLocalTime = toZonedTime(now, userTimezone);
-    const currentHour = userLocalTime.getHours();
-    const currentMinute = userLocalTime.getMinutes();
+    const currentHour = getHours(userLocalTime);
+    const currentMinute = getMinutes(userLocalTime);
     
     if (process.env.CI) {
       console.log('[isTimeToSend] userLocalTime:', userLocalTime.toISOString());
+      console.log('[isTimeToSend] userLocalTime.toString():', userLocalTime.toString());
       console.log('[isTimeToSend] currentHour:', currentHour, 'currentMinute:', currentMinute);
     }
 
