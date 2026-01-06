@@ -39,7 +39,16 @@ describe('ExamService', () => {
 
     // Setup mock chain para diferentes casos
     mockSingle = jest.fn();
-    mockEq = jest.fn().mockReturnValue({ single: mockSingle });
+    
+    // Mock eq que permite encadenamiento
+    const mockEqChain = {
+      eq: jest.fn().mockReturnThis(),
+      single: mockSingle,
+    };
+    mockEq = jest.fn().mockReturnValue(mockEqChain);
+    // Asegurar que mockEqChain.eq devuelve a sí mismo
+    mockEqChain.eq.mockReturnValue(mockEqChain);
+    
     mockIn = jest.fn().mockResolvedValue({ data: [], error: null });
     mockLimit = jest.fn().mockResolvedValue({ data: [], error: null });
     mockSelect = jest.fn().mockReturnValue({ 
