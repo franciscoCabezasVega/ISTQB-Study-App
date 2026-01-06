@@ -10,8 +10,9 @@ export function useTranslation() {
   // Esto previene errores de hidratación
   const language = typeof window === 'undefined' || !_hasHydrated ? 'es' : storeLanguage;
 
-  const t = (key: string, params?: Record<string, any>): string => {
+  const t = (key: string, params?: Record<string, string | number>): string => {
     const keys = key.split('.');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let value: any = translations[language];
 
     for (const k of keys) {
