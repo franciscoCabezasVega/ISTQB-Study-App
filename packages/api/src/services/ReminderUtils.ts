@@ -22,6 +22,12 @@ export class ReminderUtils {
     const now = currentTime || new Date();
     const userLocalDate = toZonedTime(now, userTimezone);
     const currentDayOfWeek = getDay(userLocalDate); // 0=Domingo, 1=Lunes, ..., 6=Sábado
+    
+    if (process.env.CI) {
+      console.log('[shouldSendToday] now:', now.toISOString());
+      console.log('[shouldSendToday] userLocalDate:', userLocalDate.toISOString());
+      console.log('[shouldSendToday] currentDayOfWeek:', currentDayOfWeek);
+    }
 
     switch (reminder.frequency) {
       case 'daily':
@@ -57,8 +63,20 @@ export class ReminderUtils {
   ): boolean {
     const now = currentTime || new Date();
     
+    // Debug logging para CI
+    if (process.env.CI) {
+      console.log('[isTimeToSend] now:', now.toISOString());
+      console.log('[isTimeToSend] userTimezone:', userTimezone);
+      console.log('[isTimeToSend] reminder.frequency:', reminder.frequency);
+      console.log('[isTimeToSend] reminder.custom_days:', reminder.custom_days);
+    }
+    
     // Primero verificar si debe enviarse HOY según frecuencia/días personalizados
-    if (!this.shouldSendToday(reminder, userTimezone, now)) {
+    const shouldSend = this.shouldSendToday(reminder, userTimezone, now);
+    if (process.env.CI) {
+      console.log('[isTimeToSend] shouldSendToday returned:', shouldSend);
+    }
+    if (!shouldSend) {
       return false;
     }
     
@@ -66,6 +84,11 @@ export class ReminderUtils {
     const userLocalTime = toZonedTime(now, userTimezone);
     const currentHour = userLocalTime.getHours();
     const currentMinute = userLocalTime.getMinutes();
+    
+    if (process.env.CI) {
+      console.log('[isTimeToSend] userLocalTime:', userLocalTime.toISOString());
+      console.log('[isTimeToSend] currentHour:', currentHour, 'currentMinute:', currentMinute);
+    }
 
     // Parsear hora preferida (formato HH:MM)
     const [preferredHour, preferredMinute] = (reminder.preferred_time || '09:00')
