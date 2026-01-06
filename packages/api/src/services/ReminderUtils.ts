@@ -25,13 +25,6 @@ export class ReminderUtils {
     // Convertir a formato JS getDay (0=domingo, 1=lunes, ..., 6=sábado)
     const isoDayOfWeek = parseInt(formatInTimeZone(now, userTimezone, 'i'), 10);
     const currentDayOfWeek = isoDayOfWeek % 7; // 7 (domingo ISO) → 0 (domingo JS), 1-6 permanecen igual
-    
-    if (process.env.CI) {
-      console.log('[shouldSendToday] now:', now.toISOString());
-      console.log('[shouldSendToday] userTimezone:', userTimezone);
-      console.log('[shouldSendToday] isoDayOfWeek:', isoDayOfWeek);
-      console.log('[shouldSendToday] currentDayOfWeek:', currentDayOfWeek);
-    }
 
     switch (reminder.frequency) {
       case 'daily':
