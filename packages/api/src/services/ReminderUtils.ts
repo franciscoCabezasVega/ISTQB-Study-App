@@ -9,13 +9,17 @@ export class ReminderUtils {
   /**
    * Verificar si un recordatorio debe enviarse HOY según su configuración
    */
-  static shouldSendToday(reminder: StudyReminder, userTimezone: string = 'UTC'): boolean {
+  static shouldSendToday(
+    reminder: StudyReminder,
+    userTimezone: string = 'UTC',
+    currentTime?: Date
+  ): boolean {
     if (!reminder.enabled) {
       return false;
     }
 
     // Obtener el día actual en la zona horaria del usuario
-    const now = new Date();
+    const now = currentTime || new Date();
     const userLocalDate = toZonedTime(now, userTimezone);
     const currentDayOfWeek = getDay(userLocalDate); // 0=Domingo, 1=Lunes, ..., 6=Sábado
 
@@ -44,6 +48,7 @@ export class ReminderUtils {
 
   /**
    * Verificar si ya es hora de enviar el recordatorio según la hora preferida
+   * Este método verifica TANTO que sea el día correcto COMO que sea la hora correcta
    */
   static isTimeToSend(
     reminder: StudyReminder,
@@ -51,6 +56,11 @@ export class ReminderUtils {
     currentTime?: Date
   ): boolean {
     const now = currentTime || new Date();
+    
+    // Primero verificar si debe enviarse HOY según frecuencia/días personalizados
+    if (!this.shouldSendToday(reminder, userTimezone, now)) {
+      return false;
+    }
     
     // Obtener hora actual en zona horaria del usuario
     const userLocalTime = toZonedTime(now, userTimezone);
