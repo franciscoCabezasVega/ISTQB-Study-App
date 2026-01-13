@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.1.0](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.0.9...v1.1.0) (2026-01-13)
+
+### ✨ Features
+
+* migrate frontend to static site and fix ESLint warnings ([3d2ee78](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/3d2ee784e05d5a1eeb281be734a0b1577c7dc7f4))
+
 ## [Unreleased]
 
 ### ⚡ Performance Improvements - Phase 3 (Aggressive TBT & CLS Optimization)
