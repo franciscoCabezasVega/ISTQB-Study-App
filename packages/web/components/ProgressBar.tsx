@@ -39,7 +39,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[64px] flex flex-col justify-center">
       {label && <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{label}</p>}
       <div className="w-full h-4 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
         <div

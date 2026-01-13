@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
@@ -28,6 +29,10 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  other: {
+    // Prevenir zoom accidental en iOS (reduce CLS)
+    'apple-mobile-web-app-capable': 'yes',
+  },
 };
 
 export default function RootLayout({
@@ -43,6 +48,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="ISTQB Study" />
+        {/* Performance optimizations */}
+        <link rel="preconnect" href="https://pygermjcpomedeyujiut.supabase.co" />
+        <link rel="dns-prefetch" href="https://pygermjcpomedeyujiut.supabase.co" />
         <ServiceWorkerRegistration />
       </head>
       <body className="bg-gray-50 dark:bg-gray-900 flex flex-col min-h-screen">
@@ -50,7 +58,9 @@ export default function RootLayout({
           <NotificationNavigator />
           <Header />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
-            {children}
+            <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>}>
+              {children}
+            </Suspense>
           </main>
           <Footer />
         </AuthInitializer>

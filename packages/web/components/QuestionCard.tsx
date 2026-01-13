@@ -18,6 +18,35 @@ const containsHTML = (text: string): boolean => {
   return /<[a-z][\s\S]*>/i.test(text);
 };
 
+// Helper function to replace image placeholder with actual image
+const renderDescriptionWithImage = (description: string, imageUrl: string | null | undefined): JSX.Element => {
+  const imagePlaceholder = /{{IMAGE}}|\[IMAGE\]/g;
+  
+  if (!imageUrl || !imagePlaceholder.test(description)) {
+    // No image or no placeholder, render description normally
+    if (containsHTML(description)) {
+      return (
+        <div 
+          className="text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
+      );
+    }
+    return <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{processText(description)}</p>;
+  }
+  
+  // Replace placeholder with image
+  const imageElement = '<div class="my-6 flex justify-center"><img src="' + imageUrl + '" alt="Diagrama de la pregunta" class="max-w-full h-auto rounded-lg shadow-md border border-gray-300 dark:border-gray-600" loading="lazy" /></div>';
+  const htmlWithImage = description.replace(imagePlaceholder, imageElement);
+  
+  return (
+    <div 
+      className="text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-none"
+      dangerouslySetInnerHTML={{ __html: htmlWithImage }}
+    />
+  );
+};
+
 interface QuestionCardProps {
   question: Question;
   onAnswer: (selectedOptions: string[], timeSpent: number) => void;
@@ -27,14 +56,16 @@ interface QuestionCardProps {
   selectedAnswerIds?: string[];
 }
 
-export const QuestionCard: React.FC<QuestionCardProps> = ({
-  question,
-  onAnswer,
-  isLoading = false,
-  showFeedback = false,
-  isCorrect = false,
-  selectedAnswerIds = [],
-}) => {
+export const QuestionCard: React.FC<QuestionCardProps> = React.memo((
+  {
+    question,
+    onAnswer,
+    isLoading = false,
+    showFeedback = false,
+    isCorrect = false,
+    selectedAnswerIds = [],
+  }
+) => {
   const { t } = useTranslation();
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [answered, setAnswered] = useState(false);
@@ -64,14 +95,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     <Card className="w-full">
       <h2 className="text-2xl font-bold mb-6">{question.title}</h2>
       {question.description && (
-        containsHTML(question.description) ? (
-          <div 
-            className="text-gray-700 dark:text-gray-300 mb-6 prose dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: question.description }}
+        <div className="mb-6">
+          {renderDescriptionWithImage(question.description, question.image_url)}
+        </div>
+      )}
+
+      {/* Render image separately if no placeholder was found in description */}
+      {question.image_url && !question.description?.match(/{{IMAGE}}|\[IMAGE\]/) && (
+        <div className="mb-6 flex justify-center">
+          <img 
+            src={question.image_url} 
+            alt="Diagrama de la pregunta" 
+            className="max-w-full h-auto rounded-lg shadow-md border border-gray-300 dark:border-gray-600"
+            loading="lazy"
           />
-        ) : (
-          <p className="text-gray-700 dark:text-gray-300 mb-6 whitespace-pre-line">{processText(question.description)}</p>
-        )
+        </div>
       )}
 
       <div className="space-y-3 mb-8">
@@ -139,4 +177,4 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       )}
     </Card>
   );
-};
+});
