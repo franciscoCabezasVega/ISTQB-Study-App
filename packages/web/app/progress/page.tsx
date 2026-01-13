@@ -13,6 +13,7 @@ import { useLanguageStore } from '@/lib/store/languageStore';
 import { formatPercentage } from '@/lib/utils';
 import { useTranslation } from '@/lib/useTranslation';
 import { translateTopicToSpanish } from '@istqb-app/shared';
+import { useDeferredLoading } from '@/lib/hooks/useTimeSlicing';
 
 interface StatsByTopic {
   topic: string;
@@ -39,8 +40,13 @@ export default function ProgressPage() {
   const [overallSuccessRate, setOverallSuccessRate] = useState(0);
   const [totalAnswers, setTotalAnswers] = useState(0);
   const [loading, setLoading] = useState(true);
+  
+  // Diferir carga de estadísticas para reducir TBT
+  const shouldLoadStats = useDeferredLoading(200);
 
   useEffect(() => {
+    if (!shouldLoadStats) return;
+    
     const loadStats = async () => {
       try {
         setLoading(true);
@@ -83,7 +89,7 @@ export default function ProgressPage() {
     };
 
     loadStats();
-  }, []);
+  }, [shouldLoadStats]);
 
   if (loading) {
     return (
@@ -131,24 +137,24 @@ export default function ProgressPage() {
       <div>
         <h2 className="text-2xl font-bold mb-4">✏️ {t('progress.studyProgress')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-blue-50 dark:bg-blue-900">
+        <Card className="bg-blue-50 dark:bg-blue-900 min-h-[140px] flex flex-col justify-center">
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.totalQuestions')}</p>
           <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">{totalAnswers}</p>
         </Card>
 
-        <Card className="bg-green-50 dark:bg-green-900">
+        <Card className="bg-green-50 dark:bg-green-900 min-h-[140px] flex flex-col justify-center">
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.successRate')}</p>
           <p className="text-4xl font-bold text-green-600 dark:text-green-400">
             {formatPercentage(overallSuccessRate)}
           </p>
         </Card>
 
-        <Card className="bg-purple-50 dark:bg-purple-900">
+        <Card className="bg-purple-50 dark:bg-purple-900 min-h-[140px] flex flex-col justify-center">
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.topicsStudied')}</p>
           <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">{stats.length}</p>
         </Card>
 
-          <Card className="bg-orange-50 dark:bg-orange-900">
+          <Card className="bg-orange-50 dark:bg-orange-900 min-h-[140px] flex flex-col justify-center">
             <StreakCounter />
           </Card>
         </div>
@@ -218,33 +224,33 @@ export default function ProgressPage() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="bg-blue-50 dark:bg-blue-900">
+            <Card className="bg-blue-50 dark:bg-blue-900 min-h-[140px] flex flex-col justify-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.totalExams')}</p>
               <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">{examStats.total_exams}</p>
             </Card>
 
-            <Card className="bg-green-50 dark:bg-green-900">
+            <Card className="bg-green-50 dark:bg-green-900 min-h-[140px] flex flex-col justify-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.averageScore')}</p>
               <p className="text-4xl font-bold text-green-600 dark:text-green-400">
                 {formatPercentage(examStats.average_score || 0)}
               </p>
             </Card>
 
-            <Card className="bg-purple-50 dark:bg-purple-900">
+            <Card className="bg-purple-50 dark:bg-purple-900 min-h-[140px] flex flex-col justify-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.lastScore')}</p>
               <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">
                 {formatPercentage(examStats.last_score || 0)}
               </p>
             </Card>
 
-            <Card className="bg-orange-50 dark:bg-orange-900">
+            <Card className="bg-orange-50 dark:bg-orange-900 min-h-[140px] flex flex-col justify-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.highestScore')}</p>
               <p className="text-4xl font-bold text-orange-600 dark:text-orange-400">
                 {formatPercentage(examStats.highest_score || 0)}
               </p>
             </Card>
 
-            <Card className="bg-teal-50 dark:bg-teal-900">
+            <Card className="bg-teal-50 dark:bg-teal-900 min-h-[140px] flex flex-col justify-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.examsPassed')}</p>
               <p className="text-4xl font-bold text-teal-600 dark:text-teal-400">
                 {examStats.exams_passed}/{examStats.total_exams}
@@ -252,7 +258,7 @@ export default function ProgressPage() {
             </Card>
 
             {examStats.last_exam_date && (
-              <Card className="bg-pink-50 dark:bg-pink-900">
+              <Card className="bg-pink-50 dark:bg-pink-900 min-h-[140px] flex flex-col justify-center">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('progress.lastExamDate')}</p>
                 <p className="text-lg font-bold text-pink-600 dark:text-pink-400">
                   {new Date(examStats.last_exam_date).toLocaleDateString()}

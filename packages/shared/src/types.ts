@@ -39,6 +39,7 @@ export interface QuestionDB {
   type: QuestionType;
   topic: string;
   correct_answer_ids: string[];
+  image_url?: string | null; // URL of image/diagram (same for all languages)
   created_at: string;
   updated_at: string;
 }
@@ -53,6 +54,7 @@ export interface Question {
   options: QuestionOption[];
   correct_answer_ids: string[];
   explanation: string;
+  image_url?: string | null; // URL of the image/diagram for this question
   created_at: string;
   updated_at: string;
   language?: Language; // Idioma actual de la pregunta

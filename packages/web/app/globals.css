@@ -22,6 +22,9 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
   transition: background-color 0.3s, color 0.3s;
+  /* Optimizaciones de performance */
+  font-display: optional;
+  text-rendering: optimizeSpeed;
 }
 
 body.dark-mode {
@@ -45,4 +48,32 @@ body.light-mode {
 
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
+}
+
+/* Optimizaciones de performance para reducir CLS y reflow */
+.perf-contain {
+  content-visibility: auto;
+  contain: layout style paint;
+}
+
+.perf-will-change {
+  will-change: transform, opacity;
+}
+
+/* Prevenir layout shift en imágenes */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Optimizar animaciones */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

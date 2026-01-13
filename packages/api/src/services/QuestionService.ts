@@ -28,7 +28,11 @@ export class QuestionService {
     language: Language = 'es',
     limit: number = 10
   ): Promise<Question[]> {
-    const query = supabase.from('questions').select('*').eq('topic', topic);
+    const query = supabase
+      .from('questions')
+      .select('*')
+      .eq('topic', topic)
+      .order('created_at', { ascending: true }); // Orden consistente por fecha de creación
 
     const { data, error } = await query.limit(limit);
 
@@ -120,6 +124,7 @@ export class QuestionService {
       options: useEnglish ? (data.options_en || data.options_es || []) : (data.options_es || []),
       correct_answer_ids: data.correct_answer_ids || [],
       explanation: useEnglish ? (data.description_en || data.description_es) : data.description_es, // Use description as explanation
+      image_url: data.image_url, // Same image for all languages
       created_at: data.created_at,
       updated_at: data.updated_at,
       language: useEnglish ? 'en' : 'es',
