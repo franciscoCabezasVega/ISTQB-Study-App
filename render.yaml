@@ -13,16 +13,30 @@ services:
     plan: starter
     autoDeploy: true
 
+  # Frontend as Static Site (FREE - saves $7/month)
   - type: web
     name: istqb-frontend
-    runtime: node
-    buildCommand: npm install && npm run build --workspace=packages/web
-    startCommand: npm start --workspace=packages/web
+    runtime: static
+    buildCommand: npm install --production=false && npm run build --workspace=packages/web
+    staticPublishPath: ./packages/web/out
     envVars:
       - key: NODE_ENV
         value: production
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+      - path: /_next/static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
     region: oregon
-    plan: starter
     autoDeploy: true
 
   # Cron Job gratuito para procesar recordatorios cada 5 minutos

@@ -1,0 +1,10 @@
+# Reportes generados
+duplicate-questions-report.json
+duplicate-questions-report-*.json
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Distribución compilada
+dist/

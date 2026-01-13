@@ -7,6 +7,7 @@ import { Button } from '@/components/Button';
 import { CardSkeleton } from '@/components/Skeleton';
 import { apiClient } from '@/lib/api';
 import { useTranslation } from '@/lib/useTranslation';
+import { useDeferredLoading } from '@/lib/hooks/useTimeSlicing';
 
 interface TopicStats {
   [key: string]: {
@@ -26,6 +27,9 @@ export default function StudyPage() {
   const [stats, setStats] = useState<TopicStats>({});
   const [questionCounts, setQuestionCounts] = useState<QuestionCounts>({});
   const [loading, setLoading] = useState(true);
+  
+  // Diferir carga de estadísticas hasta después del FCP
+  const shouldLoadStats = useDeferredLoading(150);
 
   // Mapeo de IDs a nombres en BD (inglés) - Nombres oficiales ISTQB
   const topicIdToDbName: Record<string, string> = {
@@ -37,8 +41,10 @@ export default function StudyPage() {
     'tools': 'Test Tools',
   };
 
-  // Cargar estadísticas
+  // Cargar estadísticas solo después de diferimiento
   useEffect(() => {
+    if (!shouldLoadStats) return;
+    
     const loadStats = async () => {
       try {
         const [statsResponse, countsResponse] = await Promise.all([
@@ -66,13 +72,13 @@ export default function StudyPage() {
     };
 
     loadStats();
-  }, []);
+  }, [shouldLoadStats]);
 
-  const handleStartStudy = (topicDbName: string) => {
+  const handleStartStudy = React.useCallback((topicDbName: string) => {
     router.push(`/study/session?topic=${encodeURIComponent(topicDbName)}`);
-  };
+  }, [router]);
 
-  const topics = [
+  const topics = React.useMemo(() => [
     {
       id: 'fundamentals',
       titleKey: 'study.topics.fundamentals.title',
@@ -109,7 +115,7 @@ export default function StudyPage() {
       descriptionKey: 'study.topics.tools.description',
       icon: '⚙️',
     },
-  ];
+  ], []);
 
   return (
     <div className="space-y-8">

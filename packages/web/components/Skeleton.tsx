@@ -44,7 +44,13 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 // Skeleton para Card
 export const CardSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-xl p-6 shadow-md ${className}`}>
+    <div 
+      className={`bg-white dark:bg-slate-800 rounded-xl p-6 shadow-md min-h-[200px] ${className}`}
+      style={{
+        contentVisibility: 'auto',
+        contain: 'layout style paint',
+      }}
+    >
       <Skeleton height={24} className="mb-4" width="60%" />
       <Skeleton height={16} className="mb-2" width="100%" />
       <Skeleton height={16} className="mb-2" width="90%" />
@@ -56,7 +62,7 @@ export const CardSkeleton: React.FC<{ className?: string }> = ({ className = '' 
 // Skeleton para estadísticas
 export const StatCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-md">
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md transition-shadow hover:shadow-lg h-full flex flex-col min-h-[140px] justify-center" style={{ contentVisibility: 'auto', contain: 'layout style paint' }}>
       <Skeleton height={16} className="mb-2" width="70%" />
       <Skeleton height={40} width="50%" />
     </div>

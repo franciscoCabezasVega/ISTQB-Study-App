@@ -9,7 +9,7 @@ import { Button } from './Button';
 import { StreakCounter } from './StreakCounter';
 import { LanguageSelector } from './LanguageSelector';
 
-export const Header: React.FC = () => {
+export const Header: React.FC = React.memo(() => {
   const { user, logout } = useAuthStore();
   const { t } = useTranslation();
   const pathname = usePathname();
@@ -17,36 +17,36 @@ export const Header: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   
-  const handleLogout = async () => {
+  const handleLogout = React.useCallback(async () => {
     setShowDropdown(false);
     setShowMobileMenu(false);
     logout();
     // Usar router de Next.js para una navegación más limpia
     router.push('/auth/signin');
-  };
+  }, [logout, router]);
 
-  const handleNavClick = () => {
+  const handleNavClick = React.useCallback(() => {
     setShowMobileMenu(false);
-  };
+  }, []);
 
-  const getInitials = (name: string) => {
+  const getInitials = React.useCallback((name: string) => {
     return name
       .split(' ')
       .map(word => word[0])
       .join('')
       .substring(0, 2)
       .toUpperCase();
-  };
+  }, []);
 
-  const isActive = (path: string) => {
+  const isActive = React.useCallback((path: string) => {
     return pathname === path || pathname?.startsWith(path + '/');
-  };
+  }, [pathname]);
 
-  const navLinkClass = (path: string) => {
+  const navLinkClass = React.useCallback((path: string) => {
     return isActive(path)
       ? 'text-blue-600 dark:text-blue-400 font-semibold border-b-2 border-blue-600 dark:border-blue-400 pb-1'
       : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400';
-  };
+  }, [isActive]);
   
   // Verificar si estamos en páginas de autenticación o en home sin login
   const isAuthPage = pathname?.startsWith('/auth/');
@@ -239,4 +239,4 @@ export const Header: React.FC = () => {
       </div>
     </header>
   );
-};
+});

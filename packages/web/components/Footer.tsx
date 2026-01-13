@@ -6,7 +6,7 @@ import { useTranslation } from '@/lib/useTranslation';
 
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0-alpha';
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const [currentYear, setCurrentYear] = useState<number | null>(null);
   const [buildDate, setBuildDate] = useState<string>('');
@@ -136,4 +136,4 @@ export const Footer: React.FC = () => {
       </div>
     </footer>
   );
-};
+});

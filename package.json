@@ -28,7 +28,9 @@
     "version:major": "npm version major --workspaces && git add . && git commit -m \"chore: bump version\" && git push",
     "release": "node scripts/release.js",
     "verify:version": "node scripts/verify-version-system.js",
-    "test:version-sync": "node scripts/test-version-sync.js"
+    "validate:optimizations": "node scripts/validate-optimizations.js",
+    "test:version-sync": "node scripts/test-version-sync.js",
+    "check-duplicates": "ts-node scripts/check-duplicate-questions.ts"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
@@ -44,8 +46,10 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.38.4",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
+    "dotenv": "^16.3.1",
     "pdf-parse": "^2.4.5",
     "pdfjs-dist": "^5.4.449",
     "uuid": "^13.0.0"

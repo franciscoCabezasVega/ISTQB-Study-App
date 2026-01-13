@@ -7,7 +7,7 @@ interface CardProps {
   className?: string;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className = '' }) => {
+export const Card: React.FC<CardProps> = React.memo(({ children, className = '' }) => {
   return (
     <div
       className={`
@@ -19,10 +19,15 @@ export const Card: React.FC<CardProps> = ({ children, className = '' }) => {
         hover:shadow-lg
         h-full
         flex flex-col
+        min-h-[200px]
         ${className}
       `}
+      style={{
+        contentVisibility: 'auto',
+        contain: 'layout style paint',
+      }}
     >
       {children}
     </div>
   );
-};
+});
