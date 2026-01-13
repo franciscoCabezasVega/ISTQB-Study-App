@@ -18,13 +18,15 @@ describe('QuestionService', () => {
   let mockFrom: jest.Mock;
   let mockSelect: jest.Mock;
   let mockEq: jest.Mock;
+  let mockOrder: jest.Mock;
   let mockLimit: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     mockLimit = jest.fn();
-    mockEq = jest.fn().mockReturnValue({ limit: mockLimit });
+    mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
+    mockEq = jest.fn().mockReturnValue({ order: mockOrder });
     mockSelect = jest.fn().mockReturnValue({ eq: mockEq, limit: mockLimit, single: jest.fn() });
     mockFrom = jest.fn().mockReturnValue({ select: mockSelect });
 
