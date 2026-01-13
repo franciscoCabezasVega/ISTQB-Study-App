@@ -1,6 +1,6 @@
 {
   "name": "istqb-study-app",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Progressive Web App para preparación ISTQB Foundation Level",
   "private": true,
   "workspaces": [

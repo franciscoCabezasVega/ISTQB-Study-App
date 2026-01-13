@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.2.0](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.1.0...v1.2.0) (2026-01-13)
+
+### ✨ Features
+
+* migrate frontend to static site, fix tests, and move cron to cron-job.org ([40b926c](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/40b926cef9493d2ec857a89857941ebd953db8d0))
+
 ## [1.1.0](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.0.9...v1.1.0) (2026-01-13)
 
 ### ✨ Features
