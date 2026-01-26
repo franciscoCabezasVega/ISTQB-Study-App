@@ -127,38 +127,52 @@
 | Sistema de gamificación | ✅ Completo |
 | Componentes de gamificación | ✅ Completo |
 | Página de configuración de recordatorios | ✅ Completo |
-| Scheduler de recordatorios | ⏳ Pendiente |
-| Tests unitarios | ⏳ Pendiente |
+| Scheduler de recordatorios | ✅ Completo (cron-job.org) |
+| Tests unitarios | ✅ Completo (117 tests, 30.83% coverage) |
 | Documentación | ✅ Actualizada |
 
 ## 🚀 Próximos Pasos
 
-1. **Implementar Scheduler de Recordatorios**
-   - Crear worker/cron job para enviar recordatorios
-   - Integrar con servicio de email (Nodemailer)
-   - Implementar notificaciones push
+1. **Testing Avanzado**
+   - Implementar E2E tests con Playwright/Cypress
+   - Aumentar cobertura a 80%+
+   - Tests de integración de notificaciones
 
-2. **Testing**
-   - Unit tests para ReminderService
-   - Unit tests para AchievementService
-   - Integration tests para las nuevas rutas
+2. **Análisis y Reportes**
+   - Gráficas de progreso temporal
+   - Exportar estadísticas en PDF
+   - Comparación de resultados entre exámenes
 
-3. **Banco de Preguntas ISTQB**
-   - Crear preguntas para cada tema
-   - Incluir explicaciones y referencias ISTQB
-   - Insertar en la base de datos
+3. **Nuevas Funcionalidades**
+   - Modo de práctica cronometrada
+   - Preguntas interactivas (drag & drop)
+   - Integración con calendario
+   - Modo colaborativo (grupos de estudio)
 
 ## 📝 Notas Importantes
 
-1. **Logros**: Los logros se insertan usando el script `docs/achievements.sql`. Ejecutar en Supabase SQL Editor.
+1. **Logros**: Los logros iniciales están en la base de datos. Se pueden agregar más ejecutando inserts en Supabase SQL Editor.
 
-2. **Streaks**: La tabla `daily_streaks` debe crearse en Supabase antes de usar la funcionalidad de streaks. El script está en `docs/SUPABASE_SETUP.md`.
+2. **Streaks**: El sistema calcula automáticamente si la racha está activa. Visualización en gris cuando >1 día sin estudiar.
 
-3. **Recordatorios**: El backend está completo, pero falta implementar el scheduler que realmente envíe los recordatorios. Por ahora, solo se pueden configurar.
+3. **Recordatorios**: Sistema completo implementado con cron-job.org para scheduler, EmailJS para emails y Service Workers para push notifications.
 
-4. **Integraciones**: Los streaks y logros se actualizan automáticamente cuando el usuario responde preguntas o completa exámenes, sin necesidad de llamadas adicionales desde el frontend.
+4. **Integraciones**: Los streaks y logros se actualizan automáticamente cuando el usuario responde preguntas o completa exámenes.
+
+5. **Preguntas**: 372 preguntas ISTQB oficiales con distribución oficial por capítulo para exámenes.
 
 ---
 
-**Fecha de actualización:** Diciembre 2024
-**Versión:** 0.2.0
+**Fecha de actualización:** Enero 2026
+**Versión:** 1.2.0
+
+## 🆕 Actualizaciones Recientes (Enero 2026)
+
+### StreakCounter - Detección Automática de Racha Perdida
+- ✅ Cálculo automático de racha efectiva basado en `last_study_date`
+- ✅ Visualización en gris cuando la racha se pierde (>1 día sin estudiar)
+- ✅ Contador muestra 0 automáticamente sin necesidad de refrescar desde backend
+- ✅ Mejora en UX: feedback visual inmediato del estado real de la racha
+
+**Archivos modificados:**
+- `packages/web/components/StreakCounter.tsx` - Agregado `useMemo` para cálculo automático de racha efectiva

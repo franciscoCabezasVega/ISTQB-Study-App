@@ -36,6 +36,7 @@ Estudiar ISTQB/
 
 - ✅ **Gamificación**
   - StreakCounter: componente para mostrar rachas de estudio
+  - Detección automática de racha perdida (fuego gris cuando >1 día sin estudiar)
   - AchievementBadge: componente para mostrar logros
   - Página /achievements: visualización de todos los logros
   - Integración automática: streaks y logros se actualizan al responder preguntas
@@ -108,71 +109,57 @@ Estudiar ISTQB/
 
 | Característica | Estado | Nota |
 |---|---|---|
-| Motor de preguntas | ✅ Base lista | Necesita banco de preguntas ISTQB |
-| Evaluación de respuestas | ✅ Lógica lista | Validación implementada |
-| Repetición espaciada (SM-2) | ✅ Completa | Algoritmo 100% funcional |
-| Simulador de examen | ✅ Completa | UI y lógica implementadas |
-| Seguimiento de progreso | ✅ Completa | Estadísticas por tema implementadas |
-| Gamificación | ✅ Completa | Streaks, badges, logros y componentes visuales |
-| Recordatorios | ✅ Backend completo | UI de configuración lista, falta scheduler |
-| PWA (Offline) | ✅ Completa | Service Worker funcional |
-| Multi-idioma | ✅ Completa | ES/EN configurados |
-| Autenticación | ✅ Completa | Email/password listo |
+| Motor de preguntas | ✅ Completo | 372 preguntas ISTQB oficiales |
+| Evaluación de respuestas | ✅ Completo | Validación implementada |
+| Repetición espaciada (SM-2) | ✅ Completo | Algoritmo 100% funcional y testeado |
+| Simulador de examen | ✅ Completo | UI, lógica y distribución oficial implementadas |
+| Seguimiento de progreso | ✅ Completo | Estadísticas por tema implementadas |
+| Gamificación | ✅ Completo | Streaks con detección automática, badges, logros visuales |
+| Recordatorios | ✅ Completo | Backend, UI, emails y scheduler via cron-job.org |
+| PWA (Offline) | ✅ Completo | Service Worker funcional con cache inteligente |
+| Multi-idioma | ✅ Completo | ES/EN configurados con 150+ strings |
+| Autenticación | ✅ Completo | Email/password con Supabase Auth |
+| Testing | ✅ Parcial | 117 tests, cobertura 30.83% |
+| CI/CD | ✅ Completo | GitHub Actions configurado |
+| Performance | ✅ Optimizado | TBT reducido 98%, optimizaciones Supabase aplicadas |
+| Seguridad | ✅ Completo | RLS policies, vulnerabilidades documentadas |
 
 ## 🚀 Próximos pasos
 
-### Fase 2: Banco de preguntas ISTQB
-1. Crear preguntas para cada tema (6 temas x ~20-40 preguntas)
-2. Insertar en Supabase
-3. Incluir explicaciones completas
-4. Agregar referencias ISTQB
-
-### Fase 3: Completar simulador
-1. Lógica de timer (60 minutos)
-2. Validación de respuestas
-3. Cálculo de puntuación
-4. Pantalla de resultados
-
-### Fase 4: Gamificación ✅ COMPLETADA
-1. ✅ Sistema de streaks (tabla daily_streaks, AchievementService)
-2. ✅ Badges por temas (logros por tema con 90%+)
-3. ✅ Visualización de logros (página /achievements)
-4. ✅ Componentes visuales (StreakCounter, AchievementBadge)
-
-### Fase 5: Recordatorios ⏳ PARCIALMENTE COMPLETADA
-1. ✅ Backend completo (ReminderService, rutas API)
-2. ✅ UI de configuración (/settings/reminders)
-3. ⏳ Email notifications (pendiente implementar)
-4. ⏳ Push notifications (pendiente scheduler/cron)
-5. ✅ Background sync (preparado en Service Worker)
-
-### Fase 6: Testing completo
-1. Unit tests (Jest)
-2. Integration tests
-3. E2E tests
-4. Coverage 80%+
+### Fase 7: Mejoras Continuas
+1. ⏳ E2E tests con Playwright o Cypress
+2. ⏳ Aumentar cobertura de tests a 80%+
+3. ⏳ Análisis detallado post-examen con gráficas
+4. ⏳ Más tipos de preguntas interactivas (drag & drop, ordenamiento)
+5. ⏳ Modo de práctica cronometrada (tiempo límite por pregunta)
+6. ⏳ Exportar progreso en PDF
+7. ⏳ Integración con calendario (Google Calendar, iCal)
 
 ## 📊 Estadísticas del código
 
 ```
-Backend:
-- 4 servicios principales
-- 3 rutas completas (auth, questions, answers)
-- 5 interfaces TypeScript
-- ~500 líneas de código
+Backend (API):
+- 7 servicios principales
+- 6 rutas completas (auth, questions, answers, exam, reminders, achievements)
+- 15+ interfaces TypeScript
+- ~2500 líneas de código
+- 68 tests unitarios (30.83% coverage)
 
-Frontend:
-- 12 componentes React
-- 5 pages principales
-- 4 stores Zustand
-- 3 utilidades (API, i18n, etc)
-- ~1200 líneas de código
+Frontend (Web):
+- 25+ componentes React
+- 12 pages principales
+- 6 stores Zustand
+- 8+ utilidades (API, i18n, hooks, etc)
+- ~4500 líneas de código
+- 49 tests (Vitest + React Testing Library)
 
 Shared:
-- 20+ tipos TypeScript
+- 30+ tipos TypeScript
 - Constantes y utilidades
+- ~800 líneas de código
 
-Total: ~2000 líneas de código TypeScript
+Total: ~8000 líneas de código TypeScript
+Tests: 117 tests totales
 ```
 
 ## 🛠️ Tecnologías utilizadas
@@ -235,21 +222,31 @@ El proyecto está diseñado para cubrir los 6 temas principales:
 
 ---
 
-## 📋 Checklist para continuar
+## 📋 Checklist de desarrollo
 
-- [ ] Crear cuenta en Supabase
-- [ ] Ejecutar scripts SQL (SUPABASE_SETUP.md)
-- [ ] Configurar variables de entorno
-- [ ] Insertar preguntas de ejemplo
-- [ ] Instalar dependencias: `npm install`
-- [ ] Iniciar backend: `npm run dev --workspace=packages/api`
-- [ ] Iniciar frontend: `npm run dev --workspace=packages/web`
-- [ ] Probar flujo de autenticación
-- [ ] Implementar motor de preguntas completo
-- [ ] Agregar banco de preguntas ISTQB
+- [x] Crear cuenta en Supabase
+- [x] Ejecutar scripts SQL (SUPABASE_SETUP.md)
+- [x] Configurar variables de entorno
+- [x] Insertar preguntas ISTQB (372 preguntas oficiales)
+- [x] Instalar dependencias: `npm install`
+- [x] Iniciar backend: `npm run dev --workspace=packages/api`
+- [x] Iniciar frontend: `npm run dev --workspace=packages/web`
+- [x] Probar flujo de autenticación
+- [x] Implementar motor de preguntas completo
+- [x] Agregar banco de preguntas ISTQB
+- [x] Implementar simulador de examen con distribución oficial
+- [x] Implementar sistema de gamificación (streaks + logros)
+- [x] Implementar recordatorios (email + push notifications)
+- [x] Configurar CI/CD con GitHub Actions
+- [x] Desplegar en Render (API + Static Site)
+- [x] Optimizaciones de performance (Supabase + Frontend)
+- [x] Aplicar security fixes y RLS policies
+- [ ] Implementar E2E tests
+- [ ] Aumentar cobertura de tests a 80%+
 
 ---
 
 **Fecha de inicio:** 14 de diciembre de 2025
-**Versión:** 0.1.0 (MVP)
-**Estado:** Arquitectura base completada ✅
+**Última actualización:** 25 de enero de 2026
+**Versión:** 1.2.0
+**Estado:** Arquitectura base completada ✅ | Optimizaciones de performance aplicadas ✅ | Sistema de gamificación mejorado ✅
