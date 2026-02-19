@@ -72,7 +72,7 @@ describe('ReminderScheduler Integration Tests', () => {
   });
 
   describe('Timing window validation', () => {
-    it('should send within the 5-minute window', () => {
+    it('should send within the 15-minute window', () => {
       const reminder: StudyReminder = {
         id: 'test-id',
         user_id: 'test-user',
@@ -83,14 +83,16 @@ describe('ReminderScheduler Integration Tests', () => {
         updated_at: new Date().toISOString(),
       };
 
-      // Dentro de la ventana (09:00-09:04)
+      // Dentro de la ventana (09:00-09:14)
       expect(ReminderUtils.isTimeToSend(reminder, 'UTC', new Date('2026-01-03T09:00:00Z'))).toBe(true);
       expect(ReminderUtils.isTimeToSend(reminder, 'UTC', new Date('2026-01-03T09:01:00Z'))).toBe(true);
       expect(ReminderUtils.isTimeToSend(reminder, 'UTC', new Date('2026-01-03T09:04:00Z'))).toBe(true);
+      expect(ReminderUtils.isTimeToSend(reminder, 'UTC', new Date('2026-01-03T09:05:00Z'))).toBe(true);
+      expect(ReminderUtils.isTimeToSend(reminder, 'UTC', new Date('2026-01-03T09:14:00Z'))).toBe(true);
       
       // Fuera de la ventana
       expect(ReminderUtils.isTimeToSend(reminder, 'UTC', new Date('2026-01-03T08:59:00Z'))).toBe(false);
-      expect(ReminderUtils.isTimeToSend(reminder, 'UTC', new Date('2026-01-03T09:05:00Z'))).toBe(false);
+      expect(ReminderUtils.isTimeToSend(reminder, 'UTC', new Date('2026-01-03T09:15:00Z'))).toBe(false);
     });
 
     it('should NOT send before the window starts', () => {

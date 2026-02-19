@@ -272,7 +272,7 @@ describe('ReminderUtils', () => {
       expect(ReminderUtils.isTimeToSend(reminder, 'UTC', currentTime)).toBe(true);
     });
 
-    it('should return true within 5-minute window', () => {
+    it('should return true within 15-minute window', () => {
       const reminder = createReminder('09:00');
       
       const testCases = [
@@ -281,6 +281,9 @@ describe('ReminderUtils', () => {
         { time: new Date('2026-01-03T09:02:00Z'), expected: true },
         { time: new Date('2026-01-03T09:03:00Z'), expected: true },
         { time: new Date('2026-01-03T09:04:00Z'), expected: true },
+        { time: new Date('2026-01-03T09:05:00Z'), expected: true },
+        { time: new Date('2026-01-03T09:10:00Z'), expected: true },
+        { time: new Date('2026-01-03T09:14:00Z'), expected: true },
       ];
 
       testCases.forEach(({ time, expected }) => {
@@ -288,13 +291,13 @@ describe('ReminderUtils', () => {
       });
     });
 
-    it('should return false outside the 5-minute window', () => {
+    it('should return false outside the 15-minute window', () => {
       const reminder = createReminder('09:00');
       
       const testCases = [
         { time: new Date('2026-01-03T08:59:00Z'), expected: false },
-        { time: new Date('2026-01-03T09:05:00Z'), expected: false },
-        { time: new Date('2026-01-03T09:10:00Z'), expected: false },
+        { time: new Date('2026-01-03T09:15:00Z'), expected: false },
+        { time: new Date('2026-01-03T09:20:00Z'), expected: false },
         { time: new Date('2026-01-03T10:00:00Z'), expected: false },
       ];
 
