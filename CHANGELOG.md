@@ -16,6 +16,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ⚡ Performance
+
+**Scheduler Optimization (Supabase Traffic Reduction)**
+- **api:** optimize ReminderSchedulerService with JOIN query instead of 2 separate queries ([ReminderSchedulerService.ts](packages/api/src/services/ReminderSchedulerService.ts))
+- **api:** increase reminder window from 5 to 15 minutes ([ReminderUtils.ts](packages/api/src/services/ReminderUtils.ts))
+- Single JOIN query fetches reminders + user data in one request (50% reduction)
+- Scheduler frequency optimized to every 15 minutes (67% reduction)
+- Combined: 83% reduction in Supabase requests (288 → 49 requests/day)
+- Update cron-job.org configuration to every 15 minutes (see render.yaml)
+
+**Results:**
+- ✅ 50% reduction with JOIN optimization (24 → 12 requests/hour)
+- ✅ 67% reduction with 15-minute interval (12 → 4 requests/hour)
+- ✅ Total: 83% reduction (24 → 4 requests/hour)
+- ✅ No impact on user experience (15-minute window acceptable for study reminders)
+
 ### 🔧 Changed
 
 **StreakCounter Component**

@@ -50,6 +50,8 @@ Editar `.env` y agregar:
 SCHEDULER_API_KEY=tu-clave-secreta-aqui
 ```
 
+> **⚡ Optimización**: El scheduler usa un JOIN optimizado reduciendo el tráfico a Supabase en 50%. Ejecutar cada 15 minutos reduce requests adicionales en 67% (de 288 a 96 requests/día).
+
 ### 2. Probar el Scheduler Localmente
 
 ```bash

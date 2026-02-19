@@ -2,6 +2,24 @@ import ReminderService from './ReminderService';
 import NotificationService from './NotificationService';
 import { ReminderUtils } from './ReminderUtils';
 import { supabase } from '../config/supabase';
+import { StudyReminder } from '@istqb-app/shared';
+
+// Tipo para el resultado del JOIN de Supabase
+interface ReminderWithUser extends StudyReminder {
+  users?: {
+    id: string;
+    email: string;
+    full_name: string | null;
+    language: string;
+    timezone: string;
+  } | {
+    id: string;
+    email: string;
+    full_name: string | null;
+    language: string;
+    timezone: string;
+  }[];
+}
 
 /**
  * Servicio para programar y ejecutar el envío de recordatorios
@@ -38,31 +56,32 @@ class ReminderSchedulerService {
     };
 
     try {
-      // 1. Obtener todos los recordatorios activos
-      const reminders = await ReminderService.getActiveRemindersToSend();
-      console.log(`📋 Found ${reminders.length} active reminders`);
+      // 1. Obtener todos los recordatorios activos CON información de usuarios (JOIN optimizado)
+      // Esto reduce de 2 queries a 1 sola query, ahorrando ~50% de requests a Supabase
+      const { data: remindersWithUsers, error: queryError } = await supabase
+        .from('study_reminders')
+        .select(`
+          *,
+          users!inner(id, email, full_name, language, timezone)
+        `)
+        .eq('enabled', true);
 
-      // 2. Obtener información de usuarios con sus zonas horarias
-      const userIds = [...new Set(reminders.map(r => r.user_id))];
-      const { data: users, error: usersError } = await supabase
-        .from('users')
-        .select('id, email, full_name, language, timezone')
-        .in('id', userIds);
-
-      if (usersError) {
-        throw new Error(`Error fetching users: ${usersError.message}`);
+      if (queryError) {
+        throw new Error(`Error fetching reminders: ${queryError.message}`);
       }
 
-      // Crear mapa de usuarios para acceso rápido
-      const userMap = new Map(users?.map(u => [u.id, u]) || []);
+      const reminders = (remindersWithUsers || []) as ReminderWithUser[];
+      console.log(`📋 Found ${reminders.length} active reminders`);
 
-      // 3. Procesar cada recordatorio
-      for (const reminder of reminders) {
+      // 2. Procesar cada recordatorio
+      for (const reminderData of reminders) {
+        // Extraer datos del recordatorio y usuario del JOIN
+        const { users: userData, ...reminderProps } = reminderData;
+        const reminder = reminderProps as StudyReminder;
+        const user = Array.isArray(userData) ? userData[0] : userData;
         stats.processed++;
 
         try {
-          const user = userMap.get(reminder.user_id);
-          
           if (!user) {
             console.warn(`⚠️ User ${reminder.user_id} not found, skipping reminder ${reminder.id}`);
             stats.skipped++;

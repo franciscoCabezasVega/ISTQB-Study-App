@@ -90,10 +90,11 @@ export class ReminderUtils {
       .split(':')
       .map(Number);
 
-    // Verificar si estamos en la hora exacta o dentro de una ventana de 5 minutos
-    // Esto ayuda a evitar perder recordatorios si el scheduler se ejecuta cada X minutos
+    // Verificar si estamos en la hora exacta o dentro de una ventana de 15 minutos
+    // Esto permite ejecutar el scheduler cada 15 minutos reduciendo el tráfico a Supabase
+    // sin perder recordatorios programados
     const isExactHour = currentHour === preferredHour;
-    const isWithinWindow = currentMinute >= preferredMinute && currentMinute < preferredMinute + 5;
+    const isWithinWindow = currentMinute >= preferredMinute && currentMinute < preferredMinute + 15;
 
     return isExactHour && isWithinWindow;
   }
