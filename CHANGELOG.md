@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.2.2](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.2.1...v1.2.2) (2026-02-19)
+
+### ⚡ Performance
+
+* **api:** optimize scheduler to reduce supabase traffic by 83% ([ea35d25](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/ea35d254eafd3e45e7df136903ede398e58b01bf))
+
 ## [1.2.1](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.2.0...v1.2.1) (2026-01-26)
 
 ### 🐛 Bug Fixes
