@@ -64,6 +64,7 @@ export default function RemindersSettingsPage() {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
+        e.returnValue = '';
       }
     };
 

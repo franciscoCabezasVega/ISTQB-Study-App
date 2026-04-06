@@ -4,6 +4,7 @@
  */
 
 import { AnswerService } from './AnswerService.js';
+import { supabase as _supabase } from '../config/supabase.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -12,7 +13,7 @@ jest.mock('../config/supabase', () => ({
   },
 }));
 
-const { supabase } = require('../config/supabase');
+const supabase = jest.mocked(_supabase);
 
 describe('AnswerService', () => {
   beforeEach(() => {

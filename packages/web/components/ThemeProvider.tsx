@@ -13,10 +13,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.classList.toggle('dark', isDark);
       root.style.colorScheme = isDark ? 'dark' : 'light';
 
-      const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) {
+      // Actualizar todos los meta[name="theme-color"] para cubrir tanto
+      // los que tienen media query como los que no
+      document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
         meta.setAttribute('content', isDark ? '#111118' : '#fafaf9');
-      }
+      });
     };
 
     if (theme === 'system') {

@@ -4,6 +4,8 @@
  */
 
 import ExamService from '../services/ExamService.js';
+import { supabase as _supabase } from '../config/supabase.js';
+import { QuestionService as _QuestionService } from '../services/QuestionService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -19,8 +21,8 @@ jest.mock('../services/QuestionService', () => ({
   },
 }));
 
-const { supabase } = require('../config/supabase');
-const { QuestionService } = require('../services/QuestionService');
+const supabase = jest.mocked(_supabase);
+const QuestionService = jest.mocked(_QuestionService);
 
 describe('ExamService', () => {
   let mockFrom: jest.Mock;

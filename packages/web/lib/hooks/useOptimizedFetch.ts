@@ -5,7 +5,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-// Caché simple en memoria para requests con límite de entradas (LRU simple)
+// Caché simple en memoria para requests con límite de entradas (FIFO)
 const MAX_CACHE_SIZE = 100;
 const requestCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutos

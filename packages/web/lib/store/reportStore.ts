@@ -54,7 +54,7 @@ export const useReportStore = create<ReportState>((set, get) => ({
     await apiClient.createReport(payload);
     // Refrescar lista si ya estaba cargada
     if (get().userReports.length > 0) {
-      get().fetchUserReports();
+      await get().fetchUserReports();
     }
   },
 
@@ -63,6 +63,9 @@ export const useReportStore = create<ReportState>((set, get) => ({
     try {
       const response = await apiClient.getUserReports();
       set({ userReports: response.data.data || [] });
+    } catch (error) {
+      console.error('Error fetching user reports:', error);
+      set({ userReports: [] });
     } finally {
       set({ isLoadingReports: false });
     }
