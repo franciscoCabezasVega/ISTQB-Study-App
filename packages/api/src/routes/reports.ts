@@ -81,6 +81,16 @@ router.get('/admin/:id', authenticateToken, requireAdmin, async (req: AuthReques
  */
 router.put('/admin/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res: Response, next) => {
   try {
+    const allowedStatuses = ['open', 'in_review', 'resolved', 'dismissed'];
+    const allowedPriorities = ['low', 'medium', 'high'];
+
+    if (req.body.status && !allowedStatuses.includes(req.body.status)) {
+      return res.status(400).json({ statusCode: 400, message: `Invalid status. Allowed: ${allowedStatuses.join(', ')}` });
+    }
+    if (req.body.priority && !allowedPriorities.includes(req.body.priority)) {
+      return res.status(400).json({ statusCode: 400, message: `Invalid priority. Allowed: ${allowedPriorities.join(', ')}` });
+    }
+
     const payload: UpdateReportPayload = {
       status: req.body.status,
       priority: req.body.priority,

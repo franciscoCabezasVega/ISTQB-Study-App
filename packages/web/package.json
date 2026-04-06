@@ -16,7 +16,6 @@
   "dependencies": {
     "@istqb-app/shared": "file:../shared",
     "@supabase/supabase-js": "^2.39.0",
-    "@types/dompurify": "^3.0.5",
     "axios": "^1.6.2",
     "clsx": "^2.1.0",
     "date-fns": "^4.1.0",
@@ -36,6 +35,7 @@
     "@types/node": "^20.10.6",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@types/dompurify": "^3.0.5",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^4.0.16",
     "autoprefixer": "^10.4.16",
