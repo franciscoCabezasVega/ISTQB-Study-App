@@ -1,31 +1,30 @@
+// Cargar variables de entorno ANTES de cualquier import local (ESM evalúa imports en orden)
+import 'dotenv/config';
+
 import express, { Express } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-// Nota: importamos middleware y rutas *después* de cargar dotenv
-
-// Cargar variables de entorno lo antes posible
-dotenv.config();
 
 // Importar la configuración después de cargar .env
-import { config } from './config';
+import { config } from './config/index.js';
 
-// Importar middleware y rutas tras cargar variables de entorno
-import { errorHandler } from './middleware';
-import authRoutes from './routes/auth';
-import questionRoutes from './routes/questions';
-import answerRoutes from './routes/answers';
-import examRoutes from './routes/exams';
-import reminderRoutes from './routes/reminders';
-import achievementRoutes from './routes/achievements';
-import userRoutes from './routes/users';
-import studyRoutes from './routes/study';
-import schedulerRoutes from './routes/scheduler';
+// Importar middleware y rutas
+import { errorHandler } from './middleware/index.js';
+import authRoutes from './routes/auth.js';
+import questionRoutes from './routes/questions.js';
+import answerRoutes from './routes/answers.js';
+import examRoutes from './routes/exams.js';
+import reminderRoutes from './routes/reminders.js';
+import achievementRoutes from './routes/achievements.js';
+import userRoutes from './routes/users.js';
+import studyRoutes from './routes/study.js';
+import schedulerRoutes from './routes/scheduler.js';
+import reportRoutes from './routes/reports.js';
 
 // Crear aplicación Express
 const app: Express = express();
 
 // Middleware
-app.use(cors({ origin: config.corsOrigin }));
+app.use(cors({ origin: config.corsOrigin, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -44,6 +43,7 @@ app.use('/api/achievements', achievementRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/study', studyRoutes);
 app.use('/api/scheduler', schedulerRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Manejo de errores
 app.use(errorHandler);

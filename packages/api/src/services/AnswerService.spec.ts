@@ -3,7 +3,7 @@
  * Cubre estadísticas y tasas de éxito del usuario
  */
 
-import { AnswerService } from './AnswerService';
+import { AnswerService } from './AnswerService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({

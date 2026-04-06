@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
-import { authenticateToken, AuthRequest } from '../middleware';
-import AchievementService from '../services/AchievementService';
+import { authenticateToken, AuthRequest } from '../middleware/index.js';
+import AchievementService from '../services/AchievementService.js';
 import { Language } from '@istqb-app/shared';
 
 const router = Router();

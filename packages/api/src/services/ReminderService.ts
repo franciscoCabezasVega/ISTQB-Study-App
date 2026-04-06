@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabase';
+import { supabase } from '../config/supabase.js';
 import { StudyReminder } from '@istqb-app/shared';
 import { v4 as uuidv4 } from 'uuid';
 

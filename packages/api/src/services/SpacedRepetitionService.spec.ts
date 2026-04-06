@@ -3,7 +3,7 @@
  * Cubre el algoritmo SM-2 de repetición espaciada
  */
 
-import { SpacedRepetitionService } from './SpacedRepetitionService';
+import { SpacedRepetitionService } from './SpacedRepetitionService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({

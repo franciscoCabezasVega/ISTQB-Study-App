@@ -3,7 +3,7 @@
  * Cubre gestión de perfil de usuario y preferencias
  */
 
-import UserService from './UserService';
+import UserService from './UserService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({

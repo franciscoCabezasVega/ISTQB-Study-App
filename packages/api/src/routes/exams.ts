@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
-import { authenticateToken, AuthRequest } from '../middleware';
-import ExamService from '../services/ExamService';
+import { authenticateToken, AuthRequest } from '../middleware/index.js';
+import ExamService from '../services/ExamService.js';
 
 const router = Router();
 

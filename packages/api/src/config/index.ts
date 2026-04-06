@@ -5,6 +5,7 @@ export interface Config {
   jwtSecret: string;
   supabaseUrl: string;
   supabaseAnonKey: string;
+  adminEmails: string[];
 }
 
 export const config: Config = {
@@ -14,4 +15,5 @@ export const config: Config = {
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-key',
   supabaseUrl: process.env.SUPABASE_URL || '',
   supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
+  adminEmails: (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean),
 };

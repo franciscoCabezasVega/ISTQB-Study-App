@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authenticateToken, AuthRequest } from '../middleware';
-import { QuestionService } from '../services/QuestionService';
+import { authenticateToken, AuthRequest } from '../middleware/index.js';
+import { QuestionService } from '../services/QuestionService.js';
 import { Language } from '@istqb-app/shared';
 
 const router = Router();

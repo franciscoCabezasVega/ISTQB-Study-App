@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import ReminderSchedulerService from '../services/ReminderSchedulerService';
+import ReminderSchedulerService from '../services/ReminderSchedulerService.js';
 
 const router = Router();
 

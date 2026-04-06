@@ -1,8 +1,8 @@
 import { Router, Response } from 'express';
-import { authenticateToken, AuthRequest } from '../middleware';
-import ReminderService from '../services/ReminderService';
-import NotificationService from '../services/NotificationService';
-import { supabase } from '../config/supabase';
+import { authenticateToken, AuthRequest } from '../middleware/index.js';
+import ReminderService from '../services/ReminderService.js';
+import NotificationService from '../services/NotificationService.js';
+import { supabase } from '../config/supabase.js';
 
 const router = Router();
 

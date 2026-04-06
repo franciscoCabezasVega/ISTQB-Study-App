@@ -3,7 +3,7 @@
  * Cubren los casos críticos y errores encontrados durante el desarrollo
  */
 
-import ExamService from '../services/ExamService';
+import ExamService from '../services/ExamService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({

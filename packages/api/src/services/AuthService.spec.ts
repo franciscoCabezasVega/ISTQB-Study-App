@@ -3,7 +3,7 @@
  * Cubre autenticación, registro y gestión de usuarios
  */
 
-import { AuthService } from './AuthService';
+import { AuthService } from './AuthService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({

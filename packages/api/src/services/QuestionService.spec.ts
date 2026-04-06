@@ -3,7 +3,7 @@
  * Cubre obtención de preguntas por tema y filtros
  */
 
-import { QuestionService } from '../services/QuestionService';
+import { QuestionService } from '../services/QuestionService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({

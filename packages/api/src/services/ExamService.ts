@@ -1,6 +1,6 @@
-import { supabase } from '../config/supabase';
+import { supabase } from '../config/supabase.js';
 import { v4 as uuidv4 } from 'uuid';
-import { QuestionService } from './QuestionService';
+import { QuestionService } from './QuestionService.js';
 import { Language } from '@istqb-app/shared';
 
 export interface ExamSessionRequest {
@@ -396,7 +396,7 @@ class ExamService {
       await this.updateUserProgress(session.user_id, answers);
 
       // Actualizar streak y verificar logros (asíncrono, no bloquea la respuesta)
-      const { default: AchievementService } = await import('./AchievementService');
+      const { default: AchievementService } = await import('./AchievementService.js');
       AchievementService.updateStreak(session.user_id).catch(console.error);
       AchievementService.checkAndUnlockAchievements(session.user_id).catch(console.error);
 

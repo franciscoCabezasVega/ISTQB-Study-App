@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
-import { config } from '../config';
+import { config } from '../config/index.js';
 import { APIError } from '@istqb-app/shared';
-import { AuthRequest } from '../types/express';
+import { AuthRequest } from '../types/express.js';
 
 const supabase = createClient(config.supabaseUrl, config.supabaseAnonKey);
 
