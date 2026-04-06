@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useTransition, Suspense } from 'react';
+import React, { useState, useCallback, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
@@ -17,9 +17,30 @@ function ExamPageContent() {
   const { t } = useTranslation();
   const { language } = useLanguageStore();
 
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
+
+  // Defined before any early return to satisfy rules-of-hooks
+  const handleStartExam = useCallback(async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      // Crear sesión de examen con el idioma actual
+      const response = await apiClient.createExamSession(language);
+      const session = response.data.data;
+
+      // Iniciar store con las preguntas
+      startExam(session.sessionId, session.totalQuestions, session.questions);
+
+      // Redirigir a la sesión
+      router.push(`/exam/session?sessionId=${session.sessionId}`);
+    } catch (error) {
+      console.error('Error starting exam:', error);
+      alert(t('errors.generic'));
+      setIsLoading(false);
+    }
+  }, [isLoading, language, router, startExam, t]);
 
   if (!user) {
     return (
@@ -36,25 +57,6 @@ function ExamPageContent() {
       </div>
     );
   }
-
-  const handleStartExam = () => {
-    startTransition(async () => {
-      try {
-        // Crear sesión de examen con el idioma actual
-        const response = await apiClient.createExamSession(language);
-        const session = response.data.data;
-
-        // Iniciar store con las preguntas
-        startExam(session.sessionId, session.totalQuestions, session.questions);
-
-        // Redirigir a la sesión
-        router.push(`/exam/session?sessionId=${session.sessionId}`);
-      } catch (error) {
-        console.error('Error starting exam:', error);
-        alert(t('errors.generic'));
-      }
-    });
-  };
 
   // Cambio de lógica: eliminar la condición !acknowledged
   if (showInstructions) {
@@ -135,7 +137,7 @@ function ExamPageContent() {
               setShowInstructions(false);
               setAcknowledged(false);
             }}
-            disabled={isPending}
+            disabled={isLoading}
           >
             {t('common.back')}
           </Button>
@@ -143,9 +145,9 @@ function ExamPageContent() {
             variant="success"
             size="lg"
             onClick={handleStartExam}
-            disabled={!acknowledged || isPending}
+            disabled={!acknowledged || isLoading}
           >
-            {isPending ? t('exam.starting') : t('exam.beginExam')}
+            {isLoading ? t('exam.starting') : t('exam.beginExam')}
           </Button>
         </div>
       </div>
@@ -205,10 +207,10 @@ function ExamPageContent() {
           variant="success"
           size="lg"
           onClick={() => setShowInstructions(true)}
-          disabled={isPending}
+          disabled={isLoading}
           className="flex-1"
         >
-          {isPending ? t('exam.starting') : t('exam.startExam')}
+          {isLoading ? t('exam.starting') : t('exam.startExam')}
         </Button>
         <Button variant="secondary" size="lg" onClick={() => router.push('/study')}>
           {t('exam.backToStudy')}

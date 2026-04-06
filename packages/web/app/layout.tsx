@@ -74,11 +74,11 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link rel="preconnect" href="https://pygermjcpomedeyujiut.supabase.co" />
         <link rel="dns-prefetch" href="https://pygermjcpomedeyujiut.supabase.co" />
-        <ServiceWorkerRegistration />
       </head>
       <body className="bg-stone-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen transition-colors duration-300">
         <ThemeProvider>
           <AuthInitializer>
+            <ServiceWorkerRegistration />
             <NotificationNavigator />
             <ReportModal />
             <Header />

@@ -839,6 +839,7 @@ export const translations = {
       buttonTitle: 'Report an issue',
       buttonLabel: 'Report',
       reportQuestion: 'Report error in this question',
+      typeLabel: 'Report type',
       titleLabel: 'Title',
       titlePlaceholder: 'Briefly describe the issue...',
       descriptionLabel: 'Description',

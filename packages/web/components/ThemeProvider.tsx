@@ -1,9 +1,10 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import { useUIStore } from '@/lib/store/uiStore';
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+export function ThemeProvider({ children }: { children: ReactNode }) {
   const theme = useUIStore((s) => s.theme);
 
   useEffect(() => {
