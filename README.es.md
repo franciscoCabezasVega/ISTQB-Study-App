@@ -6,7 +6,6 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
-![Tests](https://img.shields.io/badge/tests-0%20passing-success)
 [![codecov](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App/branch/main/graph/badge.svg)](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App)
 
 **Español** | **[English](README.md)**
@@ -92,13 +91,13 @@ istqb-study-app/
 - **Testing**: Jest
 
 ### Frontend
-- **Framework**: Next.js 14 (App Router)
-- **Librería UI**: React 18
+- **Framework**: Next.js 16 (App Router)
+- **Librería UI**: React 19
 - **Estilos**: Tailwind CSS
-- **Gestión de Estado**: Zustand
+- **Gestión de Estado**: Zustand 5
 - **Cliente HTTP**: Axios
 - **Testing**: Vitest + React Testing Library
-- **PWA**: next-pwa
+- **PWA**: Service Worker personalizado (soporte offline)
 
 ### DevOps & Herramientas
 - **Despliegue**: Render
@@ -142,7 +141,8 @@ JWT_SECRET=tu-secreto-jwt-seguro
 # Servidor
 API_PORT=3001
 NODE_ENV=development
-CORS_ORIGIN=http://localhost:3000
+# Múltiples orígenes separados por coma — Next.js puede arrancar en 3000, 3001 o 3002
+CORS_ORIGIN=http://localhost:3000,http://localhost:3001,http://localhost:3002
 
 # EmailJS (para recordatorios)
 EMAILJS_SERVICE_ID=tu-service-id
@@ -179,7 +179,7 @@ npm run dev:web
 ```
 
 Accede a la aplicación:
-- Frontend: http://localhost:3000
+- Frontend: http://localhost:3000 (o 3001/3002 si el puerto está ocupado)
 - API Backend: http://localhost:3001
 
 ## 🧪 Testing
@@ -296,11 +296,12 @@ npm run version:major  # 1.0.0 -> 2.0.0
 
 - ✅ Autenticación basada en JWT
 - ✅ HTTPS en producción
-- ✅ Configuración CORS
+- ✅ Configuración CORS (soporte multi-origen)
 - ✅ Prevención de inyección SQL (PostgreSQL de Supabase)
-- ✅ Protección XSS (React)
+- ✅ Protección XSS mediante DOMPurify (sanitización de contenido HTML)
 - ✅ Row Level Security (RLS) en base de datos
 - ✅ Variables de entorno para datos sensibles
+- ✅ Server Actions autenticadas como rutas de API
 
 ## 🤝 Contribuir
 
