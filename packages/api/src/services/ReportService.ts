@@ -150,6 +150,9 @@ export class ReportService {
       updateData.status = payload.status;
       if (payload.status === 'resolved' || payload.status === 'dismissed') {
         updateData.resolved_at = new Date().toISOString();
+      } else {
+        // Revert to a non-terminal state: clear any stale resolution timestamp
+        updateData.resolved_at = null;
       }
     }
 

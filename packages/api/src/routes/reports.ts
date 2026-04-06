@@ -2,6 +2,7 @@ import { Router, Response, NextFunction } from 'express';
 import { authenticateToken, AuthRequest } from '../middleware/index.js';
 import { ReportService } from '../services/ReportService.js';
 import { UpdateReportPayload } from '@istqb-app/shared';
+import { config } from '../config/index.js';
 
 const router = Router();
 
@@ -10,10 +11,9 @@ const router = Router();
  * Compara el email del token con la lista ADMIN_EMAILS del entorno.
  */
 const requireAdmin = (req: AuthRequest, res: Response, next: NextFunction) => {
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim().toLowerCase());
   const userEmail = req.user?.email?.toLowerCase() || '';
 
-  if (!userEmail || !adminEmails.includes(userEmail)) {
+  if (!userEmail || !config.adminEmails.includes(userEmail)) {
     return res.status(403).json({ statusCode: 403, message: 'Forbidden: admin access required' });
   }
 
@@ -45,12 +45,23 @@ router.get('/admin/stats', authenticateToken, requireAdmin, async (req: AuthRequ
 router.get('/admin/all', authenticateToken, requireAdmin, async (req: AuthRequest, res: Response, next) => {
   try {
     const { status, type, priority, page, limit } = req.query;
+
+    const parsedPage = page ? parseInt(page as string, 10) : 1;
+    const parsedLimit = limit ? parseInt(limit as string, 10) : 20;
+
+    if (!Number.isInteger(parsedPage) || parsedPage < 1) {
+      return res.status(400).json({ statusCode: 400, message: 'page must be a positive integer' });
+    }
+    if (!Number.isInteger(parsedLimit) || parsedLimit < 1 || parsedLimit > 100) {
+      return res.status(400).json({ statusCode: 400, message: 'limit must be an integer between 1 and 100' });
+    }
+
     const result = await ReportService.getAllReports({
       status: status as string | undefined,
       type: type as string | undefined,
       priority: priority as string | undefined,
-      page: page ? parseInt(page as string) : undefined,
-      limit: limit ? parseInt(limit as string) : undefined,
+      page: parsedPage,
+      limit: parsedLimit,
     });
     return res.status(200).json({
       statusCode: 200,

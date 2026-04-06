@@ -34,6 +34,8 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
 
   const [submitting, setSubmitting] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isEndingRef = useRef(false);
   // Aleatorizar preguntas y opciones al iniciar el examen
   const [questions] = useState<Question[]>(() => {
     if (!initialQuestions || initialQuestions.length === 0) {
@@ -54,10 +56,11 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
 
   // Timer de 60 minutos — functional update para evitar recrear el intervalo cada tick
   useEffect(() => {
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       updateTimeRemaining((prev: number) => {
         if (prev <= 1) {
-          clearInterval(interval);
+          clearInterval(intervalRef.current!);
+          intervalRef.current = null;
           handleEndExam();
           return 0;
         }
@@ -65,7 +68,9 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
       });
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);  // solo se monta una vez
 
@@ -112,6 +117,15 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
   }, [currentQuestionIndex, questions.length, questionStartTime, currentQuestion, submitAnswer]);
 
   const handleEndExam = async (lastAnswer?: { questionId: string; selectedAnswerId: string | string[]; timeSpent: number }) => {
+    if (isEndingRef.current) return;
+    isEndingRef.current = true;
+
+    // Detener el timer en cualquier ruta de finalización
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     try {
       // Combinar respuestas del store con la última respuesta si existe
       const allAnswers = lastAnswer ? [...answersRef.current, lastAnswer] : answersRef.current;
