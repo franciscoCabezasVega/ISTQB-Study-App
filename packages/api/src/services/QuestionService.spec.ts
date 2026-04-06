@@ -4,7 +4,6 @@
  */
 
 import { QuestionService } from '../services/QuestionService.js';
-import { supabase as _supabase } from '../config/supabase.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -19,10 +18,12 @@ describe('QuestionService', () => {
   let mockEq: jest.Mock;
   let mockOrder: jest.Mock;
   let mockLimit: jest.Mock;
-  let supabase: jest.Mocked<typeof _supabase>;
+  // Use dynamic import to get the mocked module (ESM-safe)
+  let supabase: jest.Mocked<any>;
 
-  beforeAll(() => {
-    supabase = jest.mocked(_supabase);
+  beforeAll(async () => {
+    const mod = await import('../config/supabase.js');
+    supabase = jest.mocked(mod.supabase);
   });
 
   beforeEach(() => {

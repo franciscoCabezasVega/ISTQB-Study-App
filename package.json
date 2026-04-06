@@ -7,8 +7,9 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:web": "npm run dev --workspace=packages/web",
-    "dev:api": "npm run dev --workspace=packages/api",
+    "dev:web": "npm run build --workspace=packages/shared && npm run dev --workspace=packages/web",
+    "dev:api": "npm run build --workspace=packages/shared && npm run dev --workspace=packages/api",
+    "postinstall": "npm run build --workspace=packages/shared",
     "extract-and-seed": "node scripts/extract_and_seed.js",
     "build": "npm run build --workspace=packages/shared && npm run build --workspace=packages/web && npm run build --workspace=packages/api",
     "build:api": "npm run build --workspace=packages/api",
