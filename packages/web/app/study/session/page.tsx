@@ -15,6 +15,7 @@ import { useStudyStore } from '@/lib/store/studyStore';
 import { useLanguageStore } from '@/lib/store/languageStore';
 import { useStreakStore } from '@/lib/store/streakStore';
 import { useTranslation } from '@/lib/useTranslation';
+import { useOfflineStorage } from '@/lib/hooks/useOfflineStorage';
 
 function StudySessionContent() {
   const router = useRouter();
@@ -26,6 +27,8 @@ function StudySessionContent() {
   const { language } = useLanguageStore();
   const { refreshStreak } = useStreakStore();
   const { t } = useTranslation();
+  const { cacheQuestions, saveAnswerOffline, getCachedQuestions } = useOfflineStorage();
+  const [isOffline, setIsOffline] = React.useState(false);
 
   // Mapeo de temas en inglés a las claves en i18n
   const topicKeyMap: Record<string, string> = {
@@ -52,12 +55,27 @@ function StudySessionContent() {
   const [submitting, setSubmitting] = useState(false);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
+  const [pendingSync, setPendingSync] = useState(0);
   const [feedback, setFeedback] = useState<{
     isCorrect: boolean;
     selectedOptions: string[];
   } | null>(null);
   const sessionLanguageRef = React.useRef<string>(language); // Idioma en que se cargó la sesión
   const [isSessionActive, setIsSessionActive] = React.useState(false);
+  const pendingSyncRef = React.useRef(0);
+
+  // Monitorear estado de red
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    setIsOffline(!navigator.onLine);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Detectar refresh de página: si hay una sesión activa en sessionStorage, redirigir al home
   useEffect(() => {
@@ -109,11 +127,43 @@ function StudySessionContent() {
         // Aleatorizar preguntas y opciones
         const shuffledQuestions = shuffleQuestionsAndOptions(response.data) as Question[];
         setQuestions(shuffledQuestions);
+        // Cachear preguntas para uso offline (fire-and-forget)
+        cacheQuestions(
+          shuffledQuestions.map((q) => ({
+            id: q.id,
+            topic: q.topic || topic,
+            question: q.description || '',
+            options: (q.options || []).map((o: { id: string }) => o.id),
+            correctAnswer: q.correct_answer_ids,
+            explanation: q.explanation || '',
+            cachedAt: Date.now(),
+          }))
+        ).catch(() => {/* non-critical */});
       } catch (error) {
         console.error('Error loading questions:', error);
-        alert(t('study.errorLoadingQuestions'));
-        sessionStorage.removeItem('active_study_session'); // Limpiar en caso de error
-        router.push('/study');
+        // Intentar cargar desde IndexedDB si estamos offline
+        const cached = await getCachedQuestions(topic);
+        if (cached.length > 0) {
+          setIsOffline(true);
+          const mapped = cached.map((c) => ({
+            id: c.id,
+            title: c.id,
+            description: c.question,
+            topic: c.topic,
+            type: 'multiple_choice' as const,
+            options: c.options.map((id: string) => ({ id, text: id })),
+            correct_answer_ids: Array.isArray(c.correctAnswer) ? c.correctAnswer : [c.correctAnswer],
+            explanation: c.explanation,
+            created_at: '',
+            updated_at: '',
+          }))
+          const shuffled = shuffleQuestionsAndOptions(mapped) as Question[];
+          setQuestions(shuffled);
+        } else {
+          alert(t('study.errorLoadingQuestions'));
+          sessionStorage.removeItem('active_study_session');
+          router.push('/study');
+        }
       } finally {
         setLoading(false);
       }
@@ -131,33 +181,47 @@ function StudySessionContent() {
       setSubmitting(true);
 
       // Verificar si la respuesta es correcta
-      const isCorrect = 
-        selectedOptions.sort().join(',') === 
+      const isCorrect =
+        selectedOptions.sort().join(',') ===
         currentQuestion.correct_answer_ids.sort().join(',');
 
-      // Registrar la respuesta en BD usando el endpoint de STUDY
-      await apiClient.submitStudyAnswer({
-        questionId: currentQuestion.id,
-        selectedOptions,
-        isCorrect,
-        timeSpentSeconds: timeSpent || 0, // Default a 0 si no hay tiempo
-        attemptNumber: 1,
-      });
+      // Intentar registrar en el servidor; si falla, guardar offline
+      try {
+        await apiClient.submitStudyAnswer({
+          questionId: currentQuestion.id,
+          selectedOptions,
+          isCorrect,
+          timeSpentSeconds: timeSpent || 0,
+          attemptNumber: 1,
+        });
+        // Refrescar el streak después de responder correctamente en línea
+        refreshStreak();
+      } catch (networkError) {
+        // Sin red — guardar en IndexedDB y encolar para Background Sync
+        console.warn('[Study] Network error, saving offline:', networkError);
+        setIsOffline(true);
+        await saveAnswerOffline({
+          questionId: currentQuestion.id,
+          selectedAnswer: selectedOptions,
+          isCorrect,
+          timeSpent: timeSpent || 0,
+          sessionId: `study-${user.id}-${topic}`,
+        });
+        pendingSyncRef.current += 1;
+        setPendingSync(pendingSyncRef.current);
+      }
 
-      // Refrescar el streak después de responder
-      refreshStreak();
-
-      // Actualizar contador y feedback
+      // Actualizar contador y feedback (siempre, sin importar si hubo error de red)
       if (isCorrect) {
         setCorrectCount((prev) => prev + 1);
       }
 
       setFeedback({
         isCorrect,
-        selectedOptions, // Pasamos las opciones seleccionadas para mostrar sus explicaciones
+        selectedOptions,
       });
 
-      // Guardar en store
+      // Guardar en store local
       addUserAnswer({
         id: Math.random().toString(),
         user_id: user.id,
@@ -169,8 +233,7 @@ function StudySessionContent() {
         attempt_number: 1,
       });
     } catch (error) {
-      console.error('Error submitting answer:', error);
-      alert('Error al registrar la respuesta');
+      console.error('Error processing answer:', error);
     } finally {
       setSubmitting(false);
     }
@@ -234,7 +297,23 @@ function StudySessionContent() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Banner offline */}
+      {isOffline && (
+        <div
+          role="status"
+          className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-200 text-sm px-4 py-2 rounded-lg"
+        >
+          <span aria-hidden="true">📡</span>
+          <span>
+            {t('pwa.offlineBanner')}
+            {pendingSync > 0 && (
+              <span className="ml-2 font-medium">
+                ({t('pwa.pendingSync', { count: pendingSync })})
+              </span>
+            )}
+          </span>
+        </div>
+      )}
       <div>
         <h1 className="text-3xl font-bold mb-2">{getTranslatedTopicTitle()}</h1>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
