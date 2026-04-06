@@ -4,7 +4,7 @@
  */
 
 import { SpacedRepetitionService } from './SpacedRepetitionService.js';
-import { supabase } from '../config/supabase.js';
+import { supabase as _supabase } from '../config/supabase.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -12,8 +12,6 @@ jest.mock('../config/supabase', () => ({
     from: jest.fn(),
   },
 }));
-
-const supabase = jest.mocked(_supabase);
 
 describe('SpacedRepetitionService', () => {
   let mockFrom: jest.Mock;
@@ -24,6 +22,11 @@ describe('SpacedRepetitionService', () => {
   let mockLte: jest.Mock;
   let mockOrder: jest.Mock;
   let mockSingle: jest.Mock;
+  let supabase: jest.Mocked<typeof _supabase>;
+
+  beforeAll(() => {
+    supabase = jest.mocked(_supabase);
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();

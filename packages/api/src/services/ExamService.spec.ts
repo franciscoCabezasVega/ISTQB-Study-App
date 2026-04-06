@@ -21,9 +21,6 @@ jest.mock('../services/QuestionService', () => ({
   },
 }));
 
-const supabase = jest.mocked(_supabase);
-const QuestionService = jest.mocked(_QuestionService);
-
 describe('ExamService', () => {
   let mockFrom: jest.Mock;
   let mockSelect: jest.Mock;
@@ -34,6 +31,13 @@ describe('ExamService', () => {
   let mockIn: jest.Mock;
   let mockSingle: jest.Mock;
   let mockLimit: jest.Mock;
+  let supabase: jest.Mocked<typeof _supabase>;
+  let QuestionService: jest.Mocked<typeof _QuestionService>;
+
+  beforeAll(() => {
+    supabase = jest.mocked(_supabase);
+    QuestionService = jest.mocked(_QuestionService);
+  });
 
   beforeEach(() => {
     // Reset all mocks

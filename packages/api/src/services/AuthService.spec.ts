@@ -18,8 +18,6 @@ jest.mock('../config/supabase', () => ({
   },
 }));
 
-const supabase = jest.mocked(_supabase);
-
 describe('AuthService', () => {
   let mockFrom: jest.Mock;
   let mockSelect: jest.Mock;
@@ -27,6 +25,11 @@ describe('AuthService', () => {
   let mockUpdate: jest.Mock;
   let mockEq: jest.Mock;
   let mockSingle: jest.Mock;
+  let supabase: jest.Mocked<typeof _supabase>;
+
+  beforeAll(() => {
+    supabase = jest.mocked(_supabase);
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();

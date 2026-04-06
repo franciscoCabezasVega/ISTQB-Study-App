@@ -4,7 +4,7 @@
  */
 
 import { QuestionService } from '../services/QuestionService.js';
-import { supabase } from '../config/supabase.js';
+import { supabase as _supabase } from '../config/supabase.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -13,14 +13,17 @@ jest.mock('../config/supabase', () => ({
   },
 }));
 
-const supabase = jest.mocked(_supabase);
-
 describe('QuestionService', () => {
   let mockFrom: jest.Mock;
   let mockSelect: jest.Mock;
   let mockEq: jest.Mock;
   let mockOrder: jest.Mock;
   let mockLimit: jest.Mock;
+  let supabase: jest.Mocked<typeof _supabase>;
+
+  beforeAll(() => {
+    supabase = jest.mocked(_supabase);
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
