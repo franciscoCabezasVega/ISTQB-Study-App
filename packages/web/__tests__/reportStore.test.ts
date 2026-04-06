@@ -16,6 +16,7 @@ vi.mock('@/lib/api', () => ({
 
 import { useReportStore } from '@/lib/store/reportStore';
 import { apiClient } from '@/lib/api';
+import type { UserReport } from '@istqb-app/shared';
 
 const mockCreateReport = vi.mocked(apiClient.createReport);
 const mockGetUserReports = vi.mocked(apiClient.getUserReports);
@@ -99,7 +100,7 @@ describe('useReportStore', () => {
 
     it('should refresh userReports list when reports are already loaded', async () => {
       // Pre-populate store so the refresh branch is exercised
-      useReportStore.setState({ userReports: [{ id: 'old-r' } as any] });
+      useReportStore.setState({ userReports: [{ id: 'old-r' } as UserReport] });
 
       mockCreateReport.mockResolvedValue(axiosOk({ id: 'r-2' }));
       const refreshedReports = [{ id: 'old-r' }, { id: 'r-2' }];
