@@ -5,9 +5,19 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-// Caché simple en memoria para requests
+// Caché simple en memoria para requests con límite de entradas (LRU simple)
+const MAX_CACHE_SIZE = 100;
 const requestCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+
+function setCacheEntry(key: string, value: { data: any; timestamp: number }) {
+  // Evicción simple: si supera el límite, eliminar la entrada más antigua
+  if (requestCache.size >= MAX_CACHE_SIZE && !requestCache.has(key)) {
+    const oldestKey = requestCache.keys().next().value;
+    if (oldestKey) requestCache.delete(oldestKey);
+  }
+  requestCache.set(key, value);
+}
 
 // Deduplicación de requests en vuelo
 const pendingRequests = new Map<string, Promise<any>>();
@@ -69,7 +79,7 @@ export function useOptimizedFetch<T>(
       if (mountedRef.current) {
         setData(result);
         // Actualizar caché
-        requestCache.set(key, {
+        setCacheEntry(key, {
           data: result,
           timestamp: Date.now(),
         });
@@ -156,7 +166,7 @@ export function useBatchFetch<T>(
             return Promise.resolve(cached.data);
           }
           return req.fetcher().then((result) => {
-            requestCache.set(req.key, {
+            setCacheEntry(req.key, {
               data: result,
               timestamp: Date.now(),
             });

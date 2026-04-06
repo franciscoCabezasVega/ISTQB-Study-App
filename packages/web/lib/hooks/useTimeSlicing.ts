@@ -3,7 +3,7 @@
  * Divide operaciones costosas en chunks para reducir TBT
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface TimeSlicingOptions {
   chunkSize?: number;
@@ -102,8 +102,14 @@ export function useLazyModule<T>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  // Usar refs para `module` y `loading` para evitar que invaliden el useCallback
+  const moduleRef = useRef(module);
+  const loadingRef = useRef(loading);
+  moduleRef.current = module;
+  loadingRef.current = loading;
+
   const load = useCallback(async () => {
-    if (module || loading) return;
+    if (moduleRef.current || loadingRef.current) return;
 
     setLoading(true);
     setError(null);
@@ -116,7 +122,8 @@ export function useLazyModule<T>(
     } finally {
       setLoading(false);
     }
-  }, [loader, module, loading]);
+  // Solo `loader` es una dependencia real; module y loading se leen por ref
+  }, [loader]);
 
   useEffect(() => {
     if (!defer) {

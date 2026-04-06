@@ -17,11 +17,14 @@ export default function Home() {
   if (!user) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <Card className="max-w-md w-full">
-          <h1 className="text-3xl font-bold mb-4 text-center">{t('home.notLoggedIn.title')}</h1>
-          <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
-            {t('home.notLoggedIn.description')}
-          </p>
+        <Card className="max-w-md w-full animate-scale-in">
+          <div className="text-center mb-6">
+            <div className="text-5xl mb-4">📚</div>
+            <h1 className="text-3xl font-bold mb-3">{t('home.notLoggedIn.title')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              {t('home.notLoggedIn.description')}
+            </p>
+          </div>
           <div className="space-y-3">
             <Link href="/auth/signup" className="block">
               <Button variant="primary" size="lg" className="w-full">
@@ -40,19 +43,18 @@ export default function Home() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-2">
+    <div className="space-y-10">
+      <div className="text-center animate-fade-in-up">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-3 tracking-tight">
           {t('home.welcome').replace('{name}', user.full_name)}
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-gray-500 dark:text-gray-400 text-lg">
           {t('home.subtitle')}
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {!shouldLoadCards ? (
-          // Mostrar skeletons mientras se difiere la carga
           <>
             <CardSkeleton />
             <CardSkeleton />
@@ -61,9 +63,9 @@ export default function Home() {
         ) : (
           <>
             {/* Estudiar */}
-            <Card className="flex flex-col">
+            <Card className="flex flex-col animate-fade-in-up stagger-1">
               <h2 className="text-2xl font-bold mb-4">{t('home.cards.study.title')}</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+              <p className="text-gray-500 dark:text-gray-400 mb-6 flex-grow">
                 {t('home.cards.study.description')}
               </p>
               <Link href="/study">
@@ -74,9 +76,9 @@ export default function Home() {
             </Card>
 
             {/* Examen */}
-            <Card className="flex flex-col">
+            <Card className="flex flex-col animate-fade-in-up stagger-2">
               <h2 className="text-2xl font-bold mb-4">{t('home.cards.exam.title')}</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+              <p className="text-gray-500 dark:text-gray-400 mb-6 flex-grow">
                 {t('home.cards.exam.description')}
               </p>
               <Link href="/exam">
@@ -87,9 +89,9 @@ export default function Home() {
             </Card>
 
             {/* Progreso */}
-            <Card className="flex flex-col">
+            <Card className="flex flex-col animate-fade-in-up stagger-3">
               <h2 className="text-2xl font-bold mb-4">{t('home.cards.progress.title')}</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+              <p className="text-gray-500 dark:text-gray-400 mb-6 flex-grow">
                 {t('home.cards.progress.description')}
               </p>
               <Link href="/progress">

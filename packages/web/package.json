@@ -16,10 +16,12 @@
   "dependencies": {
     "@istqb-app/shared": "file:../shared",
     "@supabase/supabase-js": "^2.39.0",
+    "@types/dompurify": "^3.0.5",
     "axios": "^1.6.2",
     "clsx": "^2.1.0",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
+    "dompurify": "^3.3.3",
     "next": "^16.1.0",
     "next-intl": "^2.22.1",
     "react": "^19.2.3",

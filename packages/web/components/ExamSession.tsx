@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Question } from '@istqb-app/shared';
 import { QuestionCard } from './QuestionCard';
@@ -33,7 +33,6 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
   } = useExamStore();
 
   const [submitting, setSubmitting] = useState(false);
-  const [sessionComplete, setSessionComplete] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
   // Aleatorizar preguntas y opciones al iniciar el examen
   const [questions] = useState<Question[]>(() => {
@@ -42,46 +41,35 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
     }
     return shuffleQuestionsAndOptions(initialQuestions);
   });
-  console.log('[DEBUG] ExamSession render:', {
-    sessionId,
-    questionsCount: questions?.length || 0,
-    currentQuestionIndex,
-    answersCount: answers?.length || 0,
-    sessionComplete,
-    language
-  });
+
+  // Estado derivado durante render — sin useEffect ni estado extra
+  const sessionComplete = questions.length > 0 && currentQuestionIndex >= questions.length;
+
+  // Ref para acceder a answers sin agregar al closure del timer
+  const answersRef = useRef(answers);
+  answersRef.current = answers;
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = (answers.length / questions.length) * 100;
 
-  // Timer de 60 minutos
+  // Timer de 60 minutos — functional update para evitar recrear el intervalo cada tick
   useEffect(() => {
     const interval = setInterval(() => {
-      updateTimeRemaining(timeRemaining - 1);
-
-      if (timeRemaining <= 1) {
-        handleEndExam();
-      }
+      updateTimeRemaining((prev: number) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleEndExam();
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timeRemaining]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);  // solo se monta una vez
 
-  // Si no hay pregunta actual, mostrar pantalla de fin
-  useEffect(() => {
-    console.log('[DEBUG] Checking session complete:', {
-      currentQuestionIndex,
-      questionsLength: questions.length,
-      shouldComplete: currentQuestionIndex >= questions.length && questions.length > 0
-    });
-    
-    if (questions.length > 0 && currentQuestionIndex >= questions.length) {
-      console.log('[DEBUG] Setting session complete to true');
-      setSessionComplete(true);
-    }
-  }, [currentQuestionIndex, questions.length]);
-
-  const handleAnswerSubmit = async (selectedAnswers: string[]) => {
+  const handleAnswerSubmit = useCallback(async (selectedAnswers: string[]) => {
     if (!currentQuestion || selectedAnswers.length === 0) return;
 
     const selectedAnswerId = selectedAnswers[0]; // Tomar la primera respuesta seleccionada
@@ -120,14 +108,13 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
     } finally {
       setSubmitting(false);
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentQuestionIndex, questions.length, questionStartTime, currentQuestion, submitAnswer]);
 
   const handleEndExam = async (lastAnswer?: { questionId: string; selectedAnswerId: string | string[]; timeSpent: number }) => {
     try {
       // Combinar respuestas del store con la última respuesta si existe
-      const allAnswers = lastAnswer ? [...answers, lastAnswer] : answers;
-      
-      console.log('[DEBUG] Ending exam with answers:', allAnswers.length);
+      const allAnswers = lastAnswer ? [...answersRef.current, lastAnswer] : answersRef.current;
       
       // Verificar que haya respuestas antes de enviar
       if (allAnswers.length === 0) {
@@ -143,11 +130,11 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
         timeSpent: answer.timeSpent
       }));
 
-      // Enviar todas las respuestas en una sola petición batch
-      await apiClient.submitExamAnswersBatch(sessionId, normalizedAnswers);
-
-      // Finalizar sesión en el backend
-      await apiClient.completeExamSession(sessionId);
+      // Enviar batch y completar sesión en paralelo (son independientes)
+      await Promise.all([
+        apiClient.submitExamAnswersBatch(sessionId, normalizedAnswers),
+        apiClient.completeExamSession(sessionId),
+      ]);
 
       // Refrescar el streak después de finalizar el examen
       refreshStreak();

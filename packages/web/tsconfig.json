@@ -24,7 +24,6 @@
       "@testing-library/jest-dom",
       "node"
     ],
-    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"

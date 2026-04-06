@@ -1,5 +1,5 @@
-export * from './types.js';
-export * from './topicMap.js';
+export * from './types';
+export * from './topicMap';
 
 // Re-exportar constantes y utilidades
 export const ISTQB_TOPICS = [

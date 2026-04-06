@@ -2,55 +2,133 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   ISTQB Study App — Design System
+   Aesthetic: Academic Elegance + Modern Tech
+   ============================================ */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* --- Theme Variables --- */
 :root {
-  --primary: #3b82f6;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
   --secondary: #8b5cf6;
   --success: #10b981;
   --danger: #ef4444;
   --warning: #f59e0b;
-  --dark: #1f2937;
-  --light: #f3f4f6;
+  --gold: #e5a93d;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.22);
+  --selection-bg: rgba(99, 102, 241, 0.18);
 }
 
+.dark {
+  --scrollbar-thumb: rgba(255, 255, 255, 0.10);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.20);
+  --selection-bg: rgba(129, 140, 248, 0.25);
+}
+
+/* --- Selection Color --- */
+::selection {
+  background-color: var(--selection-bg);
+  color: inherit;
+}
+
+/* --- Typography --- */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  transition: background-color 0.3s, color 0.3s;
-  /* Optimizaciones de performance */
-  font-display: optional;
-  text-rendering: optimizeSpeed;
+  font-family: var(--font-outfit), system-ui, -apple-system, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-display: swap;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body.dark-mode {
-  @apply bg-gray-900 text-white;
+h1, h2, h3 {
+  font-family: var(--font-fraunces), Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.025em;
+  font-weight: 700;
 }
 
-body.light-mode {
-  @apply bg-white text-gray-900;
+/* --- Scrollbar --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* --- Animations --- */
 @keyframes slide-in {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes progress-fill {
+  from { width: 0%; }
 }
 
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
 }
 
-/* Optimizaciones de performance para reducir CLS y reflow */
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 80ms; }
+.stagger-3 { animation-delay: 160ms; }
+.stagger-4 { animation-delay: 240ms; }
+.stagger-5 { animation-delay: 320ms; }
+.stagger-6 { animation-delay: 400ms; }
+
+/* --- Performance --- */
 .perf-contain {
   content-visibility: auto;
   contain: layout style paint;
@@ -60,14 +138,20 @@ body.light-mode {
   will-change: transform, opacity;
 }
 
-/* Prevenir layout shift en imágenes */
 img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* Optimizar animaciones */
+/* --- Focus visible --- */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* --- Reduced motion --- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

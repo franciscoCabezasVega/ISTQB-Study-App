@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from './Card';
 import { Button } from './Button';
+import { useTranslation } from '@/lib/useTranslation';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -13,6 +14,7 @@ export const InstallPrompt: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Detectar si ya está instalada
@@ -28,7 +30,6 @@ export const InstallPrompt: React.FC = () => {
     };
 
     const handleAppInstalled = () => {
-      console.log('[PWA] App installed');
       setIsInstalled(true);
       setShowInstallPrompt(false);
       setDeferredPrompt(null);
@@ -51,10 +52,7 @@ export const InstallPrompt: React.FC = () => {
       const { outcome } = await deferredPrompt.userChoice;
 
       if (outcome === 'accepted') {
-        console.log('[PWA] User accepted install');
         setIsInstalled(true);
-      } else {
-        console.log('[PWA] User dismissed install');
       }
 
       setDeferredPrompt(null);
@@ -73,14 +71,12 @@ export const InstallPrompt: React.FC = () => {
   }
 
   return (
-    <Card className="fixed bottom-4 right-4 w-80 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg animate-bounce">
+    <Card className="fixed bottom-4 right-4 w-80 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-xl animate-fade-in-up z-40">
       <div className="flex items-start gap-3">
-        <div className="text-3xl">📱</div>
+        <div className="text-3xl" aria-hidden="true">📱</div>
         <div className="flex-1">
-          <h3 className="font-bold mb-1">Instala nuestra app</h3>
-          <p className="text-sm opacity-90 mb-3">
-            Acceso rápido y funcionamiento offline
-          </p>
+          <h3 className="font-bold mb-1">{t('pwa.installTitle')}</h3>
+          <p className="text-sm opacity-90 mb-3">{t('pwa.installDescription')}</p>
           <div className="flex gap-2">
             <Button
               variant="primary"
@@ -88,15 +84,15 @@ export const InstallPrompt: React.FC = () => {
               onClick={handleInstall}
               className="bg-white text-blue-600 hover:bg-gray-100"
             >
-              Instalar
+              {t('pwa.installButton')}
             </Button>
             <Button
               variant="secondary"
               size="sm"
               onClick={handleDismiss}
-              className="bg-white bg-opacity-20 text-white hover:bg-opacity-30"
+              className="bg-white/20 text-white hover:bg-white/30"
             >
-              Después
+              {t('pwa.installLater')}
             </Button>
           </div>
         </div>
