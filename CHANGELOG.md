@@ -6,6 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.3.0](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.2.2...v1.3.0) (2026-04-07)
+
+### ✨ Features
+
+* **theme:** remove 'system' option, sync theme from DB, fix tsconfig baseUrl ([cd6f3ee](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/cd6f3ee5c4409f60ea20aec30982b1c41061c6bc))
+* **web/study:** add offline support with IndexedDB cache and background sync ([4a4bcb6](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/4a4bcb665e24821e0261009e841bc60d726f7021))
+* **web:** add theme system, report feature, and UI improvements ([415f566](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/415f5662dc4d994c6a2475fb5e044e5f0b1fb736))
+
+### 🐛 Bug Fixes
+
+* address Copilot PR review comments ([6ef5534](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/6ef5534f712773f5da32a4f6f63c5a569cb5922f))
+* address Copilot PR review comments (round 2) ([ef8a267](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/ef8a2671034dfb21ba1988d4406bed778c479b3e))
+* address Copilot PR review comments (round 3) ([9c5a4e3](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/9c5a4e3dcd3d57b9a2a9e734313d12ca9b3b8dc6))
+* address Copilot review round 4 ([4bc6a96](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/4bc6a96505e6a264bedce97d3f8f3bc8d97bd0d6))
+* address Copilot review round 5 ([07b6e75](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/07b6e754f4668b71546f0e4778a68eec82a5f3ce))
+* address Copilot review round 6 ([ab783b2](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/ab783b22820825786f69e776e6ea240c30a3a7a7))
+* **api/specs:** move jest.mocked() to beforeAll to fix ESM ReferenceError ([71a1903](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/71a1903148d411d35bdaffdc59725fdbe28775c7))
+* **deploy:** add --production=false to API buildCommand in render.yaml ([1b638cd](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/1b638cd609a371ea94153b5014bdb474dff389c5))
+* **test:** replace 'as any' with UserReport type cast in reportStore test ([e5a9fbc](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/e5a9fbc90eae2d58067cde4f39e9994bec3fa9af))
+* **web:** add eslint-plugin-react-hooks to fix lint errors ([216bd15](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/216bd154a1a897d2449b53c4dcb0060915f406a9))
+
+### ♻️ Refactors
+
+* **api:** improve services, routes, config, and add reports ([e3b5ebe](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/e3b5ebe98c5b789dd0f3130b7e8c026fcda23c90))
+* **shared:** update types and fix ESM imports ([be951ce](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/be951ce03452c47667c2fa693e03ab2044dff049))
+
+### 📝 Documentation
+
+* update README files and package-lock ([476a131](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/476a1319ee7214564f28ff35eb0cf99ce8b7414e))
+
 ## [1.2.2](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.2.1...v1.2.2) (2026-02-19)
 
 ### ⚡ Performance
