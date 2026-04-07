@@ -29,6 +29,13 @@ export default function Home() {
 
     if (!accessToken) return;
 
+    // Solo persistir para tipos reconocidos para no dejar tokens huérfanos en storage
+    if (type !== 'recovery' && type !== 'signup' && type !== 'email') {
+      // Tipo desconocido — limpiar el hash sin guardar nada
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+      return;
+    }
+
     // Extraer el token sensible y eliminarlo inmediatamente del hash
     // para que no quede expuesto en el historial del navegador ni a otros scripts.
     sessionStorage.setItem(

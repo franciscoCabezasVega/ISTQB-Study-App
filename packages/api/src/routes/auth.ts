@@ -53,9 +53,12 @@ router.post('/forgot-password', async (req, res, next) => {
 router.post('/reset-password', async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    const accessToken = authHeader?.startsWith('Bearer ')
-      ? authHeader.slice(7)
-      : undefined;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(400).json({
+        message: 'Authorization header with Bearer token is required',
+      });
+    }
+    const accessToken = authHeader.slice(7);
     const { newPassword } = req.body;
     await AuthService.resetPassword(accessToken, newPassword);
     res.status(200).json({ message: 'Password updated successfully' });

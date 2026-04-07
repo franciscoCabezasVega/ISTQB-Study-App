@@ -41,7 +41,8 @@ class APIClient {
     this.client.interceptors.request.use(
       (config) => {
         const token = getCachedToken();
-        if (token) {
+        // Solo inyectar si no se ha proporcionado ya un Authorization personalizado
+        if (token && !config.headers.Authorization) {
           config.headers.Authorization = `Bearer ${token}`;
         }
         return config;

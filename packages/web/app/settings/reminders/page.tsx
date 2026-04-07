@@ -41,6 +41,11 @@ export default function RemindersSettingsPage() {
   ];
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
     const fetchReminder = async () => {
       try {
         setLoading(true);
