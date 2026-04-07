@@ -18,6 +18,10 @@ export default function AuthCallbackPage() {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
     const type = params.get('type');
+    const accessToken = params.get('access_token');
+
+    // Limpiar el hash inmediatamente para no dejar tokens expuestos en la URL
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
 
     if (type === 'signup' || type === 'email') {
       // Email verificado exitosamente
@@ -27,20 +31,19 @@ export default function AuthCallbackPage() {
         router.push('/auth/signin');
       }, 3000);
     } else if (type === 'recovery') {
-      // Redirigir a la página de reset password con el token
-      const accessToken = params.get('access_token');
+      // Guardar token en sessionStorage y redirigir a reset-password sin token en URL
       if (accessToken) {
-        router.push(`/auth/reset-password#access_token=${accessToken}`);
+        sessionStorage.setItem(
+          'auth:redirect-token',
+          JSON.stringify({ accessToken, type: 'recovery' })
+        );
+        router.push('/auth/reset-password');
       } else {
         setStatus('error');
       }
     } else {
-      // Si no hay tipo reconocido, podría ser una verificación exitosa sin hash
-      // Redirigir al signin
-      setStatus('success');
-      setTimeout(() => {
-        router.push('/auth/signin');
-      }, 3000);
+      // Sin tipo reconocido — no asumir éxito para evitar falsos positivos
+      setStatus('error');
     }
   }, [router]);
 

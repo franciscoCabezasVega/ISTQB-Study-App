@@ -170,7 +170,8 @@ function StudySessionContent() {
     };
 
     loadQuestions();
-  }, [topic]); // NO incluir language
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topic]); // language and other deps excluded: prevents session reload mid-study
 
   const currentQuestion = questions[currentIndex];
 

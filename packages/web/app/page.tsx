@@ -26,14 +26,21 @@ export default function Home() {
     const params = new URLSearchParams(hash);
     const type = params.get('type');
     const accessToken = params.get('access_token');
+
     if (!accessToken) return;
+
+    // Extraer el token sensible y eliminarlo inmediatamente del hash
+    // para que no quede expuesto en el historial del navegador ni a otros scripts.
+    sessionStorage.setItem(
+      'auth:redirect-token',
+      JSON.stringify({ accessToken, type })
+    );
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+
     if (type === 'recovery') {
-      router.replace(`/auth/reset-password#access_token=${accessToken}&type=recovery`);
+      router.replace('/auth/reset-password');
     } else if (type === 'signup' || type === 'email') {
-      router.replace(`/auth/callback#access_token=${accessToken}&type=${type}`);
-    } else {
-      // type desconocido — limpiar el hash para no dejar el token expuesto en la URL
-      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+      router.replace('/auth/callback');
     }
   }, [router]);
 

@@ -3,11 +3,8 @@
  * Reduce el bundle inicial diferiendo la carga de stores no críticos
  */
 
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-
 // Cache para stores ya cargados
-const storeCache = new Map<string, any>();
+const storeCache = new Map<string, unknown>();
 
 /**
  * Carga un store de forma lazy
@@ -15,15 +12,15 @@ const storeCache = new Map<string, any>();
  * @param storeKey - Clave única para el store
  */
 export async function loadStore<T>(
-  storeLoader: () => Promise<{ default: any }>,
+  storeLoader: () => Promise<{ default: unknown }>,
   storeKey: string
 ): Promise<T> {
   if (storeCache.has(storeKey)) {
-    return storeCache.get(storeKey);
+    return storeCache.get(storeKey) as T;
   }
 
   const module = await storeLoader();
-  const store = module.default;
+  const store = module.default as T;
   storeCache.set(storeKey, store);
   
   return store;
@@ -33,7 +30,7 @@ export async function loadStore<T>(
  * Hook para cargar stores de forma diferida
  */
 export function useLazyStore<T>(
-  storeLoader: () => Promise<{ default: any }>,
+  storeLoader: () => Promise<{ default: unknown }>,
   storeKey: string,
   defaultValue: T
 ): T {

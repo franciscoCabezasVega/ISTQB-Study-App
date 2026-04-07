@@ -8,7 +8,6 @@ import { ProgressBar } from './ProgressBar';
 import { Card } from './Card';
 import { apiClient } from '@/lib/api';
 import { useExamStore } from '@/lib/store/examStore';
-import { useLanguageStore } from '@/lib/store/languageStore';
 import { useStreakStore } from '@/lib/store/streakStore';
 import { useTranslation } from '@/lib/useTranslation';
 import { shuffleQuestionsAndOptions } from '@/lib/utils';
@@ -20,7 +19,6 @@ interface ExamSessionProps {
 
 export function ExamSession({ sessionId, questions: initialQuestions }: ExamSessionProps) {
   const router = useRouter();
-  const { language } = useLanguageStore();
   const { t } = useTranslation();
   const { refreshStreak } = useStreakStore();
   const {

@@ -3,7 +3,12 @@
  * Reduce el bundle inicial cargando el cliente bajo demanda
  */
 
-let apiClientInstance: any = null;
+import React from 'react';
+import type { apiClient } from '@/lib/api';
+
+type ApiClientType = typeof apiClient;
+
+let apiClientInstance: ApiClientType | null = null;
 
 /**
  * Obtiene el API client de forma lazy
@@ -25,7 +30,7 @@ export async function getApiClient() {
  * Hook para usar el API client de forma lazy
  */
 export function useLazyApiClient() {
-  const [client, setClient] = React.useState<any>(null);
+  const [client, setClient] = React.useState<ApiClientType | null>(null);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -48,8 +53,6 @@ export function useLazyApiClient() {
 
   return { client, loading };
 }
-
-import React from 'react';
 
 /**
  * Preload del API client

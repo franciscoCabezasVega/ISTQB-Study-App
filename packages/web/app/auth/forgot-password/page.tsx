@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
                   autoComplete="email"
                   required
                   className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                  placeholder="tu@email.com"
+                  placeholder="email@example.com"
                 />
               </div>
 

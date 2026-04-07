@@ -51,15 +51,34 @@ export default function ResetPasswordPage() {
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [noToken, setNoToken] = useState(false);
 
-  // Extraer access_token del hash fragment
+  // Extraer access_token del hash fragment o de sessionStorage (fallback desde page.tsx)
   useEffect(() => {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
     const token = params.get('access_token');
+
     if (token) {
       setAccessToken(token);
+      // Limpiar el hash para no dejar el token expuesto en la URL
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
     } else {
-      setNoToken(true);
+      // Intentar recuperar el token desde sessionStorage (redirigido via page.tsx)
+      const stored = sessionStorage.getItem('auth:redirect-token');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored) as { accessToken: string; type: string };
+          if (parsed.accessToken && parsed.type === 'recovery') {
+            setAccessToken(parsed.accessToken);
+            sessionStorage.removeItem('auth:redirect-token');
+          } else {
+            setNoToken(true);
+          }
+        } catch {
+          setNoToken(true);
+        }
+      } else {
+        setNoToken(true);
+      }
     }
   }, []);
 
@@ -110,8 +129,16 @@ export default function ResetPasswordPage() {
       setTimeout(() => {
         router.push('/auth/signin');
       }, 3000);
-    } catch {
-      setError(t('auth.resetPasswordError'));
+    } catch (err) {
+      const status =
+        typeof err === 'object' && err !== null && 'response' in err
+          ? (err as { response?: { status?: number } }).response?.status
+          : undefined;
+      if (status === 401) {
+        setNoToken(true);
+      } else {
+        setError(t('auth.resetPasswordError'));
+      }
     } finally {
       setLoading(false);
     }

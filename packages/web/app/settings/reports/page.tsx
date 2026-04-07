@@ -59,7 +59,7 @@ export default function MyReportsPage() {
     if (user) {
       fetchUserReports();
     }
-  }, [user]);
+  }, [user, fetchUserReports]);
 
   if (!user) {
     return (
