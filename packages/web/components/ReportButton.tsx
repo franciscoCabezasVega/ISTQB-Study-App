@@ -14,6 +14,7 @@ export const ReportButton: React.FC = () => {
 
   return (
     <button
+      type="button"
       onClick={() => openReportModal()}
       title={t('report.buttonTitle')}
       aria-label={t('report.buttonTitle')}

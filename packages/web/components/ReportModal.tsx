@@ -109,10 +109,11 @@ export const ReportModal: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Tipo de reporte */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="report-type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   {t('report.typeLabel')}
                 </label>
                 <select
+                  id="report-type"
                   value={type}
                   onChange={(e) => setType(e.target.value as typeof type)}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -133,11 +134,12 @@ export const ReportModal: React.FC = () => {
 
               {/* Título */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="report-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   {t('report.titleLabel')}
                   <span className="ml-1 text-xs text-gray-400">({title.length}/200)</span>
                 </label>
                 <input
+                  id="report-title"
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value.slice(0, 200))}
@@ -149,11 +151,12 @@ export const ReportModal: React.FC = () => {
 
               {/* Descripción */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="report-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   {t('report.descriptionLabel')}
                   <span className="ml-1 text-xs text-gray-400">({description.length}/2000)</span>
                 </label>
                 <textarea
+                  id="report-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value.slice(0, 2000))}
                   placeholder={t('report.descriptionPlaceholder')}

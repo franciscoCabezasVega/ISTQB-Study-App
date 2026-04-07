@@ -202,10 +202,11 @@ function StudySessionContent() {
         setIsOffline(true);
         await saveAnswerOffline({
           questionId: currentQuestion.id,
-          selectedAnswer: selectedOptions,
+          selectedOptions: Array.isArray(selectedOptions) ? selectedOptions : [selectedOptions],
           isCorrect,
-          timeSpent: timeSpent || 0,
-          sessionId: `study-${user.id}-${topic}`,
+          timeSpentSeconds: timeSpent || 0,
+          attemptNumber: 1,
+          studySessionId: `study-${user.id}-${topic}`,
         });
         pendingSyncRef.current += 1;
         setPendingSync(pendingSyncRef.current);

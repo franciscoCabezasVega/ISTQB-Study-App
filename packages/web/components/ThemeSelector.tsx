@@ -45,6 +45,7 @@ export function ThemeSelector() {
       {options.map(({ value, label, icon }) => (
         <button
           key={value}
+          type="button"
           onClick={() => setTheme(value)}
           role="radio"
           aria-checked={theme === value}

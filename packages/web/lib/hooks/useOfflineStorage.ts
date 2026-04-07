@@ -32,10 +32,11 @@ function openDB(): Promise<IDBDatabase> {
 export interface PendingAnswer {
   id?: number;
   questionId: string;
-  selectedAnswer: string | string[];
+  selectedOptions: string[];   // matches API field name
   isCorrect: boolean;
-  timeSpent: number;
-  sessionId: string;
+  timeSpentSeconds: number;   // matches API field name
+  attemptNumber: number;      // matches API field name
+  studySessionId: string;     // matches API field name
   answeredAt: string;
   createdAt: number;
   synced: number;
