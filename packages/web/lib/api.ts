@@ -80,6 +80,14 @@ class APIClient {
     return this.client.post('/auth/signin', { email, password });
   }
 
+  forgotPassword(email: string) {
+    return this.client.post('/auth/forgot-password', { email });
+  }
+
+  resetPassword(accessToken: string, newPassword: string) {
+    return this.client.post('/auth/reset-password', { accessToken, newPassword });
+  }
+
   getCurrentUser() {
     return this.client.get('/auth/me');
   }

@@ -12,6 +12,11 @@ jest.mock('../config/supabase', () => ({
       signUp: jest.fn(),
       signInWithPassword: jest.fn(),
       getSession: jest.fn(),
+      resetPasswordForEmail: jest.fn(),
+      getUser: jest.fn(),
+      admin: {
+        updateUserById: jest.fn(),
+      },
     },
     from: jest.fn(),
   },
@@ -97,11 +102,42 @@ describe('AuthService', () => {
       expect(supabase.auth.signUp).toHaveBeenCalledWith({
         email: validSignupData.email,
         password: validSignupData.password,
+        options: {
+          emailRedirectTo: expect.any(String),
+          data: {
+            full_name: validSignupData.fullName,
+          },
+        },
       });
       expect(mockFrom).toHaveBeenCalledWith('users');
       expect(mockInsert).toHaveBeenCalled();
       expect(result.user).toEqual(mockUserData);
-      expect(result.session.access_token).toBe('token-123');
+      expect(result.session?.access_token).toBe('token-123');
+      expect(result.confirmationRequired).toBe(false);
+    });
+
+    it('should return confirmationRequired when session is null', async () => {
+      supabase.auth.signUp.mockResolvedValue({
+        data: {
+          user: mockAuthUser,
+          session: null,
+        },
+        error: null,
+      });
+
+      mockSingle.mockResolvedValue({
+        data: mockUserData,
+        error: null,
+      });
+
+      const result = await AuthService.signup(
+        validSignupData.email,
+        validSignupData.password,
+        validSignupData.fullName
+      );
+
+      expect(result.confirmationRequired).toBe(true);
+      expect(result.session).toBeNull();
     });
 
     it('should throw error if email is missing', async () => {

@@ -136,20 +136,28 @@ function SigninForm() {
             </div>
           </div>
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              checked={rememberMeChecked}
-              onChange={(e) => setRememberMeChecked(e.target.checked)}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              htmlFor="rememberMe"
-              className="ml-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer select-none"
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={rememberMeChecked}
+                onChange={(e) => setRememberMeChecked(e.target.checked)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label
+                htmlFor="rememberMe"
+                className="ml-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer select-none"
+              >
+                {t('auth.rememberMe')}
+              </label>
+            </div>
+            <Link
+              href="/auth/forgot-password"
+              className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
             >
-              {t('auth.rememberMe')}
-            </label>
+              {t('auth.forgotPassword')}
+            </Link>
           </div>
 
           <Button

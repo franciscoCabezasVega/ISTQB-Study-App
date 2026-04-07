@@ -33,6 +33,34 @@ router.post('/signin', async (req, res, next) => {
 });
 
 /**
+ * POST /auth/forgot-password
+ * Solicita reset de contraseña
+ */
+router.post('/forgot-password', async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    await AuthService.forgotPassword(email);
+    res.status(200).json({ message: 'Password reset email sent' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /auth/reset-password
+ * Resetea la contraseña con token de recuperación
+ */
+router.post('/reset-password', async (req, res, next) => {
+  try {
+    const { accessToken, newPassword } = req.body;
+    await AuthService.resetPassword(accessToken, newPassword);
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
  * GET /auth/me
  * Obtiene el usuario autenticado actual
  */
