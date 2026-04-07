@@ -41,10 +41,12 @@ class APIClient {
     this.client.interceptors.request.use(
       (config) => {
         const token = getCachedToken();
+        const headers = axios.AxiosHeaders.from(config.headers ?? {});
         // Solo inyectar si no se ha proporcionado ya un Authorization personalizado
-        if (token && !config.headers.Authorization) {
-          config.headers.Authorization = `Bearer ${token}`;
+        if (token && !headers.has('Authorization')) {
+          headers.set('Authorization', `Bearer ${token}`);
         }
+        config.headers = headers;
         return config;
       },
       (error) => Promise.reject(error)

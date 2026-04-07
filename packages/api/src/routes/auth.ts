@@ -55,6 +55,7 @@ router.post('/reset-password', async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(400).json({
+        statusCode: 400,
         message: 'Authorization header with Bearer token is required',
       });
     }
