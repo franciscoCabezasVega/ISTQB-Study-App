@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.0](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.3.0...v1.4.0) (2026-04-07)
+
+### ✨ Features
+
+* **auth:** improve authentication flow and API integration ([0aa5c67](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/0aa5c67cb4cd31056109237ca2c706ebb67271ac))
+* **auth:** improve authentication flow, error translations, and password recovery redirect ([b0efe03](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/b0efe030546a2e6ec4feb1f917cf44ee987dd815))
+
+### 🐛 Bug Fixes
+
+* address Copilot PR review comments ([6fe1f85](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/6fe1f858f05872ee61bad331f3afddf179b00385))
+* address fifth round of Copilot PR review comments ([602ca0a](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/602ca0a5f2e7ea008d66c85a973c43d292ee398f))
+* address fourth round of Copilot PR review comments ([7f5418f](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/7f5418f55caf3a7e914c53d3924a294c2fbf4839))
+* address second round of Copilot PR review comments and eliminate lint warnings ([7d6cf48](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/7d6cf488c10c27a189714683efedf810d2177813))
+* address third round of Copilot PR review comments ([debb924](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/debb9247e48ba954c42a26757177586f9d4ac4e7))
+
 ## [1.3.0](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.2.2...v1.3.0) (2026-04-07)
 
 ### ✨ Features
