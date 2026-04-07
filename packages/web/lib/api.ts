@@ -41,9 +41,12 @@ class APIClient {
     this.client.interceptors.request.use(
       (config) => {
         const token = getCachedToken();
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+        const headers = axios.AxiosHeaders.from(config.headers ?? {});
+        // Solo inyectar si no se ha proporcionado ya un Authorization personalizado
+        if (token && !headers.has('Authorization')) {
+          headers.set('Authorization', `Bearer ${token}`);
         }
+        config.headers = headers;
         return config;
       },
       (error) => Promise.reject(error)
@@ -78,6 +81,18 @@ class APIClient {
 
   signin(email: string, password: string) {
     return this.client.post('/auth/signin', { email, password });
+  }
+
+  forgotPassword(email: string) {
+    return this.client.post('/auth/forgot-password', { email });
+  }
+
+  resetPassword(accessToken: string, newPassword: string) {
+    return this.client.post(
+      '/auth/reset-password',
+      { newPassword },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
   }
 
   getCurrentUser() {

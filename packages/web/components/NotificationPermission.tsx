@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNotifications } from '@/lib/hooks/useNotifications';
 import { useTranslation } from '@/lib/useTranslation';
 import { Card } from './Card';
@@ -27,13 +27,7 @@ export function NotificationPermission({
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (autoRequest && permission === 'default' && isSupported) {
-      handleRequestPermission();
-    }
-  }, [autoRequest, permission, isSupported]);
-
-  const handleRequestPermission = async () => {
+  const handleRequestPermission = useCallback(async () => {
     setLoading(true);
     try {
       const granted = await requestPermission();
@@ -47,7 +41,13 @@ export function NotificationPermission({
     } finally {
       setLoading(false);
     }
-  };
+  }, [requestPermission, onPermissionGranted, onPermissionDenied]);
+
+  useEffect(() => {
+    if (autoRequest && permission === 'default' && isSupported) {
+      handleRequestPermission();
+    }
+  }, [autoRequest, permission, isSupported, handleRequestPermission]);
 
   // No mostrar nada si no están soportadas
   if (!isSupported) {

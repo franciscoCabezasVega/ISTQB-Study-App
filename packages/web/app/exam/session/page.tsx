@@ -135,7 +135,8 @@ function ExamSessionContent() {
     if (isSessionActive) {
       loadExamQuestions();
     }
-  }, [sessionId, user, router, isSessionActive]); // NO incluir language para evitar recarga durante el examen
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId, user, router, isSessionActive]); // language excluded: prevents exam reload on language change
 
   if (loading) {
     return (

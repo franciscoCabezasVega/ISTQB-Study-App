@@ -170,7 +170,8 @@ function StudySessionContent() {
     };
 
     loadQuestions();
-  }, [topic]); // NO incluir language
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topic]); // language and other deps excluded: prevents session reload mid-study
 
   const currentQuestion = questions[currentIndex];
 
@@ -222,7 +223,8 @@ function StudySessionContent() {
         selectedOptions,
       });
 
-      // Guardar en store local
+      // Mantener al usuario en el tope de la página al mostrar el feedback
+      window.scrollTo({ top: 0, behavior: 'auto' });
       addUserAnswer({
         id: Math.random().toString(),
         user_id: user.id,
@@ -244,6 +246,7 @@ function StudySessionContent() {
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex((prev) => prev + 1);
       setFeedback(null);
+      window.scrollTo({ top: 0, behavior: 'auto' });
     } else {
       setSessionComplete(true);
     }

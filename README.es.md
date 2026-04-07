@@ -53,6 +53,17 @@ Una Aplicación Web Progresiva (PWA) para ayudar a estudiantes a prepararse para
 - **Horario Personalizado**: Establece frecuencia de estudio y horarios preferidos
 - **Sesiones de Estudio**: Sesiones de práctica cronometradas con feedback
 
+### 🔐 Autenticación
+- **Email y Contraseña**: Registro e inicio de sesión seguros mediante Supabase
+- **Verificación de Email**: Confirmación de cuenta mediante enlace en el correo
+- **Recuperación de Contraseña**: Flujo completo de olvidé/restablecer contraseña con mensajes de error localizados
+- **Gestión de Sesión**: Sesiones basadas en JWT con opción de inicio de sesión persistente
+
+### 📱 UX Mobile
+- **Scroll Preservado**: La página permanece en el tope al responder una pregunta, sin saltos desorientadores
+- **Botón Volver Arriba**: Botón flotante (esquina inferior derecha) que aparece al hacer scroll para regresar al tope rápidamente
+- **Botón Reportar**: Movido a la esquina inferior izquierda para no superponerse con el botón Volver Arriba
+
 ## 🏗️ Arquitectura
 
 ```

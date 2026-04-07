@@ -18,7 +18,7 @@ export const ReportButton: React.FC = () => {
       onClick={() => openReportModal()}
       title={t('report.buttonTitle')}
       aria-label={t('report.buttonTitle')}
-      className="fixed bottom-6 right-6 z-40 flex items-center gap-2 bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 text-white text-xs font-medium px-3 py-2 rounded-full shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 group"
+      className="fixed bottom-6 left-6 z-40 flex items-center gap-2 bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 text-white text-xs font-medium px-3 py-2 rounded-full shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 group"
     >
       <svg
         className="w-4 h-4"

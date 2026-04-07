@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
@@ -13,6 +14,44 @@ export default function Home() {
   const { user } = useAuthStore();
   const { t } = useTranslation();
   const shouldLoadCards = useDeferredLoading(50);
+  const router = useRouter();
+
+  // Red de seguridad: Supabase puede redirigir el token de recuperación
+  // al Site URL en vez del redirectTo si la URL no está en la whitelist del dashboard.
+  // En ese caso interceptamos el hash aquí y redirigimos al flujo correcto.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash.substring(1);
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+    const type = params.get('type');
+    const accessToken = params.get('access_token');
+
+    if (!accessToken) return;
+
+    // Solo persistir para tipos reconocidos para no dejar tokens huérfanos en storage
+    if (type !== 'recovery' && type !== 'signup' && type !== 'email') {
+      // Tipo desconocido — limpiar el hash sin guardar nada
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+      return;
+    }
+
+    // Extraer el token sensible y eliminarlo inmediatamente del hash
+    // para que no quede expuesto en el historial del navegador ni a otros scripts.
+    sessionStorage.setItem(
+      'auth:redirect-token',
+      JSON.stringify({ accessToken, type })
+    );
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+
+    if (type === 'recovery') {
+      router.replace('/auth/reset-password');
+    } else if (type === 'signup' || type === 'email') {
+      // Preservar el tipo en el hash para que /auth/callback pueda leerlo
+      // (el token ya está guardado en sessionStorage y no viaja en la URL)
+      router.replace(`/auth/callback#type=${encodeURIComponent(type)}`);
+    }
+  }, [router]);
 
   if (!user) {
     return (

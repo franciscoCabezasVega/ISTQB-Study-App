@@ -50,6 +50,7 @@ export default function SignupPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmationSent, setConfirmationSent] = useState(false);
   const [passwordValidation, setPasswordValidation] = useState<PasswordValidation>({
     minLength: false,
     hasUppercase: false,
@@ -111,8 +112,13 @@ export default function SignupPage() {
     try {
       const { data } = await apiClient.signup(email, password, fullName);
       
-      // Guardar el token PRIMERO, luego el usuario
-      // Esto asegura que las peticiones subsecuentes tengan el token
+      // Si requiere confirmación de email, mostrar mensaje
+      if (data.confirmationRequired || !data.session) {
+        setConfirmationSent(true);
+        return;
+      }
+
+      // Si no requiere confirmación, iniciar sesión directamente
       setAccessToken(data.session.access_token);
       setUser(data.user);
       
@@ -127,6 +133,25 @@ export default function SignupPage() {
   return (
     <div className="min-h-[70vh] flex items-center justify-center" suppressHydrationWarning>
       <Card className="max-w-md w-full">
+        {confirmationSent ? (
+          <>
+            <div className="text-center py-6">
+              <div className="text-5xl mb-4">📧</div>
+              <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+                {t('auth.confirmationSentTitle')}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                {t('auth.confirmationSentMessage')}
+              </p>
+              <Link href="/auth/signin">
+                <Button variant="primary" size="lg" className="w-full">
+                  {t('auth.goToSignIn')}
+                </Button>
+              </Link>
+            </div>
+          </>
+        ) : (
+        <>
         <h1 className="text-3xl font-bold mb-6 text-center">{t('auth.signup')}</h1>
 
         {error && (
@@ -334,6 +359,8 @@ export default function SignupPage() {
             {t('auth.signinHere')}
           </Link>
         </p>
+        </>
+        )}
       </Card>
     </div>
   );

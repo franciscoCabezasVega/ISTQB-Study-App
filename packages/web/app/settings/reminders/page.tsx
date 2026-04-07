@@ -41,8 +41,59 @@ export default function RemindersSettingsPage() {
   ];
 
   useEffect(() => {
-    loadReminder();
-  }, []);
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchReminder = async () => {
+      try {
+        setLoading(true);
+        const response = await apiClient.getReminder();
+        const reminderData = response.data.data;
+
+        if (reminderData) {
+          setReminder(reminderData);
+          // Siempre usar 'custom' como frecuencia
+          setFrequency('custom');
+          setPreferredTime(reminderData.preferred_time || '09:00');
+          setEnabled(reminderData.enabled);
+          setCustomDays(reminderData.custom_days || []);
+        } else {
+          // Si no hay reminder previo, crear un objeto inicial para comparación
+          const initialReminder: StudyReminder = {
+            id: '',
+            user_id: user?.id || '',
+            frequency: 'custom',
+            preferred_time: '09:00',
+            enabled: false,
+            custom_days: [],
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          setReminder(initialReminder);
+        }
+      } catch (error) {
+        console.error('Error loading reminder:', error);
+        // En caso de error, también crear un objeto inicial
+        const initialReminder: StudyReminder = {
+          id: '',
+          user_id: user?.id || '',
+          frequency: 'custom',
+          preferred_time: '09:00',
+          enabled: false,
+          custom_days: [],
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        setReminder(initialReminder);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReminder();
+  }, [user]);
 
   // Detectar cambios en el formulario
   useEffect(() => {
@@ -74,52 +125,6 @@ export default function RemindersSettingsPage() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [hasUnsavedChanges]);
-
-  const loadReminder = async () => {
-    try {
-      setLoading(true);
-      const response = await apiClient.getReminder();
-      const reminderData = response.data.data;
-
-      if (reminderData) {
-        setReminder(reminderData);
-        // Siempre usar 'custom' como frecuencia
-        setFrequency('custom');
-        setPreferredTime(reminderData.preferred_time || '09:00');
-        setEnabled(reminderData.enabled);
-        setCustomDays(reminderData.custom_days || []);
-      } else {
-        // Si no hay reminder previo, crear un objeto inicial para comparación
-        const initialReminder: StudyReminder = {
-          id: '',
-          user_id: user?.id || '',
-          frequency: 'custom',
-          preferred_time: '09:00',
-          enabled: false,
-          custom_days: [],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-        setReminder(initialReminder);
-      }
-    } catch (error) {
-      console.error('Error loading reminder:', error);
-      // En caso de error, también crear un objeto inicial
-      const initialReminder: StudyReminder = {
-        id: '',
-        user_id: user?.id || '',
-        frequency: 'custom',
-        preferred_time: '09:00',
-        enabled: false,
-        custom_days: [],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      setReminder(initialReminder);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDayToggle = (day: number) => {
     setCustomDays((prev) => {

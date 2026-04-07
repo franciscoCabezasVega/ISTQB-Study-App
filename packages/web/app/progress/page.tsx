@@ -89,7 +89,7 @@ export default function ProgressPage() {
     };
 
     loadStats();
-  }, [shouldLoadStats]);
+  }, [shouldLoadStats, refreshStreak]);
 
   if (loading) {
     return (

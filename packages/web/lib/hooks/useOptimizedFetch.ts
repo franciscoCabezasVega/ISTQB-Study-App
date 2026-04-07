@@ -7,10 +7,10 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 
 // Caché simple en memoria para requests con límite de entradas (FIFO)
 const MAX_CACHE_SIZE = 100;
-const requestCache = new Map<string, { data: any; timestamp: number }>();
+const requestCache = new Map<string, { data: unknown; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
 
-function setCacheEntry(key: string, value: { data: any; timestamp: number }) {
+function setCacheEntry(key: string, value: { data: unknown; timestamp: number }) {
   // Evicción simple: si supera el límite, eliminar la entrada más antigua
   if (requestCache.size >= MAX_CACHE_SIZE && !requestCache.has(key)) {
     const oldestKey = requestCache.keys().next().value;
@@ -20,7 +20,7 @@ function setCacheEntry(key: string, value: { data: any; timestamp: number }) {
 }
 
 // Deduplicación de requests en vuelo
-const pendingRequests = new Map<string, Promise<any>>();
+const pendingRequests = new Map<string, Promise<unknown>>();
 
 export function useOptimizedFetch<T>(
   key: string,
@@ -48,7 +48,7 @@ export function useOptimizedFetch<T>(
     // Verificar caché
     const cached = requestCache.get(key);
     if (cached && Date.now() - cached.timestamp < cacheTime) {
-      setData(cached.data);
+      setData(cached.data as T);
       return;
     }
 
@@ -57,7 +57,7 @@ export function useOptimizedFetch<T>(
       try {
         const result = await pendingRequests.get(key);
         if (mountedRef.current) {
-          setData(result);
+          setData(result as T);
         }
       } catch (err) {
         if (mountedRef.current) {
@@ -104,7 +104,7 @@ export function useOptimizedFetch<T>(
     } else {
       const cached = requestCache.get(key);
       if (cached) {
-        setData(cached.data);
+        setData(cached.data as T);
       }
     }
 
@@ -163,7 +163,7 @@ export function useBatchFetch<T>(
         requests.map((req) => {
           const cached = requestCache.get(req.key);
           if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-            return Promise.resolve(cached.data);
+            return Promise.resolve(cached.data as T);
           }
           return req.fetcher().then((result) => {
             setCacheEntry(req.key, {
@@ -184,7 +184,7 @@ export function useBatchFetch<T>(
             successData.push(result.value);
             errorList.push(null);
           } else {
-            successData.push(null as any);
+            successData.push(null as unknown as T);
             errorList.push(result.reason);
           }
         });

@@ -8,7 +8,6 @@ import { ProgressBar } from './ProgressBar';
 import { Card } from './Card';
 import { apiClient } from '@/lib/api';
 import { useExamStore } from '@/lib/store/examStore';
-import { useLanguageStore } from '@/lib/store/languageStore';
 import { useStreakStore } from '@/lib/store/streakStore';
 import { useTranslation } from '@/lib/useTranslation';
 import { shuffleQuestionsAndOptions } from '@/lib/utils';
@@ -20,7 +19,6 @@ interface ExamSessionProps {
 
 export function ExamSession({ sessionId, questions: initialQuestions }: ExamSessionProps) {
   const router = useRouter();
-  const { language } = useLanguageStore();
   const { t } = useTranslation();
   const { refreshStreak } = useStreakStore();
   const {
@@ -101,7 +99,10 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
       submitAnswer(currentAnswer);
 
       setQuestionStartTime(Date.now());
-      
+
+      // Mantener al usuario en el tope al pasar a la siguiente pregunta
+      window.scrollTo({ top: 0, behavior: 'auto' });
+
       // Pasar a la siguiente pregunta o finalizar
       if (currentQuestionIndex + 1 >= questions.length) {
         // Pasar la respuesta actual al método de finalización

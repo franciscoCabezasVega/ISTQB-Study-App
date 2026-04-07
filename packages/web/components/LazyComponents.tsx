@@ -4,7 +4,6 @@
  */
 
 import dynamic from 'next/dynamic';
-import { ComponentType } from 'react';
 
 // Loading component genérico
 const LoadingFallback = () => (

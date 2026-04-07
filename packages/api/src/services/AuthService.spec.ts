@@ -12,6 +12,11 @@ jest.mock('../config/supabase', () => ({
       signUp: jest.fn(),
       signInWithPassword: jest.fn(),
       getSession: jest.fn(),
+      resetPasswordForEmail: jest.fn(),
+      getUser: jest.fn(),
+      admin: {
+        updateUserById: jest.fn(),
+      },
     },
     from: jest.fn(),
   },
@@ -97,11 +102,42 @@ describe('AuthService', () => {
       expect(supabase.auth.signUp).toHaveBeenCalledWith({
         email: validSignupData.email,
         password: validSignupData.password,
+        options: {
+          emailRedirectTo: expect.any(String),
+          data: {
+            full_name: validSignupData.fullName,
+          },
+        },
       });
       expect(mockFrom).toHaveBeenCalledWith('users');
       expect(mockInsert).toHaveBeenCalled();
       expect(result.user).toEqual(mockUserData);
-      expect(result.session.access_token).toBe('token-123');
+      expect(result.session?.access_token).toBe('token-123');
+      expect(result.confirmationRequired).toBe(false);
+    });
+
+    it('should return confirmationRequired when session is null', async () => {
+      supabase.auth.signUp.mockResolvedValue({
+        data: {
+          user: mockAuthUser,
+          session: null,
+        },
+        error: null,
+      });
+
+      mockSingle.mockResolvedValue({
+        data: mockUserData,
+        error: null,
+      });
+
+      const result = await AuthService.signup(
+        validSignupData.email,
+        validSignupData.password,
+        validSignupData.fullName
+      );
+
+      expect(result.confirmationRequired).toBe(true);
+      expect(result.session).toBeNull();
     });
 
     it('should throw error if email is missing', async () => {
@@ -353,6 +389,158 @@ describe('AuthService', () => {
       ).rejects.toEqual({
         statusCode: 500,
         message: 'Failed to update user',
+      });
+    });
+  });
+
+  describe('forgotPassword', () => {
+    it('should send reset email successfully', async () => {
+      supabase.auth.resetPasswordForEmail.mockResolvedValue({ error: null });
+
+      await expect(
+        AuthService.forgotPassword('test@example.com')
+      ).resolves.toBeUndefined();
+
+      expect(supabase.auth.resetPasswordForEmail).toHaveBeenCalledWith(
+        'test@example.com',
+        { redirectTo: expect.stringContaining('/auth/callback') }
+      );
+    });
+
+    it('should throw 400 when email is missing', async () => {
+      await expect(AuthService.forgotPassword('')).rejects.toEqual({
+        statusCode: 400,
+        message: 'Email is required',
+      });
+
+      expect(supabase.auth.resetPasswordForEmail).not.toHaveBeenCalled();
+    });
+
+    it('should throw 429 for Supabase rate-limit (security purposes)', async () => {
+      supabase.auth.resetPasswordForEmail.mockResolvedValue({
+        error: { message: 'For security purposes, you can only request this after 60 seconds.' },
+      });
+
+      await expect(
+        AuthService.forgotPassword('test@example.com')
+      ).rejects.toEqual({
+        statusCode: 429,
+        message: 'RATE_LIMIT_EXCEEDED',
+      });
+    });
+
+    it('should throw 429 for Supabase rate-limit (rate limit message)', async () => {
+      supabase.auth.resetPasswordForEmail.mockResolvedValue({
+        error: { message: 'Email rate limit exceeded' },
+      });
+
+      await expect(
+        AuthService.forgotPassword('test@example.com')
+      ).rejects.toEqual({
+        statusCode: 429,
+        message: 'RATE_LIMIT_EXCEEDED',
+      });
+    });
+
+    it('should throw 400 for other Supabase errors', async () => {
+      supabase.auth.resetPasswordForEmail.mockResolvedValue({
+        error: { message: 'Unable to send email' },
+      });
+
+      await expect(
+        AuthService.forgotPassword('test@example.com')
+      ).rejects.toEqual({
+        statusCode: 400,
+        message: 'FORGOT_PASSWORD_FAILED',
+      });
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('should reset password successfully', async () => {
+      supabase.auth.getUser.mockResolvedValue({
+        data: { user: { id: 'user-123' } },
+        error: null,
+      });
+      supabase.auth.admin.updateUserById.mockResolvedValue({ error: null });
+
+      await expect(
+        AuthService.resetPassword('valid-token', 'NewPass123!')
+      ).resolves.toBeUndefined();
+
+      expect(supabase.auth.getUser).toHaveBeenCalledWith('valid-token');
+      expect(supabase.auth.admin.updateUserById).toHaveBeenCalledWith(
+        'user-123',
+        { password: 'NewPass123!' }
+      );
+    });
+
+    it('should throw 400 when access token is missing', async () => {
+      await expect(
+        AuthService.resetPassword('', 'NewPass123!')
+      ).rejects.toEqual({
+        statusCode: 400,
+        message: 'Access token and new password are required',
+      });
+
+      expect(supabase.auth.getUser).not.toHaveBeenCalled();
+    });
+
+    it('should throw 400 when new password is missing', async () => {
+      await expect(
+        AuthService.resetPassword('valid-token', '')
+      ).rejects.toEqual({
+        statusCode: 400,
+        message: 'Access token and new password are required',
+      });
+
+      expect(supabase.auth.getUser).not.toHaveBeenCalled();
+    });
+
+    it('should throw 401 for invalid or expired token', async () => {
+      supabase.auth.getUser.mockResolvedValue({
+        data: { user: null },
+        error: { message: 'Invalid JWT' },
+      });
+
+      await expect(
+        AuthService.resetPassword('expired-token', 'NewPass123!')
+      ).rejects.toEqual({
+        statusCode: 401,
+        message: 'Invalid or expired reset token',
+      });
+
+      expect(supabase.auth.admin.updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('should throw 401 when getUser returns no user without error', async () => {
+      supabase.auth.getUser.mockResolvedValue({
+        data: { user: null },
+        error: null,
+      });
+
+      await expect(
+        AuthService.resetPassword('token-no-user', 'NewPass123!')
+      ).rejects.toEqual({
+        statusCode: 401,
+        message: 'Invalid or expired reset token',
+      });
+    });
+
+    it('should throw 500 when password update fails', async () => {
+      supabase.auth.getUser.mockResolvedValue({
+        data: { user: { id: 'user-123' } },
+        error: null,
+      });
+      supabase.auth.admin.updateUserById.mockResolvedValue({
+        error: { message: 'Update failed' },
+      });
+
+      await expect(
+        AuthService.resetPassword('valid-token', 'NewPass123!')
+      ).rejects.toEqual({
+        statusCode: 500,
+        message: 'Failed to update password',
       });
     });
   });
