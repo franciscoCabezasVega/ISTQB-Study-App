@@ -85,7 +85,11 @@ class APIClient {
   }
 
   resetPassword(accessToken: string, newPassword: string) {
-    return this.client.post('/auth/reset-password', { accessToken, newPassword });
+    return this.client.post(
+      '/auth/reset-password',
+      { newPassword },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
   }
 
   getCurrentUser() {

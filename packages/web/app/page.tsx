@@ -40,7 +40,9 @@ export default function Home() {
     if (type === 'recovery') {
       router.replace('/auth/reset-password');
     } else if (type === 'signup' || type === 'email') {
-      router.replace('/auth/callback');
+      // Preservar el tipo en el hash para que /auth/callback pueda leerlo
+      // (el token ya está guardado en sessionStorage y no viaja en la URL)
+      router.replace(`/auth/callback#type=${encodeURIComponent(type)}`);
     }
   }, [router]);
 

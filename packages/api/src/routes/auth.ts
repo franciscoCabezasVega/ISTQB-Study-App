@@ -52,7 +52,11 @@ router.post('/forgot-password', async (req, res, next) => {
  */
 router.post('/reset-password', async (req, res, next) => {
   try {
-    const { accessToken, newPassword } = req.body;
+    const authHeader = req.headers.authorization;
+    const accessToken = authHeader?.startsWith('Bearer ')
+      ? authHeader.slice(7)
+      : undefined;
+    const { newPassword } = req.body;
     await AuthService.resetPassword(accessToken, newPassword);
     res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {

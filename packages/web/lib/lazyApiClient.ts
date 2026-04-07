@@ -4,9 +4,8 @@
  */
 
 import React from 'react';
-import type { apiClient } from '@/lib/api';
 
-type ApiClientType = typeof apiClient;
+type ApiClientType = typeof import('@/lib/api')['apiClient'];
 
 let apiClientInstance: ApiClientType | null = null;
 

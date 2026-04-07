@@ -15,15 +15,32 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     // Supabase redirige aquí después de verificar el email
     // Los tokens vienen en el hash fragment: #access_token=...&type=signup
+    // o solo #type=signup cuando el token fue movido a sessionStorage por page.tsx
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
-    const type = params.get('type');
+    const typeFromHash = params.get('type');
     const accessToken = params.get('access_token');
 
     // Limpiar el hash inmediatamente para no dejar tokens expuestos en la URL
     window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
 
+    // Intentar leer el tipo desde el hash; si no está, buscar en sessionStorage (fallback de page.tsx)
+    let type = typeFromHash;
+    if (!type) {
+      const stored = sessionStorage.getItem('auth:redirect-token');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored) as { accessToken: string; type: string };
+          type = parsed.type;
+        } catch {
+          // ignorar JSON malformado
+        }
+      }
+    }
+
     if (type === 'signup' || type === 'email') {
+      // Limpiar la entrada de sessionStorage ya consumida
+      sessionStorage.removeItem('auth:redirect-token');
       // Email verificado exitosamente
       setStatus('success');
       // Redirigir al signin después de 3 segundos
