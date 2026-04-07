@@ -1,18 +1,8 @@
 import { supabase } from '../config/supabase.js';
-import { User, AuthResponse } from '@istqb-app/shared';
+import { User, AuthResponse, SignupResult } from '@istqb-app/shared';
 
 // URL de la aplicación frontend (para redirecciones de email)
 const APP_URL = process.env.APP_URL || 'http://localhost:3000';
-
-export interface SignupResult {
-  user: User;
-  session: {
-    access_token: string;
-    refresh_token: string;
-    expires_in: number;
-  } | null;
-  confirmationRequired: boolean;
-}
 
 export class AuthService {
   /**

@@ -67,6 +67,14 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     if (password) {
       setPasswordValidation(validatePassword(password));
+    } else {
+      setPasswordValidation({
+        minLength: false,
+        hasUppercase: false,
+        hasLowercase: false,
+        hasNumber: false,
+        hasSpecial: false,
+      });
     }
   }, [password]);
 

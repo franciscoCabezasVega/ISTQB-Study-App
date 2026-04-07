@@ -31,6 +31,9 @@ export default function Home() {
       router.replace(`/auth/reset-password#access_token=${accessToken}&type=recovery`);
     } else if (type === 'signup' || type === 'email') {
       router.replace(`/auth/callback#access_token=${accessToken}&type=${type}`);
+    } else {
+      // type desconocido — limpiar el hash para no dejar el token expuesto en la URL
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
     }
   }, [router]);
 

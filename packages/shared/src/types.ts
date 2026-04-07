@@ -18,6 +18,11 @@ export interface AuthResponse {
   };
 }
 
+export type SignupResult = Omit<AuthResponse, 'session'> & {
+  session: AuthResponse['session'] | null;
+  confirmationRequired: boolean;
+};
+
 // Tipos de preguntas y respuestas
 export type QuestionType = 'multiple_choice' | 'true_false' | 'situational';
 export type Language = 'es' | 'en';

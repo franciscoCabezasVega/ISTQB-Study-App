@@ -59,8 +59,10 @@ function SigninForm() {
       const status = (err as { response?: { status?: number } }).response?.status;
       if (status === 429) {
         setError(t('auth.rateLimitError'));
-      } else {
+      } else if (status === 401) {
         setError(t('auth.signinError'));
+      } else {
+        setError(t('auth.genericError'));
       }
     } finally {
       setLoading(false);

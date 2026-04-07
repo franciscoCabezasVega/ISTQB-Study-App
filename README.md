@@ -53,6 +53,17 @@ A Progressive Web Application (PWA) to help students prepare for the ISTQB Found
 - **Custom Schedule**: Set study frequency and preferred times
 - **Study Sessions**: Timed practice sessions with feedback
 
+### 🔐 Authentication
+- **Email/Password Auth**: Secure registration and login via Supabase
+- **Email Verification**: Account confirmation via email link
+- **Password Recovery**: Full forgot/reset password flow with localized error messages
+- **Session Management**: JWT-based sessions with optional persistent login
+
+### 📱 Mobile UX
+- **Scroll Preserved**: Page stays at the top after answering a question — no disorienting jumps
+- **Back to Top Button**: Floating button (bottom-right) appears on scroll to quickly return to the top
+- **Report Button**: Moved to the bottom-left corner to avoid overlap with the Back to Top button
+
 ## 🏗️ Architecture
 
 ```

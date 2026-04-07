@@ -15,6 +15,8 @@ export const BackToTopButton: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    // Verificar posición inicial (scroll restoration, deep links)
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
