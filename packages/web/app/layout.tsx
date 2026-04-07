@@ -52,8 +52,8 @@ const themeInitScript = `
 (function(){
   try {
     var s = JSON.parse(localStorage.getItem('ui-storage') || '{}');
-    var t = (s.state && s.state.theme) || 'system';
-    var d = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var t = (s.state && s.state.theme) || 'light';
+    var d = t === 'dark';
     if (d) document.documentElement.classList.add('dark');
     document.documentElement.style.colorScheme = d ? 'dark' : 'light';
   } catch(e) {}

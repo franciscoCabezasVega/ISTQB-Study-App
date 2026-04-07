@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-type ThemeMode = 'light' | 'dark' | 'system';
+type ThemeMode = 'light' | 'dark';
 
 interface UIState {
   theme: ThemeMode;
@@ -16,7 +16,7 @@ interface UIState {
 export const useUIStore = create<UIState>()(
   persist(
     (set) => ({
-      theme: 'system' as ThemeMode,
+      theme: 'light' as ThemeMode,
       language: 'es',
       sidebarOpen: true,
 

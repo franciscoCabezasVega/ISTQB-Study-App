@@ -29,7 +29,6 @@
         "./*"
       ]
     },
-    "baseUrl": ".",
     "incremental": true,
     "allowJs": true,
     "plugins": [

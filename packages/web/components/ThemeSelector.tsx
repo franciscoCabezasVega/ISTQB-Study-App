@@ -2,19 +2,14 @@
 
 import React from 'react';
 import { useUIStore } from '@/lib/store/uiStore';
+import { useAuthStore } from '@/lib/store/authStore';
 import { useTranslation } from '@/lib/useTranslation';
+import { apiClient } from '@/lib/api';
 
 const SunIcon = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <circle cx="12" cy="12" r="5" />
     <path strokeLinecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-  </svg>
-);
-
-const MonitorIcon = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <rect x="2" y="3" width="20" height="14" rx="2" />
-    <path strokeLinecap="round" d="M8 21h8M12 17v4" />
   </svg>
 );
 
@@ -24,17 +19,24 @@ const MoonIcon = () => (
   </svg>
 );
 
-type ThemeOption = 'light' | 'system' | 'dark';
+type ThemeOption = 'light' | 'dark';
 
 export function ThemeSelector() {
   const { theme, setTheme } = useUIStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const { t } = useTranslation();
 
   const options: { value: ThemeOption; label: string; icon: React.ReactNode }[] = [
     { value: 'light', label: t('common.light'), icon: <SunIcon /> },
-    { value: 'system', label: t('common.system'), icon: <MonitorIcon /> },
     { value: 'dark', label: t('common.dark'), icon: <MoonIcon /> },
   ];
+
+  const handleSetTheme = (value: ThemeOption) => {
+    setTheme(value);
+    if (isAuthenticated && (value === 'light' || value === 'dark')) {
+      apiClient.updateThemePreference(value).catch(() => {/* silent fail */});
+    }
+  };
 
   return (
     <div
@@ -46,7 +48,7 @@ export function ThemeSelector() {
         <button
           key={value}
           type="button"
-          onClick={() => setTheme(value)}
+          onClick={() => handleSetTheme(value)}
           role="radio"
           aria-checked={theme === value}
           aria-label={label}
