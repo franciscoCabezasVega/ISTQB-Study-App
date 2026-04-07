@@ -25,9 +25,9 @@ const nextConfig = {
   compress: true,
   // Experimental: Optimizar chunks y tree shaking
   experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['axios', 'zustand', 'date-fns'],
+    optimizePackageImports: ['axios', 'zustand', 'date-fns', 'next-intl'],
   },
+  turbopack: {},
   async headers() {
     return [
       {

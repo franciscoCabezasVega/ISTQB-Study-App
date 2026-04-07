@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { authenticateToken, AuthRequest } from '../middleware';
-import StudyService from '../services/StudyService';
-import AchievementService from '../services/AchievementService';
+import { authenticateToken, AuthRequest } from '../middleware/index.js';
+import StudyService from '../services/StudyService.js';
+import AchievementService from '../services/AchievementService.js';
 
 const router = Router();
 

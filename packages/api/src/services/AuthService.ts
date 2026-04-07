@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabase';
+import { supabase } from '../config/supabase.js';
 import { User, AuthResponse } from '@istqb-app/shared';
 
 export class AuthService {

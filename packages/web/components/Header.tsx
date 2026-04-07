@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/useTranslation';
 import { Button } from './Button';
 import { StreakCounter } from './StreakCounter';
 import { LanguageSelector } from './LanguageSelector';
+import { ThemeSelector } from './ThemeSelector';
 
 export const Header: React.FC = React.memo(() => {
   const { user, logout } = useAuthStore();
@@ -54,7 +55,7 @@ export const Header: React.FC = React.memo(() => {
   const shouldHideSignInButton = isAuthPage || (isHomePage && !user);
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow sticky top-0 z-50">
+    <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-gray-700/50 sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
@@ -80,6 +81,7 @@ export const Header: React.FC = React.memo(() => {
                   {t('nav.achievements')}
                 </Link>
                 <StreakCounter compact />
+                <ThemeSelector />
                 <LanguageSelector />
                 
                 {/* Avatar con dropdown */}
@@ -120,6 +122,16 @@ export const Header: React.FC = React.memo(() => {
                             <span>{t('nav.settings')}</span>
                           </button>
                           <button
+                            onClick={() => {
+                              setShowDropdown(false);
+                              router.push('/settings/reports');
+                            }}
+                            className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                          >
+                            <span>🐛</span>
+                            <span>{t('report.myReportsTitle')}</span>
+                          </button>
+                          <button
                             onClick={handleLogout}
                             className="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
                           >
@@ -147,9 +159,8 @@ export const Header: React.FC = React.memo(() => {
           </nav>
 
           {/* Mobile Menu Controls */}
-          <div className="flex lg:hidden items-center gap-3">
+          <div className="flex lg:hidden items-center gap-2">
             {user && <StreakCounter compact />}
-            <LanguageSelector />
             {user && (
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -167,12 +178,18 @@ export const Header: React.FC = React.memo(() => {
                 )}
               </button>
             )}
-            {!user && !shouldHideSignInButton && (
-              <Link href="/auth/signin">
-                <Button variant="primary" size="sm">
-                  {t('auth.signin')}
-                </Button>
-              </Link>
+            {!user && (
+              <div className="flex items-center gap-2">
+                <ThemeSelector />
+                <LanguageSelector />
+                {!shouldHideSignInButton && (
+                  <Link href="/auth/signin">
+                    <Button variant="primary" size="sm">
+                      {t('auth.signin')}
+                    </Button>
+                  </Link>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -211,27 +228,55 @@ export const Header: React.FC = React.memo(() => {
               </Link>
               
               <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
-                  <p className="font-semibold text-gray-800 dark:text-gray-200">{user.full_name}</p>
-                  <p className="text-xs">{user.email}</p>
+                {/* Preferences: Theme & Language */}
+                <div className="px-4 py-3 grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                      {t('common.theme')}
+                    </span>
+                    <ThemeSelector />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                      {t('common.language')}
+                    </span>
+                    <LanguageSelector fullWidth />
+                  </div>
                 </div>
-                <button
-                  onClick={() => {
-                    setShowMobileMenu(false);
-                    router.push('/settings/reminders');
-                  }}
-                  className="w-full text-left px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
-                >
-                  <span>⚙️</span>
-                  <span>{t('nav.settings')}</span>
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
-                >
-                  <span>🚪</span>
-                  <span>{t('common.logout')}</span>
-                </button>
+                
+                <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
+                  <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
+                    <p className="font-semibold text-gray-800 dark:text-gray-200">{user.full_name}</p>
+                    <p className="text-xs">{user.email}</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      router.push('/settings/reminders');
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                  >
+                    <span>⚙️</span>
+                    <span>{t('nav.settings')}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      router.push('/settings/reports');
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                  >
+                    <span>🐛</span>
+                    <span>{t('report.myReportsTitle')}</span>
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                  >
+                    <span>🚪</span>
+                    <span>{t('common.logout')}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

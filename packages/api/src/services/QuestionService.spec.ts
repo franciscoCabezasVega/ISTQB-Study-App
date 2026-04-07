@@ -3,7 +3,7 @@
  * Cubre obtención de preguntas por tema y filtros
  */
 
-import { QuestionService } from '../services/QuestionService';
+import { QuestionService } from '../services/QuestionService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -12,14 +12,19 @@ jest.mock('../config/supabase', () => ({
   },
 }));
 
-const { supabase } = require('../config/supabase');
-
 describe('QuestionService', () => {
   let mockFrom: jest.Mock;
   let mockSelect: jest.Mock;
   let mockEq: jest.Mock;
   let mockOrder: jest.Mock;
   let mockLimit: jest.Mock;
+  // Use dynamic import to get the mocked module (ESM-safe)
+  let supabase: jest.Mocked<any>;
+
+  beforeAll(async () => {
+    const mod = await import('../config/supabase.js');
+    supabase = jest.mocked(mod.supabase);
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();

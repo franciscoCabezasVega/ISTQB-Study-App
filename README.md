@@ -6,7 +6,6 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
-![Tests](https://img.shields.io/badge/tests-0%20passing-success)
 [![codecov](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App/branch/main/graph/badge.svg)](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App)
 
 **[Español](README.es.md)** | **English**
@@ -92,13 +91,13 @@ istqb-study-app/
 - **Testing**: Jest
 
 ### Frontend
-- **Framework**: Next.js 14 (App Router)
-- **UI Library**: React 18
+- **Framework**: Next.js 16 (App Router)
+- **UI Library**: React 19
 - **Styling**: Tailwind CSS
-- **State Management**: Zustand
+- **State Management**: Zustand 5
 - **HTTP Client**: Axios
 - **Testing**: Vitest + React Testing Library
-- **PWA**: next-pwa
+- **PWA**: Custom Service Worker (offline support)
 
 ### DevOps & Tools
 - **Deployment**: Render
@@ -142,7 +141,8 @@ JWT_SECRET=your-secure-jwt-secret
 # Server
 API_PORT=3001
 NODE_ENV=development
-CORS_ORIGIN=http://localhost:3000
+# Multiple origins (comma-separated) — Next.js may start on 3000, 3001, or 3002
+CORS_ORIGIN=http://localhost:3000,http://localhost:3001,http://localhost:3002
 
 # EmailJS (for reminders)
 EMAILJS_SERVICE_ID=your-service-id
@@ -179,7 +179,7 @@ npm run dev:web
 ```
 
 Access the application:
-- Frontend: http://localhost:3000
+- Frontend: http://localhost:3000 (or 3001/3002 if port is busy)
 - Backend API: http://localhost:3001
 
 ## 🧪 Testing
@@ -296,11 +296,12 @@ npm run version:major  # 1.0.0 -> 2.0.0
 
 - ✅ JWT-based authentication
 - ✅ HTTPS in production
-- ✅ CORS configuration
+- ✅ CORS configuration (multi-origin support)
 - ✅ SQL injection prevention (Supabase PostgreSQL)
-- ✅ XSS protection (React)
+- ✅ XSS protection via DOMPurify (HTML content sanitization)
 - ✅ Row Level Security (RLS) in database
 - ✅ Environment variables for sensitive data
+- ✅ Server Actions authenticated as API routes
 
 ## 🤝 Contributing
 

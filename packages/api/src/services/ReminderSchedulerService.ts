@@ -1,7 +1,7 @@
-import ReminderService from './ReminderService';
-import NotificationService from './NotificationService';
-import { ReminderUtils } from './ReminderUtils';
-import { supabase } from '../config/supabase';
+import ReminderService from './ReminderService.js';
+import NotificationService from './NotificationService.js';
+import { ReminderUtils } from './ReminderUtils.js';
+import { supabase } from '../config/supabase.js';
 import { StudyReminder } from '@istqb-app/shared';
 
 // Tipo para el resultado del JOIN de Supabase

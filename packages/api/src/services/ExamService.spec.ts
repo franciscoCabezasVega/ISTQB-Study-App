@@ -3,7 +3,7 @@
  * Cubren los casos críticos y errores encontrados durante el desarrollo
  */
 
-import ExamService from '../services/ExamService';
+import ExamService from '../services/ExamService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -19,9 +19,6 @@ jest.mock('../services/QuestionService', () => ({
   },
 }));
 
-const { supabase } = require('../config/supabase');
-const { QuestionService } = require('../services/QuestionService');
-
 describe('ExamService', () => {
   let mockFrom: jest.Mock;
   let mockSelect: jest.Mock;
@@ -32,6 +29,16 @@ describe('ExamService', () => {
   let mockIn: jest.Mock;
   let mockSingle: jest.Mock;
   let mockLimit: jest.Mock;
+  // Use dynamic imports to get the mocked modules (ESM-safe)
+  let supabase: jest.Mocked<any>;
+  let QuestionService: jest.Mocked<any>;
+
+  beforeAll(async () => {
+    const supaMod = await import('../config/supabase.js');
+    supabase = jest.mocked(supaMod.supabase);
+    const qsMod = await import('../services/QuestionService.js');
+    QuestionService = jest.mocked(qsMod.QuestionService);
+  });
 
   beforeEach(() => {
     // Reset all mocks

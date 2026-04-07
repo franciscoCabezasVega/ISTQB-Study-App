@@ -2,7 +2,7 @@ services:
   - type: web
     name: istqb-api
     runtime: node
-    buildCommand: npm install && npm run build --workspace=packages/api
+    buildCommand: npm install --production=false && npm run build --workspace=packages/shared && npm run build --workspace=packages/api
     startCommand: npm start --workspace=packages/api
     envVars:
       - key: NODE_ENV
@@ -17,7 +17,7 @@ services:
   - type: web
     name: istqb-frontend
     runtime: static
-    buildCommand: npm install --production=false && npm run build --workspace=packages/web
+    buildCommand: npm install --production=false && npm run build --workspace=packages/shared && npm run build --workspace=packages/web
     staticPublishPath: ./packages/web/out
     envVars:
       - key: NODE_ENV

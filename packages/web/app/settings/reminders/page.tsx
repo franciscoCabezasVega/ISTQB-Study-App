@@ -134,7 +134,7 @@ export default function RemindersSettingsPage() {
   const handleSave = async () => {
     // Validar que haya al menos un día seleccionado si los recordatorios están habilitados
     if (enabled && customDays.length === 0) {
-      alert(t('reminders.selectAtLeastOneDay'));
+      setToast({ message: t('reminders.selectAtLeastOneDay'), type: 'warning' });
       return;
     }
 
@@ -159,11 +159,11 @@ export default function RemindersSettingsPage() {
         notificationScheduler.cancelAllNotifications();
       }
 
-      alert(t('reminders.reminderSaved'));
+      setToast({ message: t('reminders.reminderSaved'), type: 'success' });
     } catch (error: unknown) {
       console.error('Error saving reminder:', error);
       const apiError = error as { response?: { data?: { error?: string } } };
-      alert(t('reminders.errorSaving') + ': ' + (apiError.response?.data?.error || (error as Error).message));
+      setToast({ message: t('reminders.errorSaving') + ': ' + (apiError.response?.data?.error || (error as Error).message), type: 'error' });
     } finally {
       setSaving(false);
     }
@@ -186,14 +186,13 @@ export default function RemindersSettingsPage() {
   const handleDiscardChanges = () => {
     if (!reminder) return;
 
-    if (confirm(t('reminders.confirmDiscardChanges'))) {
-      // Restaurar valores originales
-      setFrequency('custom');
-      setPreferredTime(reminder.preferred_time || '09:00');
-      setEnabled(reminder.enabled);
-      setCustomDays(reminder.custom_days || []);
-      setHasUnsavedChanges(false);
-    }
+    // Restaurar valores originales
+    setFrequency('custom');
+    setPreferredTime(reminder.preferred_time || '09:00');
+    setEnabled(reminder.enabled);
+    setCustomDays(reminder.custom_days || []);
+    setHasUnsavedChanges(false);
+    setToast({ message: t('reminders.changesDiscarded') || 'Cambios descartados', type: 'info' });
   };
 
   if (!user) {
@@ -272,9 +271,11 @@ export default function RemindersSettingsPage() {
               className="relative group"
               title={customDays.length === 0 ? t('reminders.selectAtLeastOneDay') : ''}
             >
-              <label className={`flex items-center gap-3 ${customDays.length === 0 ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}>
+              <label htmlFor="enableReminders" className={`flex items-center gap-3 ${customDays.length === 0 ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}>
                 <input
                   type="checkbox"
+                  id="enableReminders"
+                  name="enableReminders"
                   checked={enabled}
                   disabled={customDays.length === 0}
                   onChange={(e) => {
@@ -307,6 +308,7 @@ export default function RemindersSettingsPage() {
               {daysOfWeek.map((day) => (
                 <label
                   key={day.value}
+                  htmlFor={`day-${day.key}`}
                   className={`
                     flex items-center justify-center gap-2 px-4 py-3 rounded-lg border cursor-pointer transition-all
                     ${
@@ -318,6 +320,8 @@ export default function RemindersSettingsPage() {
                 >
                   <input
                     type="checkbox"
+                    id={`day-${day.key}`}
+                    name={`day-${day.key}`}
                     checked={customDays.includes(day.value)}
                     onChange={() => handleDayToggle(day.value)}
                     className="w-4 h-4 text-blue-600 rounded"

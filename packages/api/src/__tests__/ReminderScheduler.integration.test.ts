@@ -1,4 +1,4 @@
-import { ReminderUtils } from '../services/ReminderUtils';
+import { ReminderUtils } from '../services/ReminderUtils.js';
 import { StudyReminder } from '@istqb-app/shared';
 
 /**

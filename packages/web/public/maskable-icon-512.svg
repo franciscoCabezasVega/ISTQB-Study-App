@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fondo completo para maskable (sin radio en esquinas, cubre toda la imagen) -->
+  <rect width="512" height="512" fill="#3b82f6"/>
+  <!-- El contenido está dentro de la safe zone: 40% margen = 102px cada lado -->
+  <!-- Safe zone: x=102, y=102, width=308, height=308 -->
+  <rect x="102" y="102" width="308" height="308" rx="56" fill="#2563eb"/>
+  <!-- Texto centrado dentro de la safe zone -->
+  <text x="256" y="310" font-family="Arial, sans-serif" font-size="200" font-weight="bold" fill="white" text-anchor="middle">📚</text>
+</svg>

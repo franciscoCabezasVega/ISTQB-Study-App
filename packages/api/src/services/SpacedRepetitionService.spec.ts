@@ -3,7 +3,7 @@
  * Cubre el algoritmo SM-2 de repetición espaciada
  */
 
-import { SpacedRepetitionService } from './SpacedRepetitionService';
+import { SpacedRepetitionService } from './SpacedRepetitionService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -11,8 +11,6 @@ jest.mock('../config/supabase', () => ({
     from: jest.fn(),
   },
 }));
-
-const { supabase } = require('../config/supabase');
 
 describe('SpacedRepetitionService', () => {
   let mockFrom: jest.Mock;
@@ -23,6 +21,13 @@ describe('SpacedRepetitionService', () => {
   let mockLte: jest.Mock;
   let mockOrder: jest.Mock;
   let mockSingle: jest.Mock;
+  // Use dynamic import to get the mocked module (ESM-safe)
+  let supabase: jest.Mocked<any>;
+
+  beforeAll(async () => {
+    const mod = await import('../config/supabase.js');
+    supabase = jest.mocked(mod.supabase);
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();

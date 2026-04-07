@@ -87,12 +87,14 @@ function SigninForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div suppressHydrationWarning>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="email" className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.email')}
             </label>
             <input
               type="email"
+              id="email"
               name="email"
+              autoComplete="email"
               required
               className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
               placeholder="tu@email.com"
@@ -101,13 +103,15 @@ function SigninForm() {
           </div>
 
           <div suppressHydrationWarning>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="password" className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.password')}
             </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                id="password"
                 name="password"
+                autoComplete="current-password"
                 required
                 className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 pr-12"
                 placeholder="••••••••"

@@ -2,6 +2,30 @@ import axios, { AxiosInstance } from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
+// Caché del token para evitar JSON.parse en cada request
+let cachedToken: string | null = null;
+
+export function setCachedToken(token: string | null) {
+  cachedToken = token;
+}
+
+export function getCachedToken(): string | null {
+  if (cachedToken) return cachedToken;
+  // Fallback: leer del storage solo en el primer acceso (hydration)
+  if (typeof window !== 'undefined') {
+    const raw = localStorage.getItem('auth-storage') || sessionStorage.getItem('auth-storage');
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        cachedToken = parsed.state?.accessToken ?? null;
+      } catch {
+        // storage corrupto, ignorar
+      }
+    }
+  }
+  return cachedToken;
+}
+
 class APIClient {
   private client: AxiosInstance;
 
@@ -16,20 +40,9 @@ class APIClient {
     // Interceptor para agregar el token
     this.client.interceptors.request.use(
       (config) => {
-        if (typeof window !== 'undefined') {
-          // Buscar primero en localStorage, luego en sessionStorage
-          const token = localStorage.getItem('auth-storage') || sessionStorage.getItem('auth-storage');
-          if (token) {
-            try {
-              const parsed = JSON.parse(token);
-              if (parsed.state?.accessToken) {
-                config.headers.Authorization = `Bearer ${parsed.state.accessToken}`;
-              }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            } catch (_e) {
-              console.error('Error parsing token from storage');
-            }
-          }
+        const token = getCachedToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
       },
@@ -41,19 +54,14 @@ class APIClient {
       (response) => response,
       (error) => {
         if (error.response?.status === 401) {
-          // Token expirado o inválido
+          // Token expirado o inválido — limpiar caché y storage
+          cachedToken = null;
           if (typeof window !== 'undefined') {
-            // Limpiar estado de autenticación en AMBOS storages
             localStorage.removeItem('auth-storage');
             sessionStorage.removeItem('auth-storage');
-            
-            // Solo redirigir si no estamos ya en páginas de auth
+
             const currentPath = window.location.pathname;
             if (!currentPath.startsWith('/auth/')) {
-              // Mostrar mensaje antes de redirigir
-              console.warn('Session expired. Please sign in again.');
-              
-              // Redirigir al login con mensaje
               window.location.href = '/auth/signin?expired=true';
             }
           }
@@ -231,6 +239,48 @@ class APIClient {
 
   updateThemePreference(theme: 'light' | 'dark') {
     return this.client.put('/users/theme', { theme });
+  }
+
+  // Reports endpoints
+  createReport(data: {
+    type: 'question_error' | 'system_bug' | 'suggestion' | 'other';
+    title: string;
+    description: string;
+    question_id?: string;
+    page_url?: string;
+  }) {
+    return this.client.post('/reports', data);
+  }
+
+  getUserReports() {
+    return this.client.get('/reports');
+  }
+
+  getUserReportById(id: string) {
+    return this.client.get(`/reports/${id}`);
+  }
+
+  // Admin reports endpoints
+  getAdminReports(params?: {
+    status?: string;
+    type?: string;
+    priority?: string;
+    page?: number;
+    limit?: number;
+  }) {
+    return this.client.get('/reports/admin/all', { params });
+  }
+
+  getAdminReportById(id: string) {
+    return this.client.get(`/reports/admin/${id}`);
+  }
+
+  updateAdminReport(id: string, data: { status?: string; priority?: string; admin_notes?: string }) {
+    return this.client.put(`/reports/admin/${id}`, data);
+  }
+
+  getAdminReportStats() {
+    return this.client.get('/reports/admin/stats');
   }
 }
 

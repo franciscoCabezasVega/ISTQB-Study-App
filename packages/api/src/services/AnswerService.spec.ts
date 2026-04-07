@@ -3,7 +3,7 @@
  * Cubre estadísticas y tasas de éxito del usuario
  */
 
-import { AnswerService } from './AnswerService';
+import { AnswerService } from './AnswerService.js';
 
 // Mock de Supabase
 jest.mock('../config/supabase', () => ({
@@ -12,9 +12,15 @@ jest.mock('../config/supabase', () => ({
   },
 }));
 
-const { supabase } = require('../config/supabase');
-
 describe('AnswerService', () => {
+  // Use dynamic import to get the mocked module (ESM-safe)
+  let supabase: jest.Mocked<any>;
+
+  beforeAll(async () => {
+    const mod = await import('../config/supabase.js');
+    supabase = jest.mocked(mod.supabase);
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     // Mock console.error to avoid noise in tests

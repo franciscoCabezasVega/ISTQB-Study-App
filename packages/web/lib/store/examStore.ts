@@ -27,7 +27,7 @@ interface ExamState {
   nextQuestion: () => void;
   endExam: () => void;
   resetExam: () => void;
-  updateTimeRemaining: (remaining: number) => void;
+  updateTimeRemaining: (remaining: number | ((prev: number) => number)) => void;
   updateQuestions: (questions: Question[]) => void;
   
   // Getters
@@ -100,11 +100,13 @@ export const useExamStore = create<ExamState>()(
         });
       },
 
-      // Actualizar tiempo restante
-      updateTimeRemaining: (remaining: number) => {
-        set({
-          timeRemaining: remaining,
-        });
+      // Actualizar tiempo restante (acepta valor o función de actualización)
+      updateTimeRemaining: (remaining: number | ((prev: number) => number)) => {
+        if (typeof remaining === 'function') {
+          set((state) => ({ timeRemaining: remaining(state.timeRemaining) }));
+        } else {
+          set({ timeRemaining: remaining });
+        }
       },
 
       // Actualizar preguntas (para traducciones)

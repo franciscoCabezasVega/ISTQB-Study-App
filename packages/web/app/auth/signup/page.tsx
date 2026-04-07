@@ -137,12 +137,14 @@ export default function SignupPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="fullName" className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.fullName')}
             </label>
             <input
               type="text"
+              id="fullName"
               name="fullName"
+              autoComplete="name"
               required
               className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
               placeholder={t('auth.fullName')}
@@ -150,12 +152,14 @@ export default function SignupPage() {
           </div>
 
           <div suppressHydrationWarning>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="signupEmail" className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.email')}
             </label>
             <input
               type="email"
+              id="signupEmail"
               name="email"
+              autoComplete="email"
               required
               className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
               placeholder="tu@email.com"
@@ -164,13 +168,15 @@ export default function SignupPage() {
           </div>
 
           <div suppressHydrationWarning>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="signupPassword" className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.password')}
             </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                id="signupPassword"
                 name="password"
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -269,13 +275,15 @@ export default function SignupPage() {
           </div>
 
           <div suppressHydrationWarning>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="confirmPassword" className="block text-gray-700 dark:text-gray-300 mb-2">
               {t('auth.confirmPassword')}
             </label>
             <div className="relative">
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
+                id="confirmPassword"
                 name="confirmPassword"
+                autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required

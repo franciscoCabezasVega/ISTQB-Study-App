@@ -186,3 +186,50 @@ export interface APIError {
   message: string;
   details?: Record<string, any>;
 }
+
+// ============================================================
+// Tipos del Sistema de Reportes de Usuarios
+// ============================================================
+
+export type ReportType = 'question_error' | 'system_bug' | 'suggestion' | 'other';
+export type ReportStatus = 'open' | 'in_review' | 'resolved' | 'dismissed';
+export type ReportPriority = 'low' | 'medium' | 'high';
+
+export interface UserReport {
+  id: string;
+  user_id: string;
+  type: ReportType;
+  status: ReportStatus;
+  priority: ReportPriority;
+  question_id: string | null;
+  title: string;
+  description: string;
+  page_url: string | null;
+  admin_notes: string | null;
+  resolved_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateReportPayload {
+  type: ReportType;
+  title: string;
+  description: string;
+  question_id?: string;
+  page_url?: string;
+}
+
+export interface UpdateReportPayload {
+  status?: ReportStatus;
+  priority?: ReportPriority;
+  admin_notes?: string;
+}
+
+export interface ReportStats {
+  total: number;
+  open: number;
+  in_review: number;
+  resolved: number;
+  dismissed: number;
+  by_type: Record<ReportType, number>;
+}
