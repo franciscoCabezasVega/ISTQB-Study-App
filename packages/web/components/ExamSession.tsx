@@ -101,7 +101,10 @@ export function ExamSession({ sessionId, questions: initialQuestions }: ExamSess
       submitAnswer(currentAnswer);
 
       setQuestionStartTime(Date.now());
-      
+
+      // Mantener al usuario en el tope al pasar a la siguiente pregunta
+      window.scrollTo({ top: 0, behavior: 'auto' });
+
       // Pasar a la siguiente pregunta o finalizar
       if (currentQuestionIndex + 1 >= questions.length) {
         // Pasar la respuesta actual al método de finalización

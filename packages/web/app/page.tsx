@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
@@ -13,6 +14,25 @@ export default function Home() {
   const { user } = useAuthStore();
   const { t } = useTranslation();
   const shouldLoadCards = useDeferredLoading(50);
+  const router = useRouter();
+
+  // Red de seguridad: Supabase puede redirigir el token de recuperación
+  // al Site URL en vez del redirectTo si la URL no está en la whitelist del dashboard.
+  // En ese caso interceptamos el hash aquí y redirigimos al flujo correcto.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash.substring(1);
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+    const type = params.get('type');
+    const accessToken = params.get('access_token');
+    if (!accessToken) return;
+    if (type === 'recovery') {
+      router.replace(`/auth/reset-password#access_token=${accessToken}&type=recovery`);
+    } else if (type === 'signup' || type === 'email') {
+      router.replace(`/auth/callback#access_token=${accessToken}&type=${type}`);
+    }
+  }, [router]);
 
   if (!user) {
     return (

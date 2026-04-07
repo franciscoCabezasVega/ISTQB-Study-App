@@ -25,10 +25,14 @@ export default function ForgotPasswordPage() {
       await apiClient.forgotPassword(email);
       setEmailSent(true);
     } catch (err: unknown) {
-      setError(
-        (err as { response?: { data?: { message?: string } } }).response?.data?.message ||
-        t('auth.forgotPasswordError')
-      );
+      const axiosErr = err as { response?: { status?: number; data?: { message?: string } } };
+      const status = axiosErr.response?.status;
+      const message = axiosErr.response?.data?.message;
+      if (status === 429 || message === 'RATE_LIMIT_EXCEEDED') {
+        setError(t('auth.rateLimitError'));
+      } else {
+        setError(t('auth.forgotPasswordError'));
+      }
     } finally {
       setLoading(false);
     }

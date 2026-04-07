@@ -9,6 +9,7 @@ import { AuthInitializer } from '@/components/AuthInitializer';
 import { NotificationNavigator } from '@/components/NotificationNavigator';
 import { ReportButton } from '@/components/ReportButton';
 import { ReportModal } from '@/components/ReportModal';
+import { BackToTopButton } from '@/components/BackToTopButton';
 import './globals.css';
 
 const outfit = Outfit({
@@ -88,6 +89,7 @@ export default function RootLayout({
               </Suspense>
             </main>
             <ReportButton />
+            <BackToTopButton />
             <Footer />
           </AuthInitializer>
         </ThemeProvider>

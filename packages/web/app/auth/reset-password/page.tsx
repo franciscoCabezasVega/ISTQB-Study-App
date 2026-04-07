@@ -102,11 +102,8 @@ export default function ResetPasswordPage() {
       setTimeout(() => {
         router.push('/auth/signin');
       }, 3000);
-    } catch (err: unknown) {
-      setError(
-        (err as { response?: { data?: { message?: string } } }).response?.data?.message ||
-        t('auth.resetPasswordError')
-      );
+    } catch {
+      setError(t('auth.resetPasswordError'));
     } finally {
       setLoading(false);
     }

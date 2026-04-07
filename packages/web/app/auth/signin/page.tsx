@@ -56,7 +56,12 @@ function SigninForm() {
       
       router.push('/');
     } catch (err: unknown) {
-      setError((err as { response?: { data?: { message?: string } } }).response?.data?.message || 'Error en la autenticación');
+      const status = (err as { response?: { status?: number } }).response?.status;
+      if (status === 429) {
+        setError(t('auth.rateLimitError'));
+      } else {
+        setError(t('auth.signinError'));
+      }
     } finally {
       setLoading(false);
     }

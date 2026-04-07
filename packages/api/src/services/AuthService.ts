@@ -87,11 +87,18 @@ export class AuthService {
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${APP_URL}/auth/reset-password`,
+      redirectTo: `${APP_URL}/auth/callback`,
     });
 
     if (error) {
-      throw { statusCode: 400, message: error.message };
+      // Rate-limit de Supabase -> 429 con código limpio (nunca exponer el mensaje crudo)
+      if (
+        error.message.toLowerCase().includes('security purposes') ||
+        error.message.toLowerCase().includes('rate limit')
+      ) {
+        throw { statusCode: 429, message: 'RATE_LIMIT_EXCEEDED' };
+      }
+      throw { statusCode: 400, message: 'FORGOT_PASSWORD_FAILED' };
     }
   }
 
