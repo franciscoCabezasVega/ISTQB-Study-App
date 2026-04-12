@@ -223,8 +223,6 @@ function StudySessionContent() {
         selectedOptions,
       });
 
-      // Mantener al usuario en el tope de la página al mostrar el feedback
-      window.scrollTo({ top: 0, behavior: 'auto' });
       addUserAnswer({
         id: Math.random().toString(),
         user_id: user.id,
@@ -248,6 +246,7 @@ function StudySessionContent() {
       setFeedback(null);
       window.scrollTo({ top: 0, behavior: 'auto' });
     } else {
+      refreshStreak();
       setSessionComplete(true);
     }
   };
