@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DOMPurify from 'dompurify';
 import { Question } from '@istqb-app/shared';
 import { Card } from './Card';
@@ -74,6 +74,26 @@ export const QuestionCard: React.FC<QuestionCardProps> = React.memo((
   const { openReportModal } = useReportStore();
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [answered, setAnswered] = useState(false);
+  const feedbackRef = useRef<HTMLDivElement>(null);
+
+  // Scroll al feedback cuando aparece (depende de showFeedback, no de answered,
+  // porque feedbackRef.current es null hasta que el padre pasa showFeedback=true)
+  useEffect(() => {
+    if (showFeedback && feedbackRef.current) {
+      const timer = setTimeout(() => {
+        const prefersReducedMotion =
+          typeof window !== 'undefined' &&
+          typeof window.matchMedia === 'function' &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        feedbackRef.current?.scrollIntoView({
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [showFeedback]);
 
   const handleSelectOption = (optionId: string) => {
     if (question.type === 'true_false' || question.type === 'multiple_choice') {
@@ -119,31 +139,68 @@ export const QuestionCard: React.FC<QuestionCardProps> = React.memo((
 
       <div className="space-y-3 mb-8">
         {Array.isArray(question.options) &&
-          question.options.map((option: { id: string; text: string }) => (
-            <label
-              key={option.id}
-              className={`flex items-center p-4 border rounded-lg cursor-pointer transition ${
-                selectedOptions.includes(option.id)
-                  ? 'bg-blue-100 border-blue-500 dark:bg-blue-900 dark:border-blue-400'
-                  : 'bg-gray-50 border-gray-300 dark:bg-gray-800 dark:border-gray-600'
-              } ${answered ? 'opacity-70 cursor-not-allowed' : ''}`}
-            >
-              <input
-                type={question.type === 'true_false' ? 'radio' : 'checkbox'}
-                name={`question-${question.id}`}
-                value={option.id}
-                checked={selectedOptions.includes(option.id)}
-                onChange={() => handleSelectOption(option.id)}
-                disabled={answered}
-                className="w-5 h-5"
-              />
-              <span className="ml-3 text-gray-800 dark:text-gray-200">{option.text}</span>
-            </label>
-          ))}
+          question.options.map((option: { id: string; text: string }) => {
+            const isCorrectOption = answered && showFeedback && question.correct_answer_ids.includes(option.id);
+            const isWrongSelected = answered && showFeedback && selectedOptions.includes(option.id) && !question.correct_answer_ids.includes(option.id);
+
+            let optionClass = 'bg-gray-50 border-gray-300 dark:bg-gray-800 dark:border-gray-600';
+            if (answered && showFeedback) {
+              if (isCorrectOption) {
+                optionClass = 'bg-green-100 border-green-500 dark:bg-green-950 dark:border-green-400';
+              } else if (isWrongSelected) {
+                optionClass = 'bg-red-100 border-red-500 dark:bg-red-900 dark:border-red-400';
+              } else {
+                optionClass = 'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700 opacity-40';
+              }
+            } else if (!answered && selectedOptions.includes(option.id)) {
+              optionClass = 'bg-blue-100 border-blue-500 dark:bg-blue-900 dark:border-blue-400';
+            }
+
+            return (
+              <label
+                key={option.id}
+                className={`flex items-center p-4 border rounded-lg transition ${answered ? 'cursor-not-allowed' : 'cursor-pointer'} ${optionClass}`}
+              >
+                {answered && showFeedback ? (
+                  <span className="flex-shrink-0 flex items-center justify-center text-base leading-none">
+                    {isCorrectOption ? (
+                      <span className="text-green-600 dark:text-green-400">✓</span>
+                    ) : isWrongSelected ? (
+                      <span>❌</span>
+                    ) : null}
+                  </span>
+                ) : (
+                  <input
+                    type={question.type === 'true_false' ? 'radio' : 'checkbox'}
+                    name={`question-${question.id}`}
+                    value={option.id}
+                    checked={selectedOptions.includes(option.id)}
+                    onChange={() => handleSelectOption(option.id)}
+                    disabled={answered}
+                    className="w-5 h-5 flex-shrink-0"
+                  />
+                )}
+                <span
+                  className={`ml-3 ${
+                    answered && showFeedback
+                      ? isCorrectOption
+                        ? 'font-semibold text-green-800 dark:text-green-200'
+                        : isWrongSelected
+                          ? 'font-semibold text-red-800 dark:text-gray-100 line-through'
+                          : 'text-gray-400 dark:text-gray-500'
+                      : 'text-gray-800 dark:text-gray-200'
+                  }`}
+                >
+                  {option.text}
+                </span>
+              </label>
+            );
+          })}
       </div>
 
       {showFeedback && answered && (
         <div
+          ref={feedbackRef}
           className={`mb-6 p-4 rounded-lg ${
             isCorrect
               ? 'bg-green-100 border border-green-500 dark:bg-green-900 dark:border-green-400'
@@ -158,7 +215,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = React.memo((
               {selectedAnswerIds.map((optionId) => {
                 const option = question.options.find((opt) => opt.id === optionId);
                 if (option?.explanation) {
-                  return (
+                  return containsHTML(option.explanation) ? (
+                    <div
+                      key={optionId}
+                      className="prose prose-sm max-w-none text-gray-800 dark:text-gray-200 dark:prose-invert"
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(option.explanation) }}
+                    />
+                  ) : (
                     <p key={optionId} className="whitespace-pre-line">{processText(option.explanation)}</p>
                   );
                 }
@@ -166,6 +229,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = React.memo((
               })}
             </div>
           )}
+
         </div>
       )}
 

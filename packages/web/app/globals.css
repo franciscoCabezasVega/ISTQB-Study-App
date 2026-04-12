@@ -161,3 +161,83 @@ img {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* --- Question HTML Content (rendered from database) --- */
+/* Restore list styles inside .prose since @tailwindcss/typography is not used */
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.prose li {
+  display: list-item;
+  margin-bottom: 0.25rem;
+}
+
+/* Dark mode overrides for inline-styled question description blocks from DB */
+.dark .prose div[style*="background-color: #f8f9fa"],
+.dark .prose div[style*="background-color:#f8f9fa"] {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+.dark .prose div[style*="border-left: 4px solid #3498db"],
+.dark .prose div[style*="border-left:4px solid #3498db"] {
+  border-left-color: #60a5fa !important;
+}
+
+.dark .prose p,
+.dark .prose li {
+  color: #d1d5db;
+}
+
+/* Dark mode overrides for tables with hardcoded inline bg colors */
+.dark .prose table {
+  border-color: #4b5563 !important;
+}
+
+.dark .prose table thead tr,
+.dark .prose table thead th {
+  background-color: #374151 !important;
+  color: #f3f4f6 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .prose table tbody tr,
+.dark .prose table tbody td,
+.dark .prose table tbody th {
+  background-color: #1f2937 !important;
+  color: #d1d5db !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .prose table tbody tr:nth-child(even) td,
+.dark .prose table tbody tr:nth-child(even) th {
+  background-color: #111827 !important;
+}
+
+/* Tables without thead (all tr/td at root level) */
+.dark .prose table tr {
+  border-color: #4b5563 !important;
+}
+
+.dark .prose table td,
+.dark .prose table th {
+  border-color: #4b5563 !important;
+  color: #d1d5db !important;
+}
+
+/* Override individual td/th inline background-colors */
+.dark .prose table td[style*="background-color"],
+.dark .prose table th[style*="background-color"],
+.dark .prose table tr[style*="background-color"] td,
+.dark .prose table tr[style*="background-color"] th {
+  background-color: #1f2937 !important;
+  color: #d1d5db !important;
+}

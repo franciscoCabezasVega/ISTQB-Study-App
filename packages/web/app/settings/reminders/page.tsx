@@ -350,13 +350,15 @@ export default function RemindersSettingsPage() {
             <label htmlFor="time" className="block text-sm font-medium mb-2">
               {t('reminders.preferredTime')}
             </label>
-            <input
-              type="time"
-              id="time"
-              value={preferredTime}
-              onChange={(e) => setPreferredTime(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800"
-            />
+            <div className="overflow-hidden">
+              <input
+                type="time"
+                id="time"
+                value={preferredTime}
+                onChange={(e) => setPreferredTime(e.target.value)}
+                className="w-full max-w-full min-w-0 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800"
+              />
+            </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {t('reminders.timeDescription')}
             </p>
