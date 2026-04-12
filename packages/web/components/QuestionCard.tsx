@@ -81,7 +81,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = React.memo((
   useEffect(() => {
     if (showFeedback && feedbackRef.current) {
       const timer = setTimeout(() => {
-        feedbackRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const prefersReducedMotion =
+          typeof window !== 'undefined' &&
+          typeof window.matchMedia === 'function' &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        feedbackRef.current?.scrollIntoView({
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          block: 'start',
+        });
       }, 100);
       return () => clearTimeout(timer);
     }
@@ -210,6 +218,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = React.memo((
                   return containsHTML(option.explanation) ? (
                     <div
                       key={optionId}
+                      className="prose prose-sm max-w-none text-gray-800 dark:text-gray-200 dark:prose-invert"
                       dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(option.explanation) }}
                     />
                   ) : (

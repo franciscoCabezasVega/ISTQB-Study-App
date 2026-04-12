@@ -114,12 +114,30 @@ jobs:
     - name: Deploy API to Render
       run: |
         echo "Triggering API deploy..."
-        curl -s -o /dev/null -w "%{http_code}" "${{ secrets.RENDER_DEPLOY_HOOK_API }}" | grep -q "2[0-9][0-9]" && echo "✅ API deploy triggered" || echo "❌ API deploy failed"
+        status_code=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.RENDER_DEPLOY_HOOK_API }}")
+        case "$status_code" in
+          2??)
+            echo "✅ API deploy triggered"
+            ;;
+          *)
+            echo "❌ API deploy failed (HTTP $status_code)"
+            exit 1
+            ;;
+        esac
       
     - name: Deploy Frontend to Render
       run: |
         echo "Triggering Frontend deploy..."
-        curl -s -o /dev/null -w "%{http_code}" "${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}" | grep -q "2[0-9][0-9]" && echo "✅ Frontend deploy triggered" || echo "❌ Frontend deploy failed"
+        status_code=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}")
+        case "$status_code" in
+          2??)
+            echo "✅ Frontend deploy triggered"
+            ;;
+          *)
+            echo "❌ Frontend deploy failed (HTTP $status_code)"
+            exit 1
+            ;;
+        esac
 
     - name: Deploy Summary
       run: |
