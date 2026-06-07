@@ -40,6 +40,6 @@ services:
     autoDeploy: true
 
 # Cron job moved to cron-job.org (free external service)
-# URL: https://istqb-api.onrender.com/api/scheduler/reminders/process
+# URL: https://istqb-api-free.onrender.com/api/scheduler/reminders/process
 # Schedule: Every 15 minutes (optimizado para reducir tráfico a Supabase)
 # Saves: ~$10/month + 83% menos requests a Supabase
