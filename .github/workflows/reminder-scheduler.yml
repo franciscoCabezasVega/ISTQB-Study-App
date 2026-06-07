@@ -1,0 +1,78 @@
+name: Reminder Scheduler
+
+on:
+  schedule:
+    # Cada 15 minutos para coincidir con la ventana de envio de ReminderUtils
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: reminder-scheduler
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  trigger-reminders:
+    name: Trigger Reminder Processor
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      SCHEDULER_URL: ${{ secrets['REMINDER_SCHEDULER_URL'] }}
+      SCHEDULER_API_KEY: ${{ secrets['SCHEDULER_API_KEY'] }}
+
+    steps:
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          if [ -z "${SCHEDULER_API_KEY}" ]; then
+            echo "Missing required secret: SCHEDULER_API_KEY"
+            exit 1
+          fi
+
+      - name: Trigger scheduler endpoint with retries
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          URL="${SCHEDULER_URL:-https://istqb-api-free.onrender.com/api/scheduler/reminders/process}"
+          echo "Triggering scheduler at ${URL}"
+
+          MAX_ATTEMPTS=4
+          ATTEMPT=1
+
+          while [ ${ATTEMPT} -le ${MAX_ATTEMPTS} ]; do
+            echo "Attempt ${ATTEMPT}/${MAX_ATTEMPTS}"
+
+            HTTP_CODE=$(curl -sS -o /tmp/response.json -w "%{http_code}" \
+              --max-time 25 \
+              --connect-timeout 10 \
+              -X POST "${URL}" \
+              -H "x-scheduler-key: ${SCHEDULER_API_KEY}" \
+              -H "Content-Type: application/json")
+
+            echo "HTTP ${HTTP_CODE}"
+            cat /tmp/response.json || true
+
+            if [ "${HTTP_CODE}" -ge 200 ] && [ "${HTTP_CODE}" -lt 300 ]; then
+              echo "Scheduler triggered successfully"
+              exit 0
+            fi
+
+            if [ "${HTTP_CODE}" = "429" ] || [ "${HTTP_CODE}" -ge 500 ]; then
+              if [ ${ATTEMPT} -lt ${MAX_ATTEMPTS} ]; then
+                SLEEP_SECONDS=$((ATTEMPT * 15))
+                echo "Transient error (${HTTP_CODE}). Retrying in ${SLEEP_SECONDS}s..."
+                sleep ${SLEEP_SECONDS}
+              fi
+            else
+              echo "Non-retriable error (${HTTP_CODE})."
+              exit 1
+            fi
+
+            ATTEMPT=$((ATTEMPT + 1))
+          done
+
+          echo "Scheduler trigger failed after ${MAX_ATTEMPTS} attempts"
+          exit 1
