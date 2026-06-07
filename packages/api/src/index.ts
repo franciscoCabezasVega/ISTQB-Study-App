@@ -9,6 +9,7 @@ import { config } from './config/index.js';
 
 // Importar middleware y rutas
 import { errorHandler } from './middleware/index.js';
+import supabase from './config/supabase.js';
 import authRoutes from './routes/auth.js';
 import questionRoutes from './routes/questions.js';
 import answerRoutes from './routes/answers.js';
@@ -28,9 +29,16 @@ app.use(cors({ origin: config.corsOrigins, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health check
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+// Health check — también hace un ping ligero a Supabase para evitar que se pause
+app.get('/health', async (req, res) => {
+  let dbStatus = 'ok';
+  try {
+    const { error } = await supabase.from('questions').select('id').limit(1);
+    if (error) dbStatus = 'error';
+  } catch {
+    dbStatus = 'error';
+  }
+  res.status(200).json({ status: 'OK', db: dbStatus, timestamp: new Date().toISOString() });
 });
 
 // Rutas
