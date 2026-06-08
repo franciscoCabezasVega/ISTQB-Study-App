@@ -7,6 +7,9 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-blue)
 [![codecov](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App/branch/main/graph/badge.svg)](https://codecov.io/gh/franciscoCabezasVega/ISTQB-Study-App)
+[![Reminder Scheduler](https://github.com/franciscoCabezasVega/ISTQB-Study-App/actions/workflows/reminder-scheduler.yml/badge.svg)](https://github.com/franciscoCabezasVega/ISTQB-Study-App/actions/workflows/reminder-scheduler.yml)
+[![Release](https://github.com/franciscoCabezasVega/ISTQB-Study-App/actions/workflows/release.yml/badge.svg)](https://github.com/franciscoCabezasVega/ISTQB-Study-App/actions/workflows/release.yml)
+[![CI/CD - Build and Test](https://github.com/franciscoCabezasVega/ISTQB-Study-App/actions/workflows/ci.yml/badge.svg)](https://github.com/franciscoCabezasVega/ISTQB-Study-App/actions/workflows/ci.yml)
 
 **[Español](README.es.md)** | **English**
 
