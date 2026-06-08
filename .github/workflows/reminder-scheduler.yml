@@ -37,6 +37,7 @@ jobs:
           set -euo pipefail
 
           URL="${SCHEDULER_URL:-https://istqb-api-free.onrender.com/api/scheduler/reminders/process}"
+          HEALTH_URL="https://istqb-api-free.onrender.com/health"
           echo "Triggering scheduler at ${URL}"
 
           MAX_ATTEMPTS=4
@@ -45,12 +46,32 @@ jobs:
           while [ ${ATTEMPT} -le ${MAX_ATTEMPTS} ]; do
             echo "Attempt ${ATTEMPT}/${MAX_ATTEMPTS}"
 
+            # En plan Free de Render, el servicio puede estar dormido y tardar en despertar.
+            # Hacemos warm-up best effort para reducir timeouts en el endpoint de scheduler.
+            curl -sS -o /dev/null --max-time 60 --connect-timeout 10 "${HEALTH_URL}" || true
+
+            set +e
             HTTP_CODE=$(curl -sS -o /tmp/response.json -w "%{http_code}" \
-              --max-time 25 \
-              --connect-timeout 10 \
+              --max-time 90 \
+              --connect-timeout 15 \
               -X POST "${URL}" \
               -H "x-scheduler-key: ${SCHEDULER_API_KEY}" \
               -H "Content-Type: application/json")
+            CURL_EXIT=$?
+            set -e
+
+            if [ ${CURL_EXIT} -ne 0 ]; then
+              echo "Curl transport error (${CURL_EXIT})."
+              if [ ${ATTEMPT} -lt ${MAX_ATTEMPTS} ]; then
+                SLEEP_SECONDS=$((ATTEMPT * 20))
+                echo "Retrying in ${SLEEP_SECONDS}s..."
+                sleep ${SLEEP_SECONDS}
+                ATTEMPT=$((ATTEMPT + 1))
+                continue
+              fi
+              echo "Scheduler trigger failed after ${MAX_ATTEMPTS} attempts"
+              exit 1
+            fi
 
             echo "HTTP ${HTTP_CODE}"
             cat /tmp/response.json || true
