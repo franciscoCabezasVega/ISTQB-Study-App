@@ -86,17 +86,13 @@ export class ReminderUtils {
     }
 
     // Parsear hora preferida (formato HH:MM)
-    const [preferredHour, preferredMinute] = (reminder.preferred_time || '09:00')
+    const [preferredHour] = (reminder.preferred_time || '09:00')
       .split(':')
       .map(Number);
 
-    // Verificar si estamos en la hora exacta o dentro de una ventana de 15 minutos
-    // Esto permite ejecutar el scheduler cada 15 minutos reduciendo el tráfico a Supabase
-    // sin perder recordatorios programados
-    const isExactHour = currentHour === preferredHour;
-    const isWithinWindow = currentMinute >= preferredMinute && currentMinute < preferredMinute + 15;
-
-    return isExactHour && isWithinWindow;
+    // El scheduler corre una vez por hora (en punto), asi que basta con que
+    // coincida la hora preferida; el minuto exacto no es relevante con esta cadencia
+    return currentHour === preferredHour;
   }
 
   /**

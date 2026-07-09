@@ -39,7 +39,6 @@ services:
     region: oregon
     autoDeploy: true
 
-# Cron job moved to cron-job.org (free external service)
+# Cron job ejecutado via GitHub Actions (.github/workflows/reminder-scheduler.yml)
 # URL: https://istqb-api-free.onrender.com/api/scheduler/reminders/process
-# Schedule: Every 15 minutes (optimizado para reducir tráfico a Supabase)
-# Saves: ~$10/month + 83% menos requests a Supabase
+# Schedule: Cada hora, en punto (optimizado para reducir tráfico a Supabase)

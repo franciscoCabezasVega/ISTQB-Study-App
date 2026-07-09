@@ -2,8 +2,8 @@ name: Reminder Scheduler
 
 on:
   schedule:
-    # Cada 15 minutos para coincidir con la ventana de envio de ReminderUtils
-    - cron: '*/15 * * * *'
+    # Cada hora, en punto (coincide con la ventana horaria de ReminderUtils.isTimeToSend)
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 concurrency:
