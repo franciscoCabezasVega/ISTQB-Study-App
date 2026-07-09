@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.2](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.4.1...v1.4.2) (2026-07-09)
+
+### 🐛 Bug Fixes
+
+* run reminder scheduler cron hourly instead of every 15 minutes ([5e90bde](https://github.com/franciscoCabezasVega/ISTQB-Study-App/commit/5e90bde1b4e025475651646b171733b6539f61c9))
+
 ## [1.4.1](https://github.com/franciscoCabezasVega/ISTQB-Study-App/compare/v1.4.0...v1.4.1) (2026-04-12)
 
 ### 🐛 Bug Fixes
